@@ -1,0 +1,154 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - link [ref=e6] [cursor=pointer]:
+      - /url: "#top"
+      - img "NEA Sistemas" [ref=e7]
+    - generic [ref=e8]:
+      - link "Contacto" [ref=e9] [cursor=pointer]:
+        - /url: "#contacto"
+      - link "Pedí tu diagnóstico gratis" [ref=e14] [cursor=pointer]:
+        - /url: "#mockup"
+  - generic [ref=e16]:
+    - generic [ref=e18]:
+      - heading "Trabajamos con empresas y negocios donde la imagen y la confianza es clave." [level=2] [ref=e19]
+      - generic [ref=e20]:
+        - generic [ref=e21]: Estrategia. Diseño. Contenido. Impacto.
+        - generic [ref=e22]: Soluciones visuales que construyen marcas líderes
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - link "Soluciones" [ref=e28] [cursor=pointer]:
+            - /url: "#soluciones"
+          - link "Servicios" [ref=e29] [cursor=pointer]:
+            - /url: "#servicios"
+          - link "Precios" [ref=e30] [cursor=pointer]:
+            - /url: "#precios"
+          - link "Nosotros" [ref=e31] [cursor=pointer]:
+            - /url: "#nosotros"
+        - generic [ref=e32]:
+          - link "Contacto" [ref=e33] [cursor=pointer]:
+            - /url: "#contacto"
+          - link "Pedí tu diagnóstico gratis" [ref=e38] [cursor=pointer]:
+            - /url: "#mockup"
+      - link [ref=e39] [cursor=pointer]:
+        - /url: "#top"
+        - img "NEA Sistemas" [ref=e40]
+    - generic [ref=e41]:
+      - heading "Más que una página web. El sistema para que tu negocio ve" [level=1] [ref=e42]: Más que una página web.El sistema para que tu negocio ve
+      - generic [ref=e44]:
+        - link "Pedí tu diagnóstico gratis" [ref=e45] [cursor=pointer]:
+          - /url: "#mockup"
+        - link "Hablemos 15 minutos" [ref=e46] [cursor=pointer]:
+          - /url: "#llamada"
+  - generic [ref=e47]:
+    - generic [ref=e48]: SERVICIOS
+    - heading "Trabajo bello, funcional y tecnológicamente adelantado. Eleva y unifica la experiencia en cada superficie donde vive tu marca." [level=2] [ref=e49]: Trabajo bello, funcional y tecnológicamente adelantado.Eleva y unifica la experiencia en cada superficie donde vive tu marca.
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e53]: Una web hecha a medida
+        - generic [ref=e54]: "# WEB"
+      - generic [ref=e55]:
+        - generic [ref=e57]: Una tienda online con todo integrado
+        - generic [ref=e58]: "# E-COMMERCE"
+      - generic [ref=e59]:
+        - generic [ref=e61]: Aparecer primero en Google
+        - generic [ref=e62]: "# SEO"
+      - generic [ref=e63]:
+        - generic [ref=e65]: Sistemas que trabajan por vos
+        - generic [ref=e66]: "# SISTEMAS"
+  - generic [ref=e69]:
+    - generic [ref=e70]: PROCESO
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]: "01"
+          - paragraph [ref=e75]: "Estudiamos tu negocio y a tu competencia, y te damos el informe antes de que pagues nada: qué te está frenando, qué hace tu competencia y qué conviene mejorar primero."
+        - generic [ref=e76]: Analizar
+      - generic:
+        - generic:
+          - generic: "02"
+          - paragraph: "Armamos un diseño preliminar navegable de las páginas principales, con la estructura e identidad visual definidas: colores, tipografía, imágenes y las animaciones que le dan vida. Cuando lo aprobás, ya sabés exactamente cómo va a verse el sitio."
+        - generic: Diseñar
+      - generic:
+        - generic:
+          - generic: "03"
+          - paragraph: "Construimos la web completa y los sistemas que hayas elegido del informe. Se integran con las herramientas que ya usás, así que nadie tiene que aprender a trabajar de nuevo. De la parte complicada nos ocupamos nosotros: vos solo lo usás."
+          - link "Pedí tu diagnóstico gratis →":
+            - /url: "#mockup"
+            - text: Pedí tu diagnóstico gratis
+            - generic: →
+        - generic: Construir.
+  - generic [ref=e81]:
+    - generic [ref=e82]: NOSOTROS
+    - heading "Todas las agencias prometen. Nosotros mostramos primero." [level=2] [ref=e83]: Todas las agencias prometen.Nosotros mostramos primero.
+    - paragraph [ref=e84]: El diagnóstico de tu negocio es gratis y llega con los precios. Recién ahí decidís si seguís.
+    - generic [ref=e85]:
+      - generic [ref=e87]:
+        - generic [ref=e88]: Primero el diagnóstico.Después decidís si pagás.
+        - paragraph [ref=e89]: Llega en menos de 24 horas, con todos los entregables y sus precios. Si no te cierra, te vas sin deber nada.
+        - link "Ver cómo trabajamos" [ref=e90] [cursor=pointer]:
+          - /url: "#proceso"
+          - text: →
+      - generic [ref=e93]:
+        - generic [ref=e94]: Nuestro portfolioes esta misma web.
+        - paragraph [ref=e95]: "La estás usando hace un minuto. Abrí la de cualquier otra agencia y compará: ninguna plantilla reciclada aguanta al lado."
+        - link "Ver estimación de precios" [ref=e96] [cursor=pointer]:
+          - /url: "#estimacion"
+          - text: →
+  - generic [ref=e97]:
+    - generic [ref=e98]: ESTIMACIÓN
+    - heading "Contá qué necesitás y mirá cuánto sale" [level=2] [ref=e99]: Contá qué necesitásy mirá cuánto sale
+    - paragraph [ref=e100]: Un rango orientativo en dos clics. El número final se define en la reunión inicial.
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - generic [ref=e103]: ¿QUÉ NECESITÁS?
+        - generic [ref=e104]:
+          - button "Landing page Sitio web de una sola página" [ref=e105] [cursor=pointer]:
+            - generic [ref=e108]:
+              - generic [ref=e109]: Landing page
+              - generic [ref=e110]: Sitio web de una sola página
+          - button "Sitio institucional Sitio web de múltiples páginas" [ref=e111] [cursor=pointer]:
+            - generic [ref=e114]:
+              - generic [ref=e115]: Sitio institucional
+              - generic [ref=e116]: Sitio web de múltiples páginas
+          - button "Catálogo online Para mostrar productos, precios y stock actualizables" [ref=e117] [cursor=pointer]:
+            - generic [ref=e120]:
+              - generic [ref=e121]: Catálogo online
+              - generic [ref=e122]: Para mostrar productos, precios y stock actualizables
+          - button "Tienda online Catálogo online + carrito, pagos y pedidos por WhatsApp" [ref=e123] [cursor=pointer]:
+            - generic [ref=e126]:
+              - generic [ref=e127]: Tienda online
+              - generic [ref=e128]: Catálogo online + carrito, pagos y pedidos por WhatsApp
+          - button "Sistemas a medida CRMs, sistemas de gestión, automatizaciones, paneles de control, plataformas internas e integraciones mediante APIs." [ref=e129] [cursor=pointer]:
+            - generic [ref=e132]:
+              - generic [ref=e133]: Sistemas a medida
+              - generic [ref=e134]: CRMs, sistemas de gestión, automatizaciones, paneles de control, plataformas internas e integraciones mediante APIs.
+      - generic [ref=e135]:
+        - generic [ref=e136]: TU ESTIMACIÓN
+        - generic [ref=e137]: Elegí una opción
+        - generic [ref=e138]: Elegí una opción para ver la estimación.
+        - generic [ref=e139]: Estimación orientativa, sujeta a revisión. El presupuesto final se define en la reunión inicial.
+        - link "Enviar por WhatsApp ↗" [ref=e140] [cursor=pointer]:
+          - /url: "#mockup"
+          - text: Enviar por WhatsApp
+          - generic [ref=e141]: ↗
+  - contentinfo [ref=e142]:
+    - generic [ref=e143]: CONTACTO
+    - generic [ref=e144]:
+      - link [ref=e145] [cursor=pointer]:
+        - /url: "#top"
+        - img "NEA Sistemas" [ref=e146]
+      - generic [ref=e147]:
+        - link "Soluciones" [ref=e148] [cursor=pointer]:
+          - /url: "#soluciones"
+        - link "Servicios" [ref=e149] [cursor=pointer]:
+          - /url: "#servicios"
+        - link "Precios" [ref=e150] [cursor=pointer]:
+          - /url: "#precios"
+        - link "Nosotros" [ref=e151] [cursor=pointer]:
+          - /url: "#nosotros"
+      - link "Pedí tu diagnóstico gratis" [ref=e152] [cursor=pointer]:
+        - /url: "#mockup"
+    - generic [ref=e153]:
+      - generic [ref=e154]: © 2026 Nea Sistemas
+      - generic [ref=e155]: Misiones, Argentina — trabajamos con todo el país

@@ -1,23 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NEA Sistemas — Webs y sistemas a medida en Misiones, Argentina</title>
 <meta name="description" content="Diseñamos y construimos webs, tiendas online y sistemas a medida. Diagnóstico gratis en menos de 24 horas, con precios y sin compromiso.">
-<link rel="icon" href="uploads/Nea_logo_negro.png">
-<meta property="og:title" content="NEA Sistemas">
-<meta property="og:description" content="Más que una página web: el sistema para que tu negocio genere consultas solo.">
-<meta property="og:image" content="uploads/Nea_logo_negro.png">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&amp;family=Instrument+Serif:ital,wght@0,400;1,400&family=Jersey+10+Charted&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&amp;display=swap" rel="stylesheet">
+<link rel="canonical" href="https://neasistemas.com.ar/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0A0A0A">
+
+<link rel="icon" type="image/png" sizes="32x32" href="uploads/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="uploads/favicon-512.png">
+<link rel="apple-touch-icon" href="uploads/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NEA Sistemas">
+<meta property="og:locale" content="es_AR">
+<meta property="og:url" content="https://neasistemas.com.ar/">
+<meta property="og:title" content="NEA Sistemas — Webs y sistemas a medida en Misiones">
+<meta property="og:description" content="Más que una página web: el sistema para que tu negocio genere consultas solo. Diagnóstico gratis en menos de 24 horas.">
+<meta property="og:image" content="https://neasistemas.com.ar/uploads/og-nea-sistemas.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NEA Sistemas — webs y sistemas a medida">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NEA Sistemas — Webs y sistemas a medida en Misiones">
+<meta name="twitter:description" content="Más que una página web: el sistema para que tu negocio genere consultas solo. Diagnóstico gratis en menos de 24 horas.">
+<meta name="twitter:image" content="https://neasistemas.com.ar/uploads/og-nea-sistemas.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://neasistemas.com.ar/#business",
+  "name": "NEA Sistemas",
+  "url": "https://neasistemas.com.ar/",
+  "logo": "https://neasistemas.com.ar/uploads/Nea_logo_negro.png",
+  "image": "https://neasistemas.com.ar/uploads/og-nea-sistemas.png",
+  "description": "Diseño y desarrollo de webs, tiendas online y sistemas a medida. Diagnóstico gratuito con precios en menos de 24 horas.",
+  "inLanguage": "es-AR",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressRegion": "Misiones",
+    "addressCountry": "AR"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Argentina"
+  },
+  "knowsLanguage": "es-AR",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Servicios",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Landing page", "description": "Sitio web de una sola página" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sitio institucional", "description": "Sitio web de múltiples páginas" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Catálogo online", "description": "Para mostrar productos, precios y stock actualizables" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Tienda online", "description": "Catálogo online con carrito, pagos y pedidos por WhatsApp" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sistemas a medida", "description": "CRMs, sistemas de gestión, automatizaciones, paneles de control e integraciones por API" } }
+    ]
+  }
+}
+</script>
+
+<link rel="preload" href="uploads/fonts/plusjakartasans-700-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="uploads/fonts/plusjakartasans-400-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+
 <style>
+/* Fuentes auto-hospedadas: no se pide nada a fonts.googleapis.com ni a fonts.gstatic.com.
+   Instrument Serif y Jersey 10 Charted están recortadas a los glifos de "Diseñar" y
+   "Construir." — si cambia ese texto, hay que regenerarlas (ver README). */
+@font-face{font-family:'Plus Jakarta Sans';font-style:italic;font-weight:400;font-display:swap;src:url(uploads/fonts/plusjakartasans-400-italic-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:italic;font-weight:400;font-display:swap;src:url(uploads/fonts/plusjakartasans-400-italic-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';font-style:italic;font-weight:700;font-display:swap;src:url(uploads/fonts/plusjakartasans-700-italic-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:italic;font-weight:700;font-display:swap;src:url(uploads/fonts/plusjakartasans-700-italic-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:300;font-display:swap;src:url(uploads/fonts/plusjakartasans-300-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:300;font-display:swap;src:url(uploads/fonts/plusjakartasans-300-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(uploads/fonts/plusjakartasans-400-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(uploads/fonts/plusjakartasans-400-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:500;font-display:swap;src:url(uploads/fonts/plusjakartasans-500-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:500;font-display:swap;src:url(uploads/fonts/plusjakartasans-500-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url(uploads/fonts/plusjakartasans-600-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url(uploads/fonts/plusjakartasans-600-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url(uploads/fonts/plusjakartasans-700-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url(uploads/fonts/plusjakartasans-700-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:800;font-display:swap;src:url(uploads/fonts/plusjakartasans-800-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:800;font-display:swap;src:url(uploads/fonts/plusjakartasans-800-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(uploads/fonts/instrumentserif-400-normal-subset.woff2) format('woff2')}
+@font-face{font-family:'Jersey 10 Charted';font-style:normal;font-weight:400;font-display:swap;src:url(uploads/fonts/jersey10charted-400-normal-subset.woff2) format('woff2')}
+
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:#FFFFFF;color:#0A0A0A;font-family:"Plus Jakarta Sans","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -25,19 +98,38 @@ a{color:inherit;text-decoration:none}
 a:hover{color:#3157FF}
 [data-ink]{transition:color .12s linear,background-color .12s linear,border-top-color .12s linear}
 @keyframes neaCaret{0%,48%{opacity:1}49%,100%{opacity:0}}
+
+/* Estimador */
+.nea-opt{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.04);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s}
+.nea-opt:hover{border-color:rgba(199,255,74,.6)}
+.nea-opt:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
+.nea-opt.is-on{border-color:#C7FF4A;background:rgba(199,255,74,.10)}
+.nea-opt .nea-dot{flex:none;width:18px;height:18px;margin-top:2px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;transition:border-color .18s}
+.nea-opt.is-on .nea-dot{border-color:#C7FF4A}
+.nea-opt .nea-fill{width:9px;height:9px;border-radius:999px;background:#C7FF4A;opacity:0;transition:opacity .18s}
+.nea-opt.is-on .nea-fill{opacity:1}
+.nea-opt .nea-optname{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.nea-opt .nea-optdesc{font-size:13.5px;line-height:1.45;font-weight:400;color:rgba(255,255,255,.62);text-wrap:pretty}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
 </style>
-</helmet>
+
+<script src="./app.js" defer></script>
+</head>
+<body>
 
 <div style="position:relative">
 
   <div id="nea-nav" style="position:fixed;left:0;right:0;top:0;z-index:90;display:flex;justify-content:center;pointer-events:none;opacity:0">
     <div id="nea-navbg" style="pointer-events:auto;width:100%;height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 32px;background:rgba(10,10,10,0);border-radius:0;overflow:hidden;color:#FFFFFF">
       <a href="#top" id="nea-navlogo" style="display:flex;align-items:center;flex:none">
-        <img id="nea-navlogoimg" src="uploads/Nea_logo_blanco.png" alt="NEA Sistemas" style="height:26px;width:auto;display:block">
+        <img id="nea-navlogoimg" src="uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="120" height="26" style="height:26px;width:auto;display:block">
       </a>
-      <div id="nea-navlinks" style="display:flex;align-items:center;gap:44px;font-size:15px;font-weight:500;white-space:nowrap">
+      <nav id="nea-navlinks" aria-label="Principal" style="display:flex;align-items:center;gap:44px;font-size:15px;font-weight:500;white-space:nowrap">
         <a href="#soluciones">Soluciones</a><a href="#servicios">Servicios</a><a href="#precios">Precios</a><a href="#nosotros">Nosotros</a>
-      </div>
+      </nav>
       <div style="display:flex;align-items:center;gap:20px;flex:none">
         <a href="#contacto" style="display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;white-space:nowrap;color:#FFFFFF">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.5"></circle><circle cx="12" cy="10" r="2.7" stroke="currentColor" stroke-width="1.5"></circle><path d="M6.7 19c1-2.6 2.9-3.9 5.3-3.9s4.3 1.3 5.3 3.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
@@ -62,7 +154,7 @@ a:hover{color:#3157FF}
       </div>
 
       <div id="nea-video" style="position:absolute;left:8px;right:8px;top:570px;bottom:0;border-radius:24px 24px 0 0;overflow:hidden;background:#1b0406;z-index:20">
-        <video id="nea-scene" src="uploads/hero-ar.mp4" autoplay muted loop playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></video>
+        <video id="nea-scene" src="uploads/hero-ar.mp4" poster="uploads/hero-poster.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></video>
         <div style="position:absolute;left:0;right:0;top:0;height:210px;background:linear-gradient(rgba(10,10,10,.68),rgba(10,10,10,.34) 55%,rgba(10,10,10,0));pointer-events:none"></div>
         <div style="position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(rgba(10,10,10,0),rgba(10,10,10,.62));pointer-events:none"></div>
       </div>
@@ -81,13 +173,13 @@ a:hover{color:#3157FF}
           </div>
         </div>
         <a href="#top" id="nea-logo" style="position:absolute;left:clamp(20px,2.9vw,56px);top:178px;display:flex;align-items:center">
-          <img src="uploads/Nea_logo_blanco.png" alt="NEA Sistemas" style="height:clamp(46px,5.2vw,72px);width:auto;display:block">
+          <img src="uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="330" height="72" style="height:clamp(46px,5.2vw,72px);width:auto;display:block">
         </a>
       </div>
 
       <div id="nea-hero" style="position:absolute;left:clamp(20px,2.5vw,48px);right:clamp(20px,2.5vw,48px);top:353px;z-index:40;will-change:transform">
         <h1 id="nea-h1" style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.115;font-weight:700;letter-spacing:-.025em;color:#FFFFFF;text-wrap:pretty">
-          Más que una página web.<br>El sistema para que tu negocio <span id="nea-typed" style="font-weight:400;letter-spacing:-.02em">crezca todos los días</span><span id="nea-caret" style="display:inline-block;width:3px;height:.82em;margin-left:.1em;background:#FFFFFF;vertical-align:-.06em;animation:neaCaret 1.05s step-end infinite"></span>
+          Más que una página web.<br>El sistema para que tu negocio <span id="nea-typed" style="font-weight:400;letter-spacing:-.02em">crezca todos los días</span><span id="nea-caret" aria-hidden="true" style="display:inline-block;width:3px;height:.82em;margin-left:.1em;background:#FFFFFF;vertical-align:-.06em;animation:neaCaret 1.05s step-end infinite"></span>
         </h1>
         <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:clamp(20px,2.6vh,28px)">
           <a href="#mockup" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
@@ -105,19 +197,19 @@ a:hover{color:#3157FF}
 
 
       <div>
-        <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#F4E9D8 url('uploads/feature-web-a-medida.png') center/cover no-repeat"></div>
+        <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#F4E9D8 url('uploads/feature-web-a-medida.webp') center/cover no-repeat"></div>
         <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:#0A0A0A">Una web hecha a medida</div>
         <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:#8f8f8f">#&nbsp;WEB</div>
       </div>
 
       <div>
-        <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#E7E8F7 url('uploads/feature-tienda-online.png') center/cover no-repeat"></div>
+        <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#E7E8F7 url('uploads/feature-tienda-online.webp') center/cover no-repeat"></div>
         <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:#0A0A0A">Una tienda online con todo integrado</div>
         <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:#8f8f8f">#&nbsp;E-COMMERCE</div>
       </div>
 
       <div>
-        <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#F7F1E6 url('uploads/feature-google-seo.png') center/cover no-repeat"></div>
+        <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#F7F1E6 url('uploads/feature-google-seo.webp') center/cover no-repeat"></div>
         <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:#0A0A0A">Aparecer primero en Google</div>
         <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:#8f8f8f">#&nbsp;SEO</div>
       </div>
@@ -155,12 +247,12 @@ a:hover{color:#3157FF}
         <div data-nea-panel="3" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;will-change:transform,opacity">
           <div data-nea-step="3" style="position:absolute;left:0;top:50%;transform:translateY(-50%);width:min(460px,42vw);z-index:2">
             <div data-ink="muted" style="font-size:12px;font-weight:600;letter-spacing:.16em;color:#8f8f8f;margin-bottom:16px">03</div>
-            <p style="margin:0 0 26px;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;color:#0A0A0A;text-wrap:pretty" data-ink="strong">Construimos la web completa y los sistemas que hayas elegido del informe. Se integran con las herramientas que ya usás, así que nadie tiene que aprender a trabajar de nuevo. De la parte complicada nos ocupamos nosotros: vos solo lo usás.</p><a href="#mockup" style="height:52px;display:inline-flex;align-items:center;gap:12px;padding:0 26px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis <span style="font-size:14px;opacity:.6">→</span></a>
+            <p style="margin:0 0 26px;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;color:#0A0A0A;text-wrap:pretty" data-ink="strong">Construimos la web completa y los sistemas que hayas elegido del informe. Se integran con las herramientas que ya usás, así que nadie tiene que aprender a trabajar de nuevo. De la parte complicada nos ocupamos nosotros: vos solo lo usás.</p><a href="#mockup" style="height:52px;display:inline-flex;align-items:center;gap:12px;padding:0 26px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis <span aria-hidden="true" style="font-size:14px;opacity:.6">→</span></a>
           </div>
           <div data-nea-word="3" style="text-align:right;font-family:'Jersey 10 Charted',ui-monospace,monospace;font-weight:400;font-size:clamp(64px,15.6vw,300px);line-height:.94;letter-spacing:-.015em;color:#b4b4b4;white-space:nowrap" data-ink="word">Construir.</div>
         </div>
         </div>
-        <div id="nea-procdots" style="display:flex;gap:8px;align-items:center;margin-top:clamp(16px,1.6vw,28px)">
+        <div id="nea-procdots" aria-hidden="true" style="display:flex;gap:8px;align-items:center;margin-top:clamp(16px,1.6vw,28px)">
           <span data-nea-dot="1" style="width:34px;height:3px;border-radius:2px;background:currentColor;opacity:1;transition:opacity .25s"></span>
           <span data-nea-dot="2" style="width:34px;height:3px;border-radius:2px;background:currentColor;opacity:.22;transition:opacity .25s"></span>
           <span data-nea-dot="3" style="width:34px;height:3px;border-radius:2px;background:currentColor;opacity:.22;transition:opacity .25s"></span>
@@ -201,28 +293,58 @@ a:hover{color:#3157FF}
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:20px;align-items:start">
       <div>
-        <div style="font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.55);margin-bottom:14px">¿QUÉ NECESITÁS?</div>
-        <div style="display:grid;gap:12px">
-          <sc-for list="{{ options }}" as="opt" hint-placeholder-count="5">
-            <button type="button" data-opt="{{ opt.id }}" onClick="{{ select }}" style="display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.04);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s" style-hover="border-color:rgba(199,255,74,.6)">
-              <span data-dot="1" style="flex:none;width:18px;height:18px;margin-top:2px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center">
-                <span data-fill="1" style="width:9px;height:9px;border-radius:999px;background:#C7FF4A;opacity:0"></span>
-              </span>
-              <span style="display:flex;flex-direction:column;gap:5px">
-                <span style="font-size:16px;font-weight:600;letter-spacing:-.01em">{{ opt.name }}</span>
-                <span data-desc="1" style="font-size:13.5px;line-height:1.45;font-weight:400;color:rgba(255,255,255,.62);text-wrap:pretty">{{ opt.desc }}</span>
-              </span>
-            </button>
-          </sc-for>
+        <div id="nea-optlabel" style="font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.55);margin-bottom:14px">¿QUÉ NECESITÁS?</div>
+        <div role="radiogroup" aria-labelledby="nea-optlabel" style="display:grid;gap:12px">
+
+          <button type="button" role="radio" aria-checked="false" data-opt="landing" class="nea-opt">
+            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
+            <span style="display:flex;flex-direction:column;gap:5px">
+              <span class="nea-optname">Landing page</span>
+              <span class="nea-optdesc">Sitio web de una sola página</span>
+            </span>
+          </button>
+
+          <button type="button" role="radio" aria-checked="false" data-opt="institucional" class="nea-opt">
+            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
+            <span style="display:flex;flex-direction:column;gap:5px">
+              <span class="nea-optname">Sitio institucional</span>
+              <span class="nea-optdesc">Sitio web de múltiples páginas</span>
+            </span>
+          </button>
+
+          <button type="button" role="radio" aria-checked="false" data-opt="catalogo" class="nea-opt">
+            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
+            <span style="display:flex;flex-direction:column;gap:5px">
+              <span class="nea-optname">Catálogo online</span>
+              <span class="nea-optdesc">Para mostrar productos, precios y stock actualizables</span>
+            </span>
+          </button>
+
+          <button type="button" role="radio" aria-checked="false" data-opt="tienda" class="nea-opt">
+            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
+            <span style="display:flex;flex-direction:column;gap:5px">
+              <span class="nea-optname">Tienda online</span>
+              <span class="nea-optdesc">Catálogo online + carrito, pagos y pedidos por WhatsApp</span>
+            </span>
+          </button>
+
+          <button type="button" role="radio" aria-checked="false" data-opt="sistemas" class="nea-opt">
+            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
+            <span style="display:flex;flex-direction:column;gap:5px">
+              <span class="nea-optname">Sistemas a medida</span>
+              <span class="nea-optdesc">CRMs, sistemas de gestión, automatizaciones, paneles de control, plataformas internas e integraciones mediante APIs.</span>
+            </span>
+          </button>
+
         </div>
       </div>
 
       <div style="border-radius:16px;padding:clamp(24px,2.2vw,34px);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);position:sticky;top:104px">
         <div style="font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.6)">TU ESTIMACIÓN</div>
-        <div style="margin-top:18px;font-size:clamp(28px,2.9vw,44px);line-height:1.1;font-weight:700;letter-spacing:-.025em;color:#FFFFFF">{{ priceLabel }}</div>
-        <div style="margin-top:12px;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.72);text-wrap:pretty">{{ priceNote }}</div>
+        <div id="nea-pricelabel" aria-live="polite" style="margin-top:18px;font-size:clamp(28px,2.9vw,44px);line-height:1.1;font-weight:700;letter-spacing:-.025em;color:#FFFFFF">Elegí una opción</div>
+        <div id="nea-pricenote" style="margin-top:12px;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.72);text-wrap:pretty">Elegí una opción para ver la estimación.</div>
         <div style="margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);font-size:13px;line-height:1.5;color:rgba(255,255,255,.5)">Estimación orientativa, sujeta a revisión. El presupuesto final se define en la reunión inicial.</div>
-        <a href="#mockup" style="margin-top:24px;height:52px;display:inline-flex;align-items:center;gap:10px;padding:0 26px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Enviar por WhatsApp <span style="font-size:14px;opacity:.6">↗</span></a>
+        <a href="#mockup" style="margin-top:24px;height:52px;display:inline-flex;align-items:center;gap:10px;padding:0 26px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Enviar por WhatsApp <span aria-hidden="true" style="font-size:14px;opacity:.6">↗</span></a>
       </div>
     </div>
   </section>
@@ -231,11 +353,11 @@ a:hover{color:#3157FF}
     <div data-ink="rule" style="border-top:1px solid rgba(10,10,10,.16);padding-top:13px;margin-bottom:clamp(26px,2.6vw,50px);font-size:11px;font-weight:600;letter-spacing:.2em;color:#0A0A0A">CONTACTO</div>
     <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:32px">
       <a href="#top" style="display:flex;align-items:center">
-        <img id="nea-footlogo" src="uploads/Nea_logo_blanco.png" alt="NEA Sistemas" style="height:clamp(38px,3vw,52px);width:auto;display:block">
+        <img id="nea-footlogo" src="uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="240" height="52" style="height:clamp(38px,3vw,52px);width:auto;display:block">
       </a>
-      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,2.3vw,44px);font-size:15px;font-weight:500">
+      <nav aria-label="Pie" style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,2.3vw,44px);font-size:15px;font-weight:500">
         <a href="#soluciones">Soluciones</a><a href="#servicios">Servicios</a><a href="#precios">Precios</a><a href="#nosotros">Nosotros</a>
-      </div>
+      </nav>
       <a href="#mockup" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
     </div>
     <div style="margin-top:clamp(36px,3.4vw,64px);padding-top:22px;border-top:1px solid rgba(10,10,10,.12);display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;font-size:13.5px;color:#747474" data-ink="line">
@@ -246,300 +368,5 @@ a:hover{color:#3157FF}
 
 </div>
 
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;typedWords&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;crezca todos los días|venda todos los días|no dependa de vos|genere consultas solo&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;autoType&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;scrollPace&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:3,&quot;min&quot;:2,&quot;max&quot;:5,&quot;step&quot;:0.25,&quot;unit&quot;:&quot;×vh&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Scroll&quot;}}">
-class Component extends DCLogic {
-  state = { pick: null };
-  componentDidMount() {
-    const ids = ['runway','stage','frame','video','scene','hero','s2bg','s2text','h1','caret','cta2','nav','navbg','navlinks','navcta','navlogo','logo','typed','navlinksA'];
-    this.el = {};
-    ids.forEach(k => { this.el[k] = document.getElementById('nea-' + k); });
-    this.pace = Math.max(1.8, Math.min(5, Number(this.props.scrollPace ?? 3)));
-    if (this.el.runway) this.el.runway.style.height = (this.pace * 100) + 'vh';
-    this._tick = () => { this._q = false; this.update(); };
-    this.onScroll = () => { if (!this._q) { this._q = true; requestAnimationFrame(this._tick); } };
-    addEventListener('scroll', this.onScroll, { passive: true });
-    addEventListener('resize', this.onScroll, { passive: true });
-    this.update();
-    this.playVideo();
-    if (this.props.autoType !== false) this.startType();
-  }
-
-  componentWillUnmount() {
-    removeEventListener('scroll', this.onScroll);
-    removeEventListener('resize', this.onScroll);
-    if (this._kick) {
-      ['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach(ev => removeEventListener(ev, this._kick));
-      document.removeEventListener('visibilitychange', this._kick);
-    }
-    clearTimeout(this._tt);
-  }
-
-  update() {
-    const e = this.el;
-    if (!e || !e.runway || !e.video) return;
-    const vw = innerWidth, vh = innerHeight;
-    const cl = (n, a, b) => Math.max(a, Math.min(b, n));
-    const lp = (a, b, t) => a + (b - a) * t;
-    const ez = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-    const total = Math.max(1, e.runway.offsetHeight - vh);
-    const p = cl(-e.runway.getBoundingClientRect().top / total, 0, 1);
-    const A = .34, H = .5;
-    const ea = ez(cl(p / A, 0, 1));
-    const ec = ez(cl((p - H) / (1 - H), 0, 1));
-    const raw_c = cl((p - H) / (1 - H), 0, 1);
-
-    const narrow = vw < 1000;
-    // hero copy: from inside the white bar down to the bottom-left corner
-    const hh = e.hero.offsetHeight;
-    if (this._vw !== vw || this._vh !== vh) { this._vw = vw; this._vh = vh; this._hhMax = 0; }
-    this._hhMax = Math.max(this._hhMax || 0, hh);
-    const logoH = e.logo ? e.logo.offsetHeight : 66;
-    // the bar always grows to fit nav + logo + copy, so the hero never spills onto the video
-    const frameH = Math.round(Math.max(88 + logoH + 28 + this._hhMax + 21, Math.min(570, vh * .62)));
-    e.frame.style.height = frameH + 'px';
-    e.frame.style.transform = 'translate3d(0,' + (-frameH * ea) + 'px,0)';
-
-    const top0 = Math.max(88 + logoH + 28, frameH - this._hhMax - 21);
-    e.hero.style.top = top0 + 'px';
-    if (e.logo) e.logo.style.top = Math.max(96, Math.min(frameH - 392, top0 - logoH - 28)) + 'px';
-    const pad = vw >= 1920 ? 54 : Math.max(20, Math.round(vw * .028));
-    e.hero.style.transform = 'translate3d(0,' + lp(0, (vh - pad - hh) - top0, ea) + 'px,0)';
-    e.hero.style.opacity = String(1 - cl(raw_c / .34, 0, 1));
-    // hero copy flips to white once it leaves the white bar and sits over the video
-    const inv = cl((ea - .45) / .3, 0, 1);
-    const mixc = t => 'rgb(' + Math.round(lp(10, 255, t)) + ',' + Math.round(lp(10, 255, t)) + ',' + Math.round(lp(10, 255, t)) + ')';
-    if (e.h1) e.h1.style.color = '#FFFFFF';
-    if (e.caret) e.caret.style.background = '#FFFFFF';
-    if (e.cta2) { e.cta2.style.color = '#FFFFFF'; e.cta2.style.borderColor = 'rgba(255,255,255,.45)'; }
-
-    // video: framed strip -> full bleed -> floating card
-    const k0 = { l: 8, r: 8, t: frameH, b: 0, rad: 24 };
-    const k1 = { l: 0, r: 0, t: 0, b: 0, rad: 0 };
-    const k2 = narrow
-      ? { l: vw * .1, r: vw * .1, t: vh * .58, b: vh * .1, rad: 12 }
-      : { l: vw * .577, r: vw * .0225, t: vh * .232, b: vh * .285, rad: 13 };
-    const mix = (a, b, t, key) => lp(a[key], b[key], t);
-    const st = {};
-    ['l', 'r', 't', 'b', 'rad'].forEach(k => {
-      st[k] = lp(mix(k0, k1, ea, k), k2[k], ec);
-    });
-    const v = e.video.style;
-    v.left = st.l + 'px'; v.right = st.r + 'px'; v.top = st.t + 'px'; v.bottom = st.b + 'px';
-    v.borderRadius = st.rad + 'px ' + st.rad + 'px ' + lp(0, st.rad, ec) + 'px ' + lp(0, st.rad, ec) + 'px';
-    v.boxShadow = ec > .02 ? '0 ' + (30 * ec) + 'px ' + (70 * ec) + 'px rgba(0,0,0,' + (.45 * ec) + ')' : 'none';
-
-
-    // section two
-    e.s2bg.style.opacity = String(cl(raw_c / .5, 0, 1));
-    const t2 = cl((raw_c - .16) / .58, 0, 1);
-    e.s2text.style.opacity = String(ez(t2));
-    e.s2text.style.transform = 'translate3d(' + lp(-52, 0, ez(t2)) + 'px,0,0)';
-    e.s2text.style.maxWidth = narrow ? '100%' : 'min(760px,62vw)';
-    if (narrow) { e.s2text.style.justifyContent = 'flex-start'; e.s2text.style.paddingTop = (vh * .16) + 'px'; }
-
-    // process section: pinned scroll-jack, one step revealed at a time
-    if (!this._steps) {
-      this._steps = Array.from(document.querySelectorAll('[data-nea-step]'));
-      this._words = Array.from(document.querySelectorAll('[data-nea-word]'));
-      this._panels = Array.from(document.querySelectorAll('[data-nea-panel]'));
-      this._dots = Array.from(document.querySelectorAll('[data-nea-dot]'));
-      this._rig = document.getElementById('nea-procrig');
-    }
-    const stack = vw < 1120;
-    this._steps.forEach(s2 => {
-      s2.style.position = stack ? 'static' : 'absolute';
-      s2.style.transform = stack ? 'none' : 'translateY(-50%)';
-      s2.style.width = stack ? 'auto' : 'min(460px,42vw)';
-      s2.style.maxWidth = stack ? '620px' : 'none';
-      s2.style.order = stack ? '2' : '0';
-      s2.style.marginTop = stack ? '18px' : '0';
-    });
-    this._words.forEach(w => { w.style.textAlign = stack ? 'left' : (w.dataset.neaWord === '2' ? 'left' : 'right'); w.style.fontSize = stack ? 'clamp(52px,13vw,120px)' : 'clamp(64px,15.6vw,300px)'; });
-    if (this._rig) {
-      const rr = this._rig.getBoundingClientRect();
-      const pr = cl(-rr.top / Math.max(1, rr.height - vh), 0, 1);
-      this._procPr = pr;
-      this._procOn = rr.top < vh && rr.bottom > 0;
-      const n = this._panels.length, seg = pr * n;
-      let active = Math.min(n - 1, Math.floor(seg));
-      this._panels.forEach((pn, i) => {
-        const d = seg - i + .25;
-        const inT = cl(d / .25, 0, 1), outT = i === n - 1 ? 0 : cl((d - 1) / .25, 0, 1);
-        const o = inT * (1 - outT);
-        const y = lp(56, 0, ez(inT)) - outT * 46;
-        pn.style.opacity = String(o);
-        pn.style.transform = 'translate3d(0,' + y + 'px,0)';
-        pn.style.pointerEvents = o > .6 ? 'auto' : 'none';
-      });
-      this._dots.forEach((dt, i) => { dt.style.opacity = i === active ? '1' : '.22'; });
-    }
-
-    this.paintBackdrop(vh, cl, lp);
-
-    // nav: full-width bar -> floating pill
-    const nav = e.nav.style, bg = e.navbg.style;
-    nav.opacity = String(cl((p / A - .3) / .7, 0, 1));
-    nav.pointerEvents = p > A * .5 ? 'auto' : 'none';
-    bg.width = vw + 'px';
-    bg.height = '88px';
-    bg.borderRadius = '0px';
-    bg.padding = '0 ' + (narrow ? 20 : 32) + 'px';
-    bg.marginTop = '0px';
-    bg.backdropFilter = 'none';
-    // nav foreground follows how dark the backdrop actually is (dark video -> white section -> dark pill)
-    // while the video still spans the nav band the backdrop is dark, otherwise it's the white section
-    // over the video the bar floats; once it detaches, it carries the page colour so content can't collide with it
-    // "covered" must mean the video actually spans the whole nav band, not just that its top edge is high
-    const covered = st.t < 4 && st.l < 4 && st.r < 4;
-    bg.background = covered ? 'transparent' : (this._bgColor || '#FFFFFF');
-    const fg = covered || (this._bgLum !== undefined && this._bgLum < .21) ? 255 : 10;
-    e.navbg.style.color = 'rgb(' + fg + ',' + fg + ',' + fg + ')';
-    const navLogoImg = document.getElementById('nea-navlogoimg');
-    if (navLogoImg) { const src = 'uploads/Nea_logo_' + (fg > 128 ? 'blanco' : 'negro') + '.png'; if (!navLogoImg.src.endsWith(src)) navLogoImg.src = src; }
-    e.navcta.style.background = '#C7FF4A';
-    e.navcta.style.color = '#0A0A0A';
-    e.navcta.style.padding = '0 24px';
-    e.navlinks.style.display = narrow ? 'none' : 'flex';
-    e.navlinks.style.gap = '44px';
-    if (e.navlinksA) e.navlinksA.style.display = vw < 700 ? 'none' : 'flex';
-  }
-
-  playVideo() {
-    // the muted attribute alone doesn't survive the render pass, so autoplay gets blocked
-    const v = this.el && this.el.scene;
-    if (!v || !v.play) return;
-    v.muted = true; v.defaultMuted = true; v.playsInline = true; v.loop = true;
-    const go = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
-    go();
-    this._kick = () => { if (v.paused) go(); };
-    ['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach(ev => addEventListener(ev, this._kick, { passive: true }));
-    document.addEventListener('visibilitychange', this._kick);
-  }
-
-  paintBackdrop(vh, cl, lp) {
-    if (!this._ink) {
-      this._ink = Array.from(document.querySelectorAll('[data-ink]'));
-      this._proceso = document.getElementById('proceso');
-      this._nosotros = document.getElementById('nosotros');
-      this._targets = {
-        strong: [255, 255, 255], muted: [221, 227, 255], word: [143, 166, 255], line: [255, 255, 255], chip: [255, 255, 255], rule: [255, 255, 255]
-      };
-      this._bases = this._ink.map(el => {
-        const c = getComputedStyle(el).color.match(/[\d.]+/g).map(Number);
-        return [c[0], c[1], c[2]];
-      });
-    }
-    if (!this._proceso || !this._nosotros) return;
-    const rgb = (a, b, t) => 'rgb(' + Math.round(lp(a[0], b[0], t)) + ',' + Math.round(lp(a[1], b[1], t)) + ',' + Math.round(lp(a[2], b[2], t)) + ')';
-    const WHITE = [255, 255, 255], BLUE = [49, 87, 255], BLACK = [10, 10, 10];
-    const enter = (el, span, at) => cl(((vh * (at || 1)) - el.getBoundingClientRect().top) / (vh * span), 0, 1);
-    // the services section stays black-on-white: the blue only starts once "Proceso" is nearly at the top
-    const p1 = enter(this._proceso, .3, .34);
-    const p2 = enter(this._nosotros, .5);
-    // backdrop darkens early; ink flips only once it is already dark, so the two never meet mid-grey
-    // the backdrop reaches full blue exactly when the ink flips, so scroll never parks on grey-on-grey
-    // white -> pale blue (dark ink still reads) -> full blue, with the ink flip inside the short last leg
-    const PALE = [221, 227, 255];
-    const q = cl(p1 / .34, 0, 1);
-    const leg = .88;
-    const deep = cl((q - leg) / (1 - leg), 0, 1);
-    const YELLOW = [199, 255, 74];
-    const mix = (a, b, t) => [lp(a[0], b[0], t), lp(a[1], b[1], t), lp(a[2], b[2], t)];
-    let arr = deep > 0 ? mix(PALE, BLUE, deep) : mix(WHITE, PALE, q / leg);
-    const seg = (this._procPr || 0) * 3;
-    if (this._procOn && seg > .85) arr = mix(mix(BLUE, YELLOW, cl((seg - .85) / .3, 0, 1)), BLACK, cl((seg - 1.85) / .3, 0, 1));
-    if (p2 > 0) arr = BLACK.slice();
-    const bg = 'rgb(' + arr.map(Math.round).join(',') + ')';
-    document.body.style.backgroundColor = bg;
-    // flip from the backdrop's actual luminance, so whichever ink wins is always the one shown
-    const lin = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); };
-    const c = bg.match(/[\d.]+/g).map(Number);
-    const lum = .2126 * lin(c[0]) + .7152 * lin(c[1]) + .0722 * lin(c[2]);
-    this._bgLum = lum;
-    this._bgColor = bg;
-    const t = lum < .21 ? 1 : 0;
-    this._ink.forEach((el, i) => {
-      const kind = el.dataset.ink;
-      const tgt = this._targets[kind] || WHITE;
-      if (kind === 'chip') {
-        el.style.background = rgb(BLACK, WHITE, t);
-        el.style.color = rgb(WHITE, BLACK, t);
-        return;
-      }
-      if (kind === 'word') { el.style.color = rgb(arr.map(Math.round), t ? WHITE : BLACK, .32); }
-      else el.style.color = rgb(this._bases[i], tgt, t);
-      if (kind === 'line' || kind === 'rule') {
-        el.style.borderTopColor = t ? 'rgba(255,255,255,' + (kind === 'rule' ? .28 : .18) + ')' : 'rgba(10,10,10,' + (kind === 'rule' ? .16 : .12) + ')';
-      }
-    });
-  }
-
-  startType() {
-    const src = String(this.props.typedWords ?? 'crezca todos los días|venda todos los días|no dependa de vos|genere consultas solo');
-    const words = src.split('|').map(s => s.trim()).filter(Boolean);
-    if (!words.length || !this.el.typed) return;
-    let i = 0, j = words[0].length, del = true;
-    const step = () => {
-      const w = words[i];
-      if (!del) {
-        j++;
-        if (j >= w.length) {
-          this.el.typed.textContent = w;
-          if (this.onScroll) this.onScroll();
-          del = true;
-          this._tt = setTimeout(step, 2300);
-          return;
-        }
-      } else {
-        j--;
-        if (j <= 0) { del = false; i = (i + 1) % words.length; j = 0; }
-      }
-      this.el.typed.textContent = words[i].slice(0, Math.max(0, j));
-      if (this.onScroll) this.onScroll();
-      this._tt = setTimeout(step, del ? 34 : 72);
-    };
-    this._tt = setTimeout(step, 2400);
-  }
-
-  renderVals() {
-    const options = [
-      { id: 'landing', name: 'Landing page', desc: 'Sitio web de una sola página', from: 450, to: 750 },
-      { id: 'institucional', name: 'Sitio institucional', desc: 'Sitio web de múltiples páginas', from: 850, to: 1400 },
-      { id: 'catalogo', name: 'Catálogo online', desc: 'Para mostrar productos, precios y stock actualizables', from: 1200, to: 2000 },
-      { id: 'tienda', name: 'Tienda online', desc: 'Catálogo online + carrito, pagos y pedidos por WhatsApp', from: 1900, to: 3400 },
-      { id: 'sistemas', name: 'Sistemas a medida', desc: 'CRMs, sistemas de gestión, automatizaciones, paneles de control, plataformas internas e integraciones mediante APIs.', from: 3500, to: 0 }
-    ];
-    const picked = options.find(o => o.id === this.state.pick);
-    const fmt = n => 'USD ' + n.toLocaleString('es-AR');
-    return {
-      options,
-      select: e => {
-        const id = e.currentTarget.getAttribute('data-opt');
-        this.setState({ pick: id });
-      },
-      priceLabel: picked ? (picked.to ? fmt(picked.from) + ' – ' + fmt(picked.to) : 'Desde ' + fmt(picked.from)) : 'Elegí una opción',
-      priceNote: picked
-        ? (picked.to ? 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' + (picked.from < 900 ? '2 a 3' : picked.from < 2000 ? '3 a 5' : '5 a 8') + ' semanas.' : 'Se cotiza por alcance: relevamiento, arquitectura e integraciones. Arrancamos con un informe sin costo.')
-        : 'Elegí una opción para ver la estimación.'
-    };
-  }
-
-  componentDidUpdate() { this.syncPick(); }
-
-  syncPick() {
-    const nodes = document.querySelectorAll('[data-opt]');
-    nodes.forEach(n => {
-      const on = n.getAttribute('data-opt') === this.state.pick;
-      n.style.borderColor = on ? '#C7FF4A' : 'rgba(255,255,255,.22)';
-      n.style.background = on ? 'rgba(199,255,74,.10)' : 'rgba(255,255,255,.04)';
-      const dot = n.querySelector('[data-dot]'), fill = n.querySelector('[data-fill]');
-      if (dot) dot.style.borderColor = on ? '#C7FF4A' : 'rgba(255,255,255,.45)';
-      if (fill) fill.style.opacity = on ? '1' : '0';
-    });
-  }
-}
-</script>
 </body>
 </html>

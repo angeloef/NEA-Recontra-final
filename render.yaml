@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: nea-sistemas-landing
+    runtime: static
+    staticPublishPath: ./site
+    pullRequestPreviewsEnabled: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

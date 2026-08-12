@@ -402,91 +402,297 @@
     setTimeout(step, 2400);
   }
 
-  /* ------------------------------------------------------------- estimador */
+  /* ------------------------------------------------------------- estimador
+     Estado 0: nada elegido, dos columnas. Al tocar una card reducida nace la
+     columna del medio con la card expandida. Cada panel guarda el estado de
+     sus propios extras en su DOM, asi volver a un producto recupera lo que
+     ya habias armado: la memoria por producto sale gratis.
 
-  // PRECIOS PROVISORIOS — pendientes de definir con el cliente.
-  // Los nombres y descripciones viven en el HTML (crawleables). Acá solo los números.
-  const PRICING = {
-    landing:       { from: 450,  to: 750 },
-    institucional: { from: 850,  to: 1400 },
-    catalogo:      { from: 1200, to: 2000 },
-    tienda:        { from: 1900, to: 3400 },
-    sistemas:      { from: 3500, to: 0 }   // to: 0 => se muestra como "Desde"
-  };
+     El morph usa la View Transitions API. Donde no existe (o con
+     prefers-reduced-motion) el panel simplemente aparece. */
 
-  // Extras de precio fijo. La etiqueta "+280" del HTML tiene que coincidir con esto.
-  const ADDONS = {
-    identidad: 280,
-    textos:    180,
-    recorrido: 350,
-    cotizador: 320,
-    whatsapp:  90,
-    seo:       220,
-    idioma:    260
-  };
+  // Numero de WhatsApp en formato internacional, sin + ni espacios.
+  // TODO: completar con el numero real antes de publicar.
+  const WA_NUMERO = '5493764000000';
 
-  // Obligatorio: no se elige, se informa siempre.
-  const MANTENIMIENTO_MENSUAL = 35;
+  const MORPH = 'neacard';
+
+  // El mantenimiento es un porcentaje del proyecto, no un precio por producto.
+  // Por eso los extras no necesitan cargo mensual propio: al subir el total,
+  // suben el plan solos.
+  const MANTENIMIENTO_MENSUAL = 0.05;   // 5% del proyecto, por mes
+  const MESES_POR_AÑO = 12;             // se factura una vez al año
 
   function initEstimator() {
-    const optButtons = Array.from(document.querySelectorAll('[data-opt]'));
-    const addButtons = Array.from(document.querySelectorAll('[data-add]'));
-    const labelNode = document.getElementById('nea-pricelabel');
-    const noteNode = document.getElementById('nea-pricenote');
-    const mantNode = document.getElementById('nea-mantenimiento');
-    if (!optButtons.length || !labelNode || !noteNode) return;
+    const root = document.getElementById('nea-est');
+    if (!root) return;
 
-    const fmt = n => 'USD ' + n.toLocaleString('es-AR');
-    const weeks = from => (from < 900 ? '2 a 3' : from < 2000 ? '3 a 5' : '5 a 8');
+    const picks = Array.from(root.querySelectorAll('[data-pick]'));
+    const panels = Array.from(root.querySelectorAll('[data-panel]'));
+    const totalNode = document.getElementById('nea-total');
+    const totalLabel = document.getElementById('nea-totallabel');
+    const noteNode = document.getElementById('nea-note');
+    const detailNode = document.getElementById('nea-detail');
+    const mesNode = document.getElementById('nea-mes');
+    const mesLabel = document.getElementById('nea-meslabel');
+    const ahorroNode = document.getElementById('nea-ahorro');
+    const mesBlock = document.getElementById('nea-mesblock');
+    const planOpts = Array.from(document.querySelectorAll('[data-plan]'));
+    const barLabel = document.getElementById('nea-barlabel');
+    const barMes = document.getElementById('nea-barmes');
+    const cta = document.getElementById('nea-cta');
+    const dlg = document.getElementById('nea-dlg');
+    if (!picks.length || !totalNode) return;
 
-    let pick = null;
-    const chosen = new Set();
+    const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
+    const weeks = base => (base < 900 ? '2 a 3' : base < 2000 ? '3 a 5' : '5 a 8');
+    const quiet = matchMedia('(prefers-reduced-motion: reduce)');
 
-    if (mantNode) mantNode.textContent = fmt(MANTENIMIENTO_MENSUAL) + ' / mes';
+    let open = null;   // id del producto abierto, o null en el estado 0
 
-    const render = () => {
-      const base = PRICING[pick];
-      const extra = [...chosen].reduce((sum, id) => sum + (ADDONS[id] || 0), 0);
-
-      if (!base) {
-        labelNode.textContent = 'Elegí una opción';
-        noteNode.textContent = extra
-          ? 'Elegí qué tipo de proyecto necesitás para ver el total.'
-          : 'Elegí una opción para ver la estimación.';
-      } else if (base.to) {
-        labelNode.textContent = fmt(base.from + extra) + ' – ' + fmt(base.to + extra);
-        noteNode.textContent = 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' +
-          weeks(base.from) + ' semanas.' +
-          (extra ? ' Sumás ' + fmt(extra) + ' en adicionales.' : '');
-      } else {
-        labelNode.textContent = 'Desde ' + fmt(base.from + extra);
-        noteNode.textContent = 'Se cotiza por alcance: relevamiento, arquitectura e integraciones. ' +
-          'Arrancamos con un informe sin costo.' +
-          (extra ? ' Sumás ' + fmt(extra) + ' en adicionales.' : '');
-      }
-
-      optButtons.forEach(b => {
-        const on = b.getAttribute('data-opt') === pick;
-        b.setAttribute('aria-checked', on ? 'true' : 'false');
-        b.classList.toggle('is-on', on);
-      });
-      addButtons.forEach(b => {
-        const on = chosen.has(b.getAttribute('data-add'));
-        b.setAttribute('aria-checked', on ? 'true' : 'false');
-        b.classList.toggle('is-on', on);
-      });
+    const pickOf = id => picks.find(b => b.getAttribute('data-pick') === id);
+    const panelOf = id => panels.find(p => p.getAttribute('data-panel') === id);
+    const extrasOf = id => {
+      const p = panelOf(id);
+      return p ? Array.from(p.querySelectorAll('[data-add]')) : [];
     };
 
-    optButtons.forEach(b => {
-      b.addEventListener('click', () => { pick = b.getAttribute('data-opt'); render(); });
+    // Lo que el usuario armo para el producto abierto.
+    function state() {
+      const btn = open && pickOf(open);
+      if (!btn) return null;
+      const chosen = extrasOf(open).filter(b => b.classList.contains('is-on'));
+      const base = Number(btn.getAttribute('data-base') || 0);
+      const total = base + chosen.reduce((n, b) => n + Number(b.getAttribute('data-price') || 0), 0);
+      const mes = total * MANTENIMIENTO_MENSUAL;
+      const plan = planOpts.find(o => o.classList.contains('is-on')) || planOpts[0];
+      const anios = plan ? Number(plan.getAttribute('data-plan')) : 1;
+      const off = plan ? Number(plan.getAttribute('data-off')) / 100 : 0;
+      const lista = mes * MESES_POR_AÑO * anios;   // sin descuento
+      return {
+        id: open,
+        name: btn.getAttribute('data-name'),
+        isQuote: btn.hasAttribute('data-quote'),
+        base: base,
+        total: total,
+        mes: mes,
+        anios: anios,
+        soporte: lista * (1 - off),     // lo que paga por adelantado
+        ahorro: lista * off,
+        chosen: chosen.map(b => ({
+          name: b.getAttribute('data-addname'),
+          price: Number(b.getAttribute('data-price') || 0)
+        }))
+      };
+    }
+
+    function sumLine(label, value) {
+      const row = document.createElement('div');
+      row.className = 'nea-sumline';
+      const a = document.createElement('span');
+      a.textContent = label;
+      const b = document.createElement('b');
+      b.textContent = value;
+      row.appendChild(a);
+      row.appendChild(b);
+      return row;
+    }
+
+    function render() {
+      root.classList.toggle('is-open', !!open);
+
+      picks.forEach(b => {
+        const id = b.getAttribute('data-pick');
+        const on = id === open;
+        b.setAttribute('aria-checked', on ? 'true' : 'false');
+        b.setAttribute('aria-expanded', on ? 'true' : 'false');
+        b.classList.toggle('is-on', on);
+        // Marca discreta: este producto ya lo tenias armado
+        b.classList.toggle('has-extras', !on && extrasOf(id).some(x => x.classList.contains('is-on')));
+      });
+
+      panels.forEach(p => { p.hidden = p.getAttribute('data-panel') !== open; });
+
+      // Si el usuario tildo algo y volvio a cerrar el desplegable, hay que
+      // decirselo: si no, aparece un precio que no sabe de donde salio.
+      panels.forEach(p => p.querySelectorAll('.nea-more').forEach(d => {
+        const n = d.querySelectorAll('[data-add].is-on').length;
+        const tag = d.querySelector('[data-morecount]');
+        if (tag) tag.textContent = n ? ' · ' + n + ' elegido' + (n > 1 ? 's' : '') : '';
+      }));
+      extrasOf(open).forEach(b => {
+        b.setAttribute('aria-checked', b.classList.contains('is-on') ? 'true' : 'false');
+      });
+
+      const s = state();
+
+      if (!s) {
+        totalLabel.textContent = 'PAGO ÚNICO';
+        totalNode.textContent = 'Elegí una opción';
+        noteNode.textContent = 'Elegí lo que necesitás a la izquierda y armá tu presupuesto.';
+        detailNode.style.display = 'none';
+        // Sin producto elegido no hay plan que ofrecer: mostrar descuentos
+        // sobre nada deja un bloque vacio y un guion suelto.
+        mesBlock.style.display = 'none';
+        mesNode.textContent = '—';
+        ahorroNode.style.display = 'none';
+        barLabel.textContent = 'Elegí una opción';
+        barMes.textContent = '';
+        cta.textContent = 'Enviar por WhatsApp';
+        return;
+      }
+
+      if (s.isQuote) {
+        // Sistemas a medida no cotiza: la columna no se apaga, cambia de trabajo.
+        totalLabel.textContent = 'SE COTIZA A MEDIDA';
+        totalNode.textContent = 'Hablemos';
+        noteNode.textContent = 'Los sistemas se presupuestan después de entender tu proceso. Contanos qué necesitás resolver y te mandamos una propuesta con alcance y precio.';
+        detailNode.style.display = 'none';
+        mesBlock.style.display = 'none';
+        barLabel.textContent = 'Sistemas a medida';
+        barMes.textContent = 'A cotizar';
+      } else {
+        totalLabel.textContent = 'PAGO ÚNICO';
+        totalNode.textContent = 'Desde ' + fmt(s.total);
+        noteNode.textContent = 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' + weeks(s.base) + ' semanas.';
+        detailNode.textContent = '';
+        detailNode.style.display = '';
+        detailNode.appendChild(sumLine(s.name, fmt(s.base)));
+        s.chosen.forEach(x => detailNode.appendChild(sumLine(x.name, '+ ' + fmt(x.price))));
+        mesBlock.style.display = '';
+        mesLabel.textContent = s.anios === 1 ? 'Por 1 año' : 'Por ' + s.anios + ' años, pago adelantado';
+        mesNode.textContent = fmt(s.soporte);
+        if (s.ahorro > 0) {
+          ahorroNode.style.display = '';
+          ahorroNode.textContent = 'Ahorrás ' + fmt(s.ahorro) + ' · te queda en ' +
+            fmt(s.soporte / (s.anios * MESES_POR_AÑO)) + ' por mes';
+        } else {
+          ahorroNode.style.display = 'none';
+        }
+        barLabel.textContent = 'Desde ' + fmt(s.total);
+        barMes.textContent = '+ ' + fmt(s.soporte) + ' soporte';
+      }
+      cta.textContent = s.isQuote ? 'Contarnos tu caso' : 'Enviar por WhatsApp';
+    }
+
+    // El morph: el nombre de transicion viaja de la card reducida al panel.
+    function morph(from, toGetter, mutate) {
+      if (!document.startViewTransition || quiet.matches) { mutate(); render(); return; }
+      if (from) from.style.viewTransitionName = MORPH;
+      const clear = () => {
+        if (from) from.style.viewTransitionName = '';
+        const to = toGetter();
+        if (to) to.style.viewTransitionName = '';
+      };
+      const t = document.startViewTransition(() => {
+        if (from) from.style.viewTransitionName = '';
+        mutate();
+        render();
+        const to = toGetter();
+        if (to) to.style.viewTransitionName = MORPH;
+      });
+      // Un click rapido cancela la transicion anterior: `ready` rechaza y sin
+      // este catch queda como error sin capturar en la consola.
+      t.ready.catch(() => {});
+      t.finished.then(clear, clear);
+    }
+
+    function openPanel(id) {
+      if (open === id) return;
+      morph(pickOf(id), () => panelOf(id), () => { open = id; });
+    }
+
+    function closePanel() {
+      if (!open) return;
+      const from = panelOf(open);
+      const back = pickOf(open);
+      morph(from, () => back, () => { open = null; });
+      if (back) back.focus();
+    }
+
+    picks.forEach(b => {
+      b.addEventListener('click', () => openPanel(b.getAttribute('data-pick')));
     });
-    addButtons.forEach(b => {
-      b.addEventListener('click', () => {
-        const id = b.getAttribute('data-add');
-        if (chosen.has(id)) chosen.delete(id); else chosen.add(id);
+
+    planOpts.forEach(o => {
+      o.addEventListener('click', () => {
+        planOpts.forEach(x => {
+          const on = x === o;
+          x.classList.toggle('is-on', on);
+          x.setAttribute('aria-checked', on ? 'true' : 'false');
+        });
         render();
       });
     });
+
+    panels.forEach(p => {
+      p.querySelectorAll('[data-close]').forEach(x => x.addEventListener('click', closePanel));
+      // La X no descarta nada: los extras marcados quedan en el DOM del panel.
+      p.querySelectorAll('[data-add]').forEach(b => {
+        b.addEventListener('click', () => { b.classList.toggle('is-on'); render(); });
+      });
+    });
+
+    addEventListener('keydown', e => {
+      if (e.key === 'Escape' && open && !(dlg && dlg.open)) closePanel();
+    });
+
+    /* -------------------------------------------------- plantilla + WhatsApp */
+
+    function mensaje(extra) {
+      const s = state();
+      if (!s) return 'Hola, quiero armar un presupuesto.';
+      const l = ['Hola, armé un presupuesto en la web.', '', 'Necesito: ' + s.name];
+      if (s.isQuote) {
+        l.push('Es un sistema a medida, sé que se cotiza según el alcance.');
+      } else {
+        if (s.chosen.length) {
+          l.push('', 'Le sumo:');
+          s.chosen.forEach(x => l.push('· ' + x.name + ' (+' + fmt(x.price) + ')'));
+        }
+        l.push('', 'Estimación: desde ' + fmt(s.total));
+        l.push('Soporte por ' + s.anios + (s.anios === 1 ? ' año: ' : ' años (adelantado): ') + fmt(s.soporte));
+        if (s.ahorro > 0) l.push('(ahorro de ' + fmt(s.ahorro) + ')');
+      }
+      if (extra && extra.length) {
+        l.push('');
+        extra.forEach(x => l.push(x));
+      }
+      return l.join('\n');
+    }
+
+    function abrirWhatsApp(extra) {
+      const url = 'https://wa.me/' + WA_NUMERO + '?text=' + encodeURIComponent(mensaje(extra));
+      const w = window.open(url, '_blank', 'noopener');
+      if (!w) location.href = url;
+    }
+
+    if (dlg && typeof dlg.showModal === 'function') {
+      const form = document.getElementById('nea-dlgform');
+      const resumen = document.getElementById('nea-dlgsummary');
+
+      cta.addEventListener('click', () => {
+        resumen.textContent = mensaje(null);
+        dlg.showModal();
+      });
+
+      form.addEventListener('submit', e => {
+        // "Cancelar" solo cierra: no mandamos nada.
+        if (e.submitter && e.submitter.value === 'cancel') return;
+        const d = new FormData(form);
+        const preguntas = [
+          ['Rubro', d.get('rubro')],
+          ['¿Ya tiene sitio?', d.get('sitio')],
+          ['Logo y textos', d.get('material')],
+          ['Plazo', d.get('plazo')]
+        ].filter(x => x[1]).map(x => x[0] + ': ' + String(x[1]).trim());
+        abrirWhatsApp(preguntas);
+      });
+    } else {
+      // Sin <dialog>, el boton sigue funcionando: va directo al chat.
+      cta.addEventListener('click', () => abrirWhatsApp(null));
+    }
+
     render();
   }
 

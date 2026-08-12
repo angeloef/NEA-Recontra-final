@@ -14,7 +14,7 @@
   [
     'runway', 'stage', 'frame', 'video', 'scene', 'hero', 's2bg', 's2text', 'h1',
     'caret', 'cta2', 'nav', 'navbg', 'navlinks', 'navcta', 'navlogo', 'logo',
-    'typed', 'navlinksA'
+    'typed', 'navlinksA', 'designbg'
   ].forEach(k => { el[k] = document.getElementById('nea-' + k); });
 
   const pace = Math.max(1.8, Math.min(5, SCROLL_PACE));
@@ -25,6 +25,7 @@
   let steps, words, panels, dots, rig;
   let procPr = 0, procOn = false;
   let ink, inkBases, proceso, nosotros, bgColor, bgLum;
+  let grid = null;
   const INK_TARGETS = {
     strong: [255, 255, 255], muted: [221, 227, 255], word: [143, 166, 255],
     line: [255, 255, 255], chip: [255, 255, 255], rule: [255, 255, 255]
@@ -163,7 +164,7 @@
       'rgb(' + Math.round(lp(a[0], b[0], t)) + ',' + Math.round(lp(a[1], b[1], t)) + ',' + Math.round(lp(a[2], b[2], t)) + ')';
     const mix = (a, b, t) => [lp(a[0], b[0], t), lp(a[1], b[1], t), lp(a[2], b[2], t)];
     const WHITE = [255, 255, 255], BLUE = [49, 87, 255], BLACK = [10, 10, 10];
-    const PALE = [221, 227, 255], YELLOW = [199, 255, 74];
+    const PALE = [221, 227, 255], YELLOW = [199, 255, 74];   // #C7FF4A, el lima de marca
     const enter = (node, span, at) => cl(((vh * (at || 1)) - node.getBoundingClientRect().top) / (vh * span), 0, 1);
 
     // the services section stays black-on-white: the blue only starts once "Proceso" is nearly at the top
@@ -175,8 +176,22 @@
     const deep = cl((q - leg) / (1 - leg), 0, 1);
     let arr = deep > 0 ? mix(PALE, BLUE, deep) : mix(WHITE, PALE, q / leg);
     const seg = procPr * 3;
-    if (procOn && seg > .85) arr = mix(mix(BLUE, YELLOW, cl((seg - .85) / .3, 0, 1)), BLACK, cl((seg - 1.85) / .3, 0, 1));
-    if (p2 > 0) arr = BLACK.slice();
+    // La textura de "Diseñar" sigue la misma curva que el color: entra cuando el fondo
+    // vira al lima y se va cuando arranca a apagarse hacia el negro. Asi el cross-fade
+    // es continuo y no se ve un corte entre el color plano y la imagen.
+    let designT = 0, toYellow = 0;
+    if (procOn && seg > .85) {
+      toYellow = cl((seg - .85) / .3, 0, 1);
+      const toBlack = cl((seg - 1.85) / .3, 0, 1);
+      arr = mix(mix(BLUE, YELLOW, toYellow), BLACK, toBlack);
+      designT = toYellow * (1 - toBlack);
+    }
+    // La grilla entra junto con el azul (deep) y se va cuando el fondo vira al lima:
+    // asi "Analizar" y "Diseñar" nunca se pisan.
+    let gridT = deep * (1 - toYellow);
+    if (p2 > 0) { arr = BLACK.slice(); designT = 0; gridT = 0; }
+    if (el.designbg) el.designbg.style.opacity = designT.toFixed(3);
+    if (grid) grid.set(gridT);
 
     const bg = 'rgb(' + arr.map(Math.round).join(',') + ')';
     document.body.style.backgroundColor = bg;
@@ -203,6 +218,147 @@
           : 'rgba(10,10,10,' + (kind === 'rule' ? .16 : .12) + ')';
       }
     });
+  }
+
+  /* ------------------------------------------------- grilla de "Analizar" */
+
+  // Malla deformada por ondas + el cursor. Dibuja sobre canvas y solo corre mientras
+  // se ve: paintBackdrop le pasa la visibilidad y el bucle se apaga solo al llegar a 0.
+  function initGrid() {
+    const cv = document.getElementById('nea-grid');
+    if (!cv || !cv.getContext) return null;
+    const ctx = cv.getContext('2d');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Valores definidos en el banco de pruebas (lab/grid.html) y aprobados por el cliente.
+    // Si se retocan, conviene volver a ese lab en vez de tantear acá.
+    const GAP = 130;            // separación de la malla
+    const GROSOR = 2;
+    const AMPLITUD = 1;         // cuánto serpentea
+    const FRECUENCIA = .1;      // ondas largas y suaves
+    const VELOCIDAD = 0;        // malla quieta: solo se mueve con el cursor
+    const RADIO = 200;          // alcance del cursor
+    const EMPUJE = 52;          // cuánto corre cada nodo
+    const FALLOFF = 1;          // caída lineal
+    const INERCIA = .56;        // seguimiento elástico del cursor
+    const OPACIDAD = .18;
+    const LUPA_ZOOM = 1.15;
+    const LUPA_RADIO = 250;
+    const LUPA_BORDE = .64;     // aro del visor
+
+    let w = 0, h = 0, raf = 0, vis = 0;
+    const mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999, on: false };
+
+    const resize = () => {
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      w = innerWidth; h = innerHeight;
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      cv.style.width = w + 'px'; cv.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    addEventListener('resize', resize, { passive: true });
+    addEventListener('pointermove', e => {
+      mouse.x = e.clientX; mouse.y = e.clientY; mouse.on = true;
+      if (vis > .001 && !raf) raf = requestAnimationFrame(draw);
+    }, { passive: true });
+    addEventListener('pointerleave', () => { mouse.on = false; });
+
+    // Traza una polilínea suavizada pasando por los puntos medios.
+    function curva(pts) {
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let k = 1; k < pts.length - 1; k++) {
+        ctx.quadraticCurveTo(pts[k].x, pts[k].y, (pts[k].x + pts[k + 1].x) / 2, (pts[k].y + pts[k + 1].y) / 2);
+      }
+      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+      ctx.stroke();
+    }
+
+    function pintarMalla(malla, cols, rows) {
+      ctx.lineWidth = GROSOR;
+      ctx.strokeStyle = 'rgba(255,255,255,' + (OPACIDAD * vis).toFixed(3) + ')';
+      for (let j = 0; j < rows; j++) curva(malla[j]);
+      for (let i = 0; i < cols; i++) {
+        const col = [];
+        for (let j = 0; j < rows; j++) col.push(malla[j][i]);
+        curva(col);
+      }
+    }
+
+    function draw(ts) {
+      raf = 0;
+      ctx.clearRect(0, 0, w, h);
+      if (vis <= .001) return;
+
+      // seguimiento elástico: la malla llega al cursor con un leve retraso
+      if (mouse.sx < -9000) { mouse.sx = mouse.x; mouse.sy = mouse.y; }
+      mouse.sx += (mouse.x - mouse.sx) * INERCIA;
+      mouse.sy += (mouse.y - mouse.sy) * INERCIA;
+      const alcanzo = Math.abs(mouse.x - mouse.sx) < .4 && Math.abs(mouse.y - mouse.sy) < .4;
+
+      const cols = Math.ceil(w / GAP) + 3, rows = Math.ceil(h / GAP) + 3;
+      const t = reduce ? 0 : (ts || 0) * .0006 * VELOCIDAD;
+      const malla = [];
+
+      for (let j = 0; j < rows; j++) {
+        const fila = [];
+        for (let i = 0; i < cols; i++) {
+          const bx = (i - 1) * GAP, by = (j - 1) * GAP;
+          // dos senos desfasados por eje: da el serpenteo irregular, sin patrón obvio
+          let x = bx + (Math.sin(by * .011 * FRECUENCIA + t * 1.1) * 13 + Math.sin((bx * .007 + by * .006) * FRECUENCIA + t * .8) * 9) * AMPLITUD;
+          let y = by + (Math.cos(bx * .009 * FRECUENCIA - t * .9) * 12 + Math.sin((bx * .006 - by * .008) * FRECUENCIA + t) * 8) * AMPLITUD;
+          if (mouse.on) {
+            const dx = x - mouse.sx, dy = y - mouse.sy;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < RADIO && d > .01) {
+              const f = Math.pow(1 - d / RADIO, FALLOFF) * EMPUJE;
+              x += dx / d * f; y += dy / d * f;
+            }
+          }
+          fila.push({ x, y });
+        }
+        malla.push(fila);
+      }
+
+      pintarMalla(malla, cols, rows);
+
+      // Lupa: recorte circular, se borra lo de adentro y se redibuja la malla escalada.
+      // Se redibuja en vez de estirar el bitmap, asi las lineas quedan nitidas.
+      if (mouse.on && LUPA_ZOOM > 1) {
+        const x = mouse.sx, y = mouse.sy;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.clearRect(0, 0, w, h);
+        ctx.translate(x, y); ctx.scale(LUPA_ZOOM, LUPA_ZOOM); ctx.translate(-x, -y);
+        pintarMalla(malla, cols, rows);
+        ctx.restore();
+        if (LUPA_BORDE > 0) {
+          ctx.beginPath();
+          ctx.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = 'rgba(255,255,255,' + (LUPA_BORDE * vis).toFixed(3) + ')';
+          ctx.stroke();
+        }
+      }
+
+      // Con VELOCIDAD 0 la malla está quieta: una vez que el seguimiento alcanzó al
+      // cursor no hay nada que redibujar, así que el bucle se apaga hasta el próximo
+      // movimiento (lo despierta el listener de pointermove).
+      if (!reduce && vis > .001 && (VELOCIDAD > 0 || !alcanzo)) raf = requestAnimationFrame(draw);
+    }
+
+    return {
+      set(v) {
+        const antes = vis;
+        vis = v;
+        cv.style.opacity = v.toFixed(3);
+        if (v > .001 && !raf) raf = requestAnimationFrame(draw);
+        else if (v <= .001 && antes > .001 && !raf) raf = requestAnimationFrame(draw); // un frame más para limpiar
+      }
+    };
   }
 
   /* ---------------------------------------------------------------- video */
@@ -248,46 +404,90 @@
 
   /* ------------------------------------------------------------- estimador */
 
-  // Los nombres y descripciones viven en el HTML (crawleables). Acá solo los precios.
+  // PRECIOS PROVISORIOS — pendientes de definir con el cliente.
+  // Los nombres y descripciones viven en el HTML (crawleables). Acá solo los números.
   const PRICING = {
     landing:       { from: 450,  to: 750 },
     institucional: { from: 850,  to: 1400 },
     catalogo:      { from: 1200, to: 2000 },
     tienda:        { from: 1900, to: 3400 },
-    sistemas:      { from: 3500, to: 0 }
+    sistemas:      { from: 3500, to: 0 }   // to: 0 => se muestra como "Desde"
   };
 
+  // Extras de precio fijo. La etiqueta "+280" del HTML tiene que coincidir con esto.
+  const ADDONS = {
+    identidad: 280,
+    textos:    180,
+    recorrido: 350,
+    cotizador: 320,
+    whatsapp:  90,
+    seo:       220,
+    idioma:    260
+  };
+
+  // Obligatorio: no se elige, se informa siempre.
+  const MANTENIMIENTO_MENSUAL = 35;
+
   function initEstimator() {
-    const buttons = Array.from(document.querySelectorAll('[data-opt]'));
+    const optButtons = Array.from(document.querySelectorAll('[data-opt]'));
+    const addButtons = Array.from(document.querySelectorAll('[data-add]'));
     const labelNode = document.getElementById('nea-pricelabel');
     const noteNode = document.getElementById('nea-pricenote');
-    if (!buttons.length || !labelNode || !noteNode) return;
+    const mantNode = document.getElementById('nea-mantenimiento');
+    if (!optButtons.length || !labelNode || !noteNode) return;
 
     const fmt = n => 'USD ' + n.toLocaleString('es-AR');
     const weeks = from => (from < 900 ? '2 a 3' : from < 2000 ? '3 a 5' : '5 a 8');
 
-    const render = pick => {
-      const p = PRICING[pick];
-      labelNode.textContent = p
-        ? (p.to ? fmt(p.from) + ' – ' + fmt(p.to) : 'Desde ' + fmt(p.from))
-        : 'Elegí una opción';
-      noteNode.textContent = p
-        ? (p.to
-            ? 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' + weeks(p.from) + ' semanas.'
-            : 'Se cotiza por alcance: relevamiento, arquitectura e integraciones. Arrancamos con un informe sin costo.')
-        : 'Elegí una opción para ver la estimación.';
+    let pick = null;
+    const chosen = new Set();
 
-      buttons.forEach(b => {
+    if (mantNode) mantNode.textContent = fmt(MANTENIMIENTO_MENSUAL) + ' / mes';
+
+    const render = () => {
+      const base = PRICING[pick];
+      const extra = [...chosen].reduce((sum, id) => sum + (ADDONS[id] || 0), 0);
+
+      if (!base) {
+        labelNode.textContent = 'Elegí una opción';
+        noteNode.textContent = extra
+          ? 'Elegí qué tipo de proyecto necesitás para ver el total.'
+          : 'Elegí una opción para ver la estimación.';
+      } else if (base.to) {
+        labelNode.textContent = fmt(base.from + extra) + ' – ' + fmt(base.to + extra);
+        noteNode.textContent = 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' +
+          weeks(base.from) + ' semanas.' +
+          (extra ? ' Sumás ' + fmt(extra) + ' en adicionales.' : '');
+      } else {
+        labelNode.textContent = 'Desde ' + fmt(base.from + extra);
+        noteNode.textContent = 'Se cotiza por alcance: relevamiento, arquitectura e integraciones. ' +
+          'Arrancamos con un informe sin costo.' +
+          (extra ? ' Sumás ' + fmt(extra) + ' en adicionales.' : '');
+      }
+
+      optButtons.forEach(b => {
         const on = b.getAttribute('data-opt') === pick;
+        b.setAttribute('aria-checked', on ? 'true' : 'false');
+        b.classList.toggle('is-on', on);
+      });
+      addButtons.forEach(b => {
+        const on = chosen.has(b.getAttribute('data-add'));
         b.setAttribute('aria-checked', on ? 'true' : 'false');
         b.classList.toggle('is-on', on);
       });
     };
 
-    buttons.forEach(b => {
-      b.addEventListener('click', () => render(b.getAttribute('data-opt')));
+    optButtons.forEach(b => {
+      b.addEventListener('click', () => { pick = b.getAttribute('data-opt'); render(); });
     });
-    render(null);
+    addButtons.forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.getAttribute('data-add');
+        if (chosen.has(id)) chosen.delete(id); else chosen.add(id);
+        render();
+      });
+    });
+    render();
   }
 
   /* ------------------------------------------------------------------ boot */
@@ -303,6 +503,7 @@
   addEventListener('resize', onScroll, { passive: true });
   addEventListener('load', onScroll);
 
+  grid = initGrid();   // antes del primer update(): paintBackdrop ya le pasa visibilidad
   update();
   playVideo();
   initEstimator();

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Lab — grilla de Analizar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-400-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-600-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-700-normal-latin.woff2) format('woff2')}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:#3157FF;color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+canvas{position:absolute;inset:0}
+/* Todo el contenido "real" vive acá: se le aplica la mascara INVERSA de la lupa,
+   asi queda recortado justo donde la lupa lo reemplaza por su version ampliada. */
+#mundo{position:fixed;inset:0;z-index:0;will-change:mask-image}
+
+/* ---- replica de la seccion Analizar ---- */
+.escena{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;
+  padding:clamp(40px,7vw,120px) clamp(20px,2.5vw,48px) clamp(48px,4vw,80px);pointer-events:none}
+.rule{border-top:1px solid rgba(255,255,255,.28);padding-top:13px;font-size:11px;font-weight:600;letter-spacing:.2em}
+.stack{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center}
+.paso{position:absolute;left:0;top:50%;transform:translateY(-50%);width:min(460px,42vw);z-index:2}
+.num{font-size:12px;font-weight:600;letter-spacing:.16em;color:rgba(255,255,255,.62);margin-bottom:16px}
+.txt{margin:0;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;text-wrap:pretty}
+.palabra{text-align:right;font-weight:700;font-size:clamp(64px,15.6vw,300px);line-height:.94;letter-spacing:-.04em;
+  color:rgba(255,255,255,.34);white-space:nowrap}
+.dots{display:flex;gap:8px;align-items:center;margin-top:clamp(16px,1.6vw,28px)}
+.dots span{width:34px;height:3px;border-radius:2px;background:#fff;opacity:.22}
+.dots span:first-child{opacity:1}
+
+/* ---- lupa: copia del mundo, recortada a un circulo y ampliada ---- */
+#lupa{position:fixed;inset:0;z-index:4;pointer-events:none;will-change:mask-image}
+#lupaZoom{position:absolute;inset:0;will-change:transform}
+#lupaAro{position:fixed;z-index:5;pointer-events:none;border-radius:999px;
+  border:1px solid rgba(255,255,255,0);transform:translate(-50%,-50%)}
+
+/* ---- panel ---- */
+#panel{position:fixed;top:0;right:0;bottom:0;width:330px;z-index:10;overflow-y:auto;
+  background:rgba(8,10,20,.93);backdrop-filter:blur(10px);border-left:1px solid rgba(255,255,255,.14);
+  padding:18px;font-size:12.5px;transition:transform .25s}
+#panel.oculto{transform:translateX(310px)}
+#toggle{position:absolute;left:-1px;top:14px;transform:translateX(-100%);background:rgba(8,10,20,.93);
+  border:1px solid rgba(255,255,255,.14);border-right:0;color:#fff;padding:9px 11px;cursor:pointer;
+  border-radius:8px 0 0 8px;font:inherit}
+h1{margin:0 0 4px;font-size:14px;font-weight:700;letter-spacing:-.01em}
+.sub{margin:0 0 16px;font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.45}
+.grupo{margin:0 0 6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);
+  font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.45)}
+.fila{display:flex;align-items:center;gap:10px;margin:9px 0}
+.fila label{flex:1;color:rgba(255,255,255,.82)}
+.fila output{width:46px;text-align:right;font-variant-numeric:tabular-nums;color:#C7FF4A;font-weight:600}
+input[type=range]{width:100%;accent-color:#C7FF4A}
+input[type=checkbox]{accent-color:#C7FF4A;width:auto}
+input[type=color]{width:40px;height:26px;padding:0;border:1px solid rgba(255,255,255,.2);
+  border-radius:6px;background:none;cursor:pointer}
+select,textarea{width:100%;background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.18);
+  border-radius:8px;padding:7px 9px;font:inherit}
+textarea{height:104px;resize:vertical;font-family:ui-monospace,monospace;font-size:11px;line-height:1.4}
+.botones{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+button.acc{background:#C7FF4A;color:#0A0A0A;border:0;border-radius:999px;padding:10px;font:inherit;
+  font-weight:700;cursor:pointer}
+button.sec{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;padding:10px;font:inherit;font-weight:600;cursor:pointer}
+button.acc:hover{filter:brightness(1.08)} button.sec:hover{background:rgba(255,255,255,.16)}
+#aviso{margin-top:8px;min-height:15px;font-size:11px;color:#C7FF4A}
+#fps{position:fixed;left:12px;bottom:10px;z-index:10;font-size:11px;color:rgba(255,255,255,.55);
+  font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<div id="mundo">
+<canvas id="grid"></canvas>
+
+<div class="escena" id="escenaBase">
+  <div class="rule">PROCESO</div>
+  <div class="stack">
+    <div class="paso">
+      <div class="num">01</div>
+      <p class="txt">Estudiamos tu negocio y a tu competencia, y te damos el informe antes de que pagues nada: qué te está frenando, qué hace tu competencia y qué conviene mejorar primero.</p>
+    </div>
+    <div class="palabra">Analizar</div>
+  </div>
+  <div class="dots"><span></span><span></span><span></span></div>
+</div>
+</div>
+
+<!-- Copia del mundo. Se recorta a un circulo y se amplia con transform, asi el texto
+     sigue siendo texto (nitido) y la grilla se redibuja escalada (tambien nitida). -->
+<div id="lupa">
+  <div id="lupaZoom">
+    <canvas id="gridLupa"></canvas>
+    <!-- el clon de la escena se inyecta por JS -->
+  </div>
+</div>
+<div id="lupaAro"></div>
+
+<div id="fps">—</div>
+
+<aside id="panel">
+  <button id="toggle" title="Mostrar u ocultar el panel">&#8677;</button>
+  <h1>Grilla de "Analizar"</h1>
+  <p class="sub">Movés el mouse sobre el fondo para probar. Cuando te guste, exportá el JSON y pasámelo.</p>
+
+  <div class="grupo">MALLA</div>
+  <div class="fila"><label for="gap">Tamaño de celda</label><output id="o-gap"></output></div>
+  <input type="range" id="gap" min="20" max="220" step="2">
+  <div class="fila"><label for="grosor">Grosor de línea</label><output id="o-grosor"></output></div>
+  <input type="range" id="grosor" min="0.3" max="6" step="0.1">
+  <div class="fila"><label for="suavizado">Curvas suaves</label><input type="checkbox" id="suavizado"></div>
+
+  <div class="grupo">ONDA DE BASE</div>
+  <div class="fila"><label for="amplitud">Amplitud</label><output id="o-amplitud"></output></div>
+  <input type="range" id="amplitud" min="0" max="4" step="0.05">
+  <div class="fila"><label for="escalaOnda">Frecuencia</label><output id="o-escalaOnda"></output></div>
+  <input type="range" id="escalaOnda" min="0.1" max="3" step="0.05">
+  <div class="fila"><label for="velocidad">Velocidad</label><output id="o-velocidad"></output></div>
+  <input type="range" id="velocidad" min="0" max="4" step="0.05">
+
+  <div class="grupo">ONDA EXPANSIVA (MOUSE)</div>
+  <div class="fila"><label for="radio">Radio de alcance</label><output id="o-radio"></output></div>
+  <input type="range" id="radio" min="0" max="700" step="10">
+  <div class="fila"><label for="empuje">Fuerza</label><output id="o-empuje"></output></div>
+  <input type="range" id="empuje" min="0" max="220" step="2">
+  <div class="fila"><label for="falloff">Caída del efecto</label><output id="o-falloff"></output></div>
+  <input type="range" id="falloff" min="1" max="5" step="0.1">
+  <div class="fila"><label for="modo">Modo</label></div>
+  <select id="modo">
+    <option value="repeler">Repeler (empuja hacia afuera)</option>
+    <option value="atraer">Atraer (chupa hacia el cursor)</option>
+    <option value="remolino">Remolino (gira alrededor)</option>
+  </select>
+  <div class="fila"><label for="inercia">Suavidad del seguimiento</label><output id="o-inercia"></output></div>
+  <input type="range" id="inercia" min="0.02" max="1" step="0.02">
+
+  <div class="grupo">LUPA</div>
+  <div class="fila"><label for="lupaActiva">Activada</label><input type="checkbox" id="lupaActiva"></div>
+  <div class="fila"><label for="lupaZoomV">Aumento</label><output id="o-lupaZoomV"></output></div>
+  <input type="range" id="lupaZoomV" min="1" max="3" step="0.05">
+  <div class="fila"><label for="lupaRadio">Radio</label><output id="o-lupaRadio"></output></div>
+  <input type="range" id="lupaRadio" min="40" max="600" step="10">
+  <div class="fila"><label for="lupaFeather">Difuminado del borde</label><output id="o-lupaFeather"></output></div>
+  <input type="range" id="lupaFeather" min="0" max="1" step="0.02">
+  <div class="fila"><label for="lupaBorde">Aro visible</label><output id="o-lupaBorde"></output></div>
+  <input type="range" id="lupaBorde" min="0" max="1" step="0.02">
+
+  <div class="grupo">COLOR</div>
+  <div class="fila"><label for="colorLinea">Línea</label><input type="color" id="colorLinea"></div>
+  <div class="fila"><label for="opacidadLinea">Opacidad de línea</label><output id="o-opacidadLinea"></output></div>
+  <input type="range" id="opacidadLinea" min="0" max="1" step="0.01">
+  <div class="fila"><label for="colorFondo">Fondo</label><input type="color" id="colorFondo"></div>
+
+  <div class="grupo">CONFIGURACIÓN</div>
+  <div class="botones">
+    <button class="acc" id="exportar">Exportar JSON</button>
+    <button class="sec" id="copiar">Copiar</button>
+    <button class="sec" id="aplicar">Aplicar pegado</button>
+    <button class="sec" id="reset">Restaurar</button>
+  </div>
+  <div id="aviso"></div>
+  <textarea id="json" spellcheck="false" placeholder="Pegá acá un JSON y tocá «Aplicar pegado»"></textarea>
+</aside>
+
+<script>
+'use strict';
+
+// Base = la config elegida por el cliente
+const DEFAULTS = {
+  gap: 130, grosor: 2, suavizado: true,
+  amplitud: 1, escalaOnda: 0.1, velocidad: 0,
+  radio: 200, empuje: 52, falloff: 1, modo: 'repeler', inercia: 0.56,
+  // lupaFeather bajo a proposito: con las mascaras complementarias, un valor alto
+  // hace un cross-fade entre las dos escalas y vuelve a leerse como texto fantasma.
+  lupaActiva: true, lupaZoomV: 1.35, lupaRadio: 220, lupaFeather: 0.06, lupaBorde: 0.12,
+  colorLinea: '#ffffff', opacidadLinea: 0.16, colorFondo: '#3157ff'
+};
+let cfg = Object.assign({}, DEFAULTS);
+
+const NUM = ['gap','grosor','amplitud','escalaOnda','velocidad','radio','empuje','falloff','inercia',
+             'lupaZoomV','lupaRadio','lupaFeather','lupaBorde','opacidadLinea'];
+const BOOL = ['suavizado','lupaActiva'];
+
+const cv = document.getElementById('grid'), ctx = cv.getContext('2d');
+const cvL = document.getElementById('gridLupa'), ctxL = cvL.getContext('2d');
+const lupa = document.getElementById('lupa'), lupaZoom = document.getElementById('lupaZoom');
+const aro = document.getElementById('lupaAro'), mundo = document.getElementById('mundo');
+
+// Clon de la escena dentro de la lupa (sin ids, para no duplicarlos)
+(function clonarEscena() {
+  const c = document.getElementById('escenaBase').cloneNode(true);
+  c.removeAttribute('id');
+  c.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+  lupaZoom.appendChild(c);
+})();
+
+let w = 0, h = 0, dpr = 1;
+const mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999, on: false };
+
+function resize() {
+  dpr = Math.min(2, devicePixelRatio || 1);
+  w = innerWidth; h = innerHeight;
+  [cv, cvL].forEach(c => {
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    c.style.width = w + 'px'; c.style.height = h + 'px';
+  });
+}
+addEventListener('resize', resize, { passive: true });
+resize();
+
+addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; mouse.on = true; }, { passive: true });
+addEventListener('pointerleave', () => { mouse.on = false; });
+
+function hexRgba(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+}
+
+function curva(c, pts, suave) {
+  c.beginPath();
+  c.moveTo(pts[0].x, pts[0].y);
+  if (suave) {
+    for (let k = 1; k < pts.length - 1; k++) {
+      c.quadraticCurveTo(pts[k].x, pts[k].y, (pts[k].x + pts[k + 1].x) / 2, (pts[k].y + pts[k + 1].y) / 2);
+    }
+    c.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+  } else {
+    for (let k = 1; k < pts.length; k++) c.lineTo(pts[k].x, pts[k].y);
+  }
+  c.stroke();
+}
+
+function pintar(c, malla, cols, rows) {
+  c.lineWidth = cfg.grosor;
+  c.strokeStyle = hexRgba(cfg.colorLinea, cfg.opacidadLinea);
+  for (let j = 0; j < rows; j++) curva(c, malla[j], cfg.suavizado);
+  for (let i = 0; i < cols; i++) {
+    const col = [];
+    for (let j = 0; j < rows; j++) col.push(malla[j][i]);
+    curva(c, col, cfg.suavizado);
+  }
+}
+
+let ultimo = 0, cuadros = 0, acum = 0;
+function draw(ts) {
+  requestAnimationFrame(draw);
+  const dt = ts - ultimo; ultimo = ts;
+  acum += dt; cuadros++;
+  if (acum > 500) {
+    document.getElementById('fps').textContent =
+      Math.round(cuadros * 1000 / acum) + ' fps · ' + Math.round(w) + '×' + Math.round(h);
+    acum = 0; cuadros = 0;
+  }
+
+  if (mouse.sx < -9000) { mouse.sx = mouse.x; mouse.sy = mouse.y; }
+  mouse.sx += (mouse.x - mouse.sx) * cfg.inercia;
+  mouse.sy += (mouse.y - mouse.sy) * cfg.inercia;
+
+  document.body.style.background = cfg.colorFondo;
+
+  // --- malla ---
+  const GAP = cfg.gap;
+  const cols = Math.ceil(w / GAP) + 3, rows = Math.ceil(h / GAP) + 3;
+  const t = ts * .0006 * cfg.velocidad;
+  const A = cfg.amplitud, F = cfg.escalaOnda;
+  const malla = [];
+  for (let j = 0; j < rows; j++) {
+    const fila = [];
+    for (let i = 0; i < cols; i++) {
+      const bx = (i - 1) * GAP, by = (j - 1) * GAP;
+      let x = bx + (Math.sin(by * .011 * F + t * 1.1) * 13 + Math.sin((bx * .007 + by * .006) * F + t * .8) * 9) * A;
+      let y = by + (Math.cos(bx * .009 * F - t * .9) * 12 + Math.sin((bx * .006 - by * .008) * F + t) * 8) * A;
+      if (mouse.on && cfg.radio > 0 && cfg.empuje > 0) {
+        const dx = x - mouse.sx, dy = y - mouse.sy;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < cfg.radio && d > .01) {
+          const f = Math.pow(1 - d / cfg.radio, cfg.falloff) * cfg.empuje;
+          if (cfg.modo === 'atraer') { x -= dx / d * f; y -= dy / d * f; }
+          else if (cfg.modo === 'remolino') { x += -dy / d * f; y += dx / d * f; }
+          else { x += dx / d * f; y += dy / d * f; }
+        }
+      }
+      fila.push({ x: x, y: y });
+    }
+    malla.push(fila);
+  }
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  pintar(ctx, malla, cols, rows);
+
+  // --- lupa ---
+  const activa = cfg.lupaActiva && mouse.on;
+  lupa.style.display = activa ? 'block' : 'none';
+  aro.style.display = activa && cfg.lupaBorde > 0 ? 'block' : 'none';
+  if (!activa && mundo.style.maskImage) { mundo.style.maskImage = ''; mundo.style.webkitMaskImage = ''; }
+  if (activa) {
+    const R = cfg.lupaRadio, Z = cfg.lupaZoomV;
+    const x = mouse.sx, y = mouse.sy;
+    // corte con borde difuminado: el gradiente es opaco hasta (1-feather) y se apaga al llegar al radio
+    const stop = Math.round((1 - cfg.lupaFeather) * 100);
+    const m = 'radial-gradient(circle ' + R + 'px at ' + x + 'px ' + y + 'px, #000 ' + stop + '%, transparent 100%)';
+    lupa.style.maskImage = m;
+    lupa.style.webkitMaskImage = m;
+    // Mascara EXACTAMENTE inversa sobre el contenido real: donde la lupa pinta, el
+    // original se recorta. Sin esto las dos capas se superponen en el borde difuminado
+    // y el texto se ve doble.
+    const mi = 'radial-gradient(circle ' + R + 'px at ' + x + 'px ' + y + 'px, transparent ' + stop + '%, #000 100%)';
+    mundo.style.maskImage = mi;
+    mundo.style.webkitMaskImage = mi;
+    lupaZoom.style.transformOrigin = x + 'px ' + y + 'px';
+    lupaZoom.style.transform = 'scale(' + Z + ')';
+    // La capa tiene que ser OPACA: si no, el contenido original se ve por debajo del
+    // clon ampliado y el texto aparece duplicado. Al usar el mismo color de fondo,
+    // el circulo tapa lo de abajo sin que se note el recorte.
+    lupaZoom.style.background = cfg.colorFondo;
+    // la grilla se REDIBUJA escalada (no se estira el bitmap): queda nitida
+    ctxL.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctxL.clearRect(0, 0, w, h);
+    ctxL.translate(x, y); ctxL.scale(Z, Z); ctxL.translate(-x, -y);
+    pintar(ctxL, malla, cols, rows);
+
+    aro.style.left = x + 'px'; aro.style.top = y + 'px';
+    aro.style.width = (R * 2) + 'px'; aro.style.height = (R * 2) + 'px';
+    aro.style.borderColor = 'rgba(255,255,255,' + cfg.lupaBorde + ')';
+  }
+}
+requestAnimationFrame(draw);
+
+/* ---------------- controles ---------------- */
+function pintarControles() {
+  NUM.forEach(k => {
+    const el = document.getElementById(k);
+    if (!el) return;
+    el.value = cfg[k];
+    const o = document.getElementById('o-' + k);
+    if (o) o.textContent = cfg[k];
+  });
+  BOOL.forEach(k => { document.getElementById(k).checked = cfg[k]; });
+  document.getElementById('modo').value = cfg.modo;
+  document.getElementById('colorLinea').value = cfg.colorLinea;
+  document.getElementById('colorFondo').value = cfg.colorFondo;
+}
+
+NUM.forEach(k => {
+  const el = document.getElementById(k);
+  if (!el) return;
+  el.addEventListener('input', e => {
+    cfg[k] = parseFloat(e.target.value);
+    const o = document.getElementById('o-' + k);
+    if (o) o.textContent = cfg[k];
+  });
+});
+BOOL.forEach(k => {
+  document.getElementById(k).addEventListener('change', e => { cfg[k] = e.target.checked; });
+});
+document.getElementById('modo').addEventListener('change', e => { cfg.modo = e.target.value; });
+document.getElementById('colorLinea').addEventListener('input', e => { cfg.colorLinea = e.target.value; });
+document.getElementById('colorFondo').addEventListener('input', e => { cfg.colorFondo = e.target.value; });
+
+const aviso = m => {
+  const n = document.getElementById('aviso');
+  n.textContent = m;
+  setTimeout(() => { if (n.textContent === m) n.textContent = ''; }, 2600);
+};
+const comoJson = () => JSON.stringify(cfg, null, 2);
+
+document.getElementById('exportar').addEventListener('click', () => {
+  document.getElementById('json').value = comoJson();
+  const blob = new Blob([comoJson()], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'grilla-config.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  aviso('Descargado grilla-config.json');
+});
+
+document.getElementById('copiar').addEventListener('click', async () => {
+  document.getElementById('json').value = comoJson();
+  try { await navigator.clipboard.writeText(comoJson()); aviso('Copiado al portapapeles'); }
+  catch (e) { aviso('No pude copiar: usá el cuadro de abajo'); }
+});
+
+document.getElementById('aplicar').addEventListener('click', () => {
+  try {
+    const p = JSON.parse(document.getElementById('json').value);
+    Object.keys(DEFAULTS).forEach(k => { if (p[k] !== undefined) cfg[k] = p[k]; });
+    pintarControles();
+    aviso('Configuración aplicada');
+  } catch (e) { aviso('JSON inválido: ' + e.message); }
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  cfg = Object.assign({}, DEFAULTS);
+  pintarControles();
+  document.getElementById('json').value = '';
+  aviso('Config base restaurada');
+});
+
+document.getElementById('toggle').addEventListener('click', () => {
+  document.getElementById('panel').classList.toggle('oculto');
+});
+
+pintarControles();
+</script>
+</body>
+</html>

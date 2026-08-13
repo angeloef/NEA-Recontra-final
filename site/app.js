@@ -422,6 +422,7 @@
   // suben el plan solos.
   const MANTENIMIENTO_MENSUAL = 0.05;   // 5% del proyecto, por mes
   const MESES_POR_AÑO = 12;             // se factura una vez al año
+  const ANIOS_GRATIS = 1;               // el primer año de soporte va de regalo
 
   function initEstimator() {
     const root = document.getElementById('nea-est');
@@ -479,7 +480,12 @@
       const plan = planOpts.find(o => o.classList.contains('is-on')) || planOpts[0];
       const anios = plan ? Number(plan.getAttribute('data-plan')) : 1;
       const off = plan ? Number(plan.getAttribute('data-off')) / 100 : 0;
-      const lista = mes * MESES_POR_AÑO * anios;   // sin descuento
+      // El primer año va de regalo en todos los productos, asi que solo se
+      // cobran los años que siguen. El descuento por prepago se aplica sobre
+      // esos, no sobre el gratis.
+      const aniosPagos = Math.max(0, anios - ANIOS_GRATIS);
+      const lista = mes * MESES_POR_AÑO * aniosPagos;   // sin descuento
+      const soporte = lista * (1 - off);
       return {
         id: open,
         name: btn.getAttribute('data-name'),
@@ -488,8 +494,10 @@
         total: total,
         mes: mes,
         anios: anios,
-        soporte: lista * (1 - off),     // lo que paga por adelantado
-        ahorro: lista * off,
+        aniosPagos: aniosPagos,
+        soporte: soporte,               // lo que paga por adelantado
+        // Contra el precio de lista de TODA la cobertura, incluido el año regalado.
+        ahorro: mes * MESES_POR_AÑO * anios - soporte,
         chosen: chosen.map(b => ({
           name: b.getAttribute('data-addname'),
           price: Number(b.getAttribute('data-price') || 0)
@@ -587,17 +595,24 @@
         detailNode.appendChild(sumLine(s.name, fmt(s.base)));
         s.chosen.forEach(x => detailNode.appendChild(sumLine(x.name, '+ ' + fmt(x.price))));
         mesBlock.style.display = '';
-        mesLabel.textContent = s.anios === 1 ? 'Por 1 año' : 'Por ' + s.anios + ' años, pago adelantado';
-        mesNode.textContent = fmt(s.soporte);
-        if (s.ahorro > 0) {
+        if (s.aniosPagos === 0) {
+          // El caso por defecto: no paga nada de soporte. El numero grande no
+          // puede ser "$0", que se lee como error; se lee como regalo.
+          mesLabel.textContent = 'Primer año';
+          mesNode.textContent = 'Incluido';
+          ahorroNode.style.display = '';
+          ahorroNode.textContent = 'Te ahorrás ' + fmt(s.ahorro) + ' el primer año';
+        } else {
+          mesLabel.textContent = (s.aniosPagos === 1 ? 'Año 2' : 'Años 2 a ' + s.anios) + ', pago adelantado';
+          mesNode.textContent = fmt(s.soporte);
           ahorroNode.style.display = '';
           ahorroNode.textContent = 'Ahorrás ' + fmt(s.ahorro) + ' · te queda en ' +
             fmt(s.soporte / (s.anios * MESES_POR_AÑO)) + ' por mes';
-        } else {
-          ahorroNode.style.display = 'none';
         }
         barLabel.textContent = 'Desde ' + fmt(s.total);
-        barMes.textContent = '+ ' + fmt(s.soporte) + ' soporte';
+        barMes.textContent = s.aniosPagos === 0
+          ? 'Soporte 1er año incluido'
+          : '+ ' + fmt(s.soporte) + ' soporte';
       }
       cta.textContent = s.isQuote ? 'Contarnos tu caso' : 'Enviar por WhatsApp';
     }
@@ -689,8 +704,13 @@
           s.chosen.forEach(x => l.push('· ' + x.name + ' (+' + fmt(x.price) + ')'));
         }
         l.push('', 'Estimación: desde ' + fmt(s.total));
-        l.push('Soporte por ' + s.anios + (s.anios === 1 ? ' año: ' : ' años (adelantado): ') + fmt(s.soporte));
-        if (s.ahorro > 0) l.push('(ahorro de ' + fmt(s.ahorro) + ')');
+        if (s.aniosPagos === 0) {
+          l.push('Soporte: primer año incluido');
+        } else {
+          l.push('Soporte por ' + s.anios + ' años: primer año incluido + ' + fmt(s.soporte) +
+                 (s.aniosPagos === 1 ? ' por el año 2' : ' por los años 2 a ' + s.anios));
+          l.push('(ahorro de ' + fmt(s.ahorro) + ')');
+        }
       }
       if (extra && extra.length) {
         l.push('');

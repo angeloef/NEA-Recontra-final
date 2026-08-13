@@ -513,6 +513,17 @@
 
       panels.forEach(p => { p.hidden = p.getAttribute('data-panel') !== open; });
 
+      // Las seis muestras pesan 460 KB juntas y no se ven hasta que abris una
+      // card, asi que cada una se baja recien en el primer clic sobre su
+      // producto. loading="lazy" no sirve aca: el panel arranca con hidden y
+      // el navegador no vuelve a evaluarlo cuando se lo destapa.
+      const visible = panels.find(p => !p.hidden);
+      const foto = visible && visible.querySelector('img[data-src]');
+      if (foto) {
+        foto.src = foto.getAttribute('data-src');
+        foto.removeAttribute('data-src');
+      }
+
       // Si el usuario tildo algo y volvio a cerrar el desplegable, hay que
       // decirselo: si no, aparece un precio que no sabe de donde salio.
       panels.forEach(p => p.querySelectorAll('.nea-more').forEach(d => {

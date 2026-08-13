@@ -556,7 +556,7 @@
       if (!s) {
         totalLabel.textContent = 'PAGO ÚNICO';
         totalNode.textContent = 'Elegí una opción';
-        noteNode.textContent = 'Elegí lo que necesitás a la izquierda y armá tu presupuesto.';
+        noteNode.textContent = 'Elegí una opción y el número aparece acá.';
         detailNode.style.display = 'none';
         // Sin producto elegido no hay plan que ofrecer: mostrar descuentos
         // sobre nada deja un bloque vacio y un guion suelto.

@@ -249,6 +249,12 @@ a:hover{color:#3157FF}
 @media (max-width:900px){
   .nea-esthead,.nea-est,.nea-est.is-open{grid-template-columns:minmax(0,1fr)}
   .nea-picks,.nea-est.is-open .nea-picks{grid-template-columns:minmax(0,1fr)}
+  /* Sin la linea de "esto es para vos si": en telefono ocupaba dos tercios de
+     cada card y hacia falta scrollear para saber que la lista tenia seis
+     opciones. El nombre alcanza para elegir; el detalle esta al abrir. */
+  .nea-pick .nea-pickdesc{display:none}
+  .nea-pick{padding:15px 18px;align-items:center}
+  .nea-pick .nea-dot{margin-top:0}
   /* Mobile: la card expandida toma la pantalla completa.
      Los tres resets de abajo son obligatorios, no cosmeticos: sin ellos el
      aspect-ratio y el max-height de escritorio le ganan a inset:0 y la card
@@ -808,7 +814,7 @@ a:hover{color:#3157FF}
         <div class="nea-sumfull" id="nea-sumfull">
           <div style="margin-top:22px;font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.45)" id="nea-totallabel">PAGO ÚNICO</div>
           <div id="nea-total" aria-live="polite" style="margin-top:8px;font-size:clamp(26px,2.6vw,38px);line-height:1.08;font-weight:700;letter-spacing:-.03em;color:#FFFFFF">Elegí una opción</div>
-          <div id="nea-note" style="margin-top:10px;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.6);text-wrap:pretty">Elegí lo que necesitás a la izquierda y armá tu presupuesto.</div>
+          <div id="nea-note" style="margin-top:10px;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.6);text-wrap:pretty">Elegí una opción y el número aparece acá.</div>
 
           <div id="nea-detail" style="margin-top:16px;display:none"></div>
 

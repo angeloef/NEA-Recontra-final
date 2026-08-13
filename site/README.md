@@ -43,4 +43,7 @@ Pedí esa URL con un User-Agent de Chrome, bajá el `.woff2` que devuelve y reem
 - Las imágenes de Servicios son WebP de 900×900 recortadas (los PNG originales eran de
   2688×1520, hasta 5,8 MB cada uno, para mostrarse en tarjetas de ~350 px).
 - `hero-poster.webp` es el primer frame del video, para que el hero no arranque en negro.
-- `pexels-cottonbro-4778662.jpg` (1,9 MB) **no se usa en ningún lado**. Se puede borrar.
+- `muestra-*.webp` son las seis muestras de la sección de presupuesto. Se bajan
+  recién al primer clic sobre su producto, no en el load inicial.
+- Los originales pesados de esas muestras viven en `assets-fuente/`, fuera de
+  `site/`, y están ignorados por git. El sitio solo sirve los WebP.

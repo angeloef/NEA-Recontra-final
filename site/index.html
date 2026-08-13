@@ -249,20 +249,53 @@ a:hover{color:#3157FF}
 @media (max-width:900px){
   .nea-esthead,.nea-est,.nea-est.is-open{grid-template-columns:minmax(0,1fr)}
   .nea-picks,.nea-est.is-open .nea-picks{grid-template-columns:minmax(0,1fr)}
-  /* Mobile: la card expandida toma la pantalla completa */
-  .nea-panel{position:fixed;inset:0;z-index:60;border-radius:0;border:0;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);overflow-y:auto;background:#0A0A0A}
-  .nea-panelmedia{aspect-ratio:4/5}
-  .nea-panelbody{overflow:visible;padding-bottom:104px}
+  /* Mobile: la card expandida toma la pantalla completa.
+     Los tres resets de abajo son obligatorios, no cosmeticos: sin ellos el
+     aspect-ratio y el max-height de escritorio le ganan a inset:0 y la card
+     quedaba de 333 px de alto flotando sobre la lista, con el cuerpo
+     recortado y sin scroll. */
+  /* z-index 100 y no 60: a pantalla completa la card es un modal y tiene que
+     tapar la barra de navegacion del sitio, que esta en 90. Con 60 la barra
+     quedaba encima y se comia el boton de cerrar. */
+  .nea-panel{position:fixed;inset:0;z-index:100;border-radius:0;border:0;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;overflow-y:auto;overscroll-behavior:contain;background:#0A0A0A;aspect-ratio:auto;max-height:none;top:0;padding-top:env(safe-area-inset-top)}
+  /* La muestra es un mockup vertical: a pantalla completa se lleva media
+     pantalla y empuja el precio fuera de vista. 34vh la deja presente y
+     todavia deja ver el titulo y el "desde" sin scrollear. */
+  .nea-panelmedia{aspect-ratio:auto;height:34vh;min-height:200px}
+  /* Las muestras son mockups verticales y lo que vende esta arriba: la grilla
+     de productos, el calendario, el tablero. Recortadas al centro se veia el
+     fondo. */
+  .nea-panelimg{object-position:top}
+  /* La fila del cuerpo va en auto, no en 1fr: con 1fr quedaba clavada al alto
+     de la pantalla y recortaba 567 px de extras, con el "ver mas opciones"
+     tapado por la barra y sin forma de llegar. El padding despeja esa barra. */
+  .nea-panelbody{overflow:visible;padding-bottom:132px}
   .nea-sum{position:static}
   /* ...y la estimacion se reduce a una barra fija con los dos numeros */
   /* top:auto es obligatorio: sin el, hereda el top:104px del sticky y la
      barra se estira de arriba a abajo tapando la pantalla entera. */
-  .nea-est.is-open .nea-sum{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:61;border-radius:0;border:0;border-top:1px solid rgba(255,255,255,.16);background:rgba(14,14,14,.94);backdrop-filter:blur(10px);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+  .nea-est.is-open .nea-sum{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:101;border-radius:0;border:0;border-top:1px solid rgba(255,255,255,.16);background:rgba(14,14,14,.94);backdrop-filter:blur(10px);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
   .nea-est.is-open .nea-sum .nea-sumfull{display:none}
+  /* Desplegado: el detalle completo entra arriba del CTA, con scroll propio
+     para que nunca empuje al boton fuera de la pantalla. */
+  .nea-est.is-open .nea-sum.is-detail .nea-sumfull{display:block;max-height:52vh;overflow-y:auto;overscroll-behavior:contain;margin-top:2px}
   .nea-est.is-open .nea-sum .nea-cta{margin-top:10px;height:48px}
+  .nea-est.is-open .nea-sum.is-detail .nea-sumbar .nea-sumchev{transform:rotate(180deg)}
+  /* Objetivos tactiles: la cruz de cerrar y el "ver mas opciones" quedaban en
+     34 y 40 px. En pantalla tactil el minimo es 44. */
+  .nea-panelclose{width:44px;height:44px}
+  .nea-more>summary{padding:14px 15px}
 }
 .nea-sumbar{display:none}
-@media (max-width:900px){.nea-est.is-open .nea-sumbar{display:flex;align-items:baseline;justify-content:space-between;gap:12px}}
+.nea-sumchev{margin-left:2px;font-size:15px;line-height:1;color:rgba(255,255,255,.5);transition:transform .22s cubic-bezier(.22,1,.36,1)}
+@media (max-width:900px){
+  .nea-est.is-open .nea-sumbar{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:44px;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+  .nea-est.is-open .nea-sumbar:focus-visible{outline:2px solid #C7FF4A;outline-offset:3px;border-radius:8px}
+  .nea-est.is-open .nea-sumbar #nea-barmes{margin-left:auto}
+  /* Con la card a pantalla completa, el fondo no puede seguir scrolleando
+     detras: al cerrar volvias a otro punto de la pagina. */
+  html.nea-locked,html.nea-locked body{overflow:hidden}
+}
 
 /* El morph de la card. Sin View Transitions, el panel simplemente aparece. */
 @media (prefers-reduced-motion:no-preference){
@@ -772,7 +805,7 @@ a:hover{color:#3157FF}
       <div class="nea-sum" id="nea-sum">
         <div style="font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.6)">TU ESTIMACIÓN</div>
 
-        <div class="nea-sumfull">
+        <div class="nea-sumfull" id="nea-sumfull">
           <div style="margin-top:22px;font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.45)" id="nea-totallabel">PAGO ÚNICO</div>
           <div id="nea-total" aria-live="polite" style="margin-top:8px;font-size:clamp(26px,2.6vw,38px);line-height:1.08;font-weight:700;letter-spacing:-.03em;color:#FFFFFF">Elegí una opción</div>
           <div id="nea-note" style="margin-top:10px;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.6);text-wrap:pretty">Elegí lo que necesitás a la izquierda y armá tu presupuesto.</div>
@@ -800,11 +833,14 @@ a:hover{color:#3157FF}
           <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.42)">Estimación orientativa, sujeta a revisión. El presupuesto final se define en la reunión inicial.</div>
         </div>
 
-        <!-- Version resumida: solo aparece en mobile, dentro de la barra fija -->
-        <div class="nea-sumbar">
+        <!-- Version resumida: solo aparece en mobile, dentro de la barra fija.
+             Es un boton porque despliega el detalle completo: sin eso, en mobile
+             el selector de años de soporte y los descuentos no existian. -->
+        <button type="button" class="nea-sumbar" id="nea-sumbar" aria-expanded="false" aria-controls="nea-sumfull">
           <span id="nea-barlabel" style="font-size:13px;color:rgba(255,255,255,.6)">Elegí una opción</span>
           <span id="nea-barmes" style="font-size:12.5px;font-weight:600;color:#C7FF4A"></span>
-        </div>
+          <span class="nea-sumchev" aria-hidden="true">⌃</span>
+        </button>
 
         <button type="button" class="nea-cta" id="nea-cta">Enviar por WhatsApp <span aria-hidden="true" style="font-size:14px;opacity:.55">↗</span></button>
       </div>

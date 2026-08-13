@@ -429,6 +429,17 @@
 
     const picks = Array.from(root.querySelectorAll('[data-pick]'));
     const panels = Array.from(root.querySelectorAll('[data-panel]'));
+
+    // En mobile la estimacion se reduce a una barra de dos numeros y el resto
+    // (plan de soporte, descuentos por varios años, desglose) vive detras de
+    // este toggle. Sin el, en telefono no habia forma de contratar 2 o 3 años.
+    const sumbar = document.getElementById('nea-sumbar');
+    const sumbox = document.getElementById('nea-sum');
+    function cerrarDetalle() {
+      if (!sumbox) return;
+      sumbox.classList.remove('is-detail');
+      if (sumbar) sumbar.setAttribute('aria-expanded', 'false');
+    }
     const totalNode = document.getElementById('nea-total');
     const totalLabel = document.getElementById('nea-totallabel');
     const noteNode = document.getElementById('nea-note');
@@ -512,6 +523,11 @@
       });
 
       panels.forEach(p => { p.hidden = p.getAttribute('data-panel') !== open; });
+
+      // En mobile la card abierta es un modal a pantalla completa: hay que
+      // frenar el scroll del fondo. La clase no hace nada en escritorio,
+      // donde el panel convive con el resto de la pagina.
+      document.documentElement.classList.toggle('nea-locked', !!open);
 
       // Las seis muestras pesan 460 KB juntas y no se ven hasta que abris una
       // card, asi que cada una se baja recien en el primer clic sobre su
@@ -610,11 +626,15 @@
 
     function openPanel(id) {
       if (open === id) return;
+      // Al cambiar de producto la hoja de detalle vuelve a cerrarse: si no,
+      // abris una card nueva y lo primero que ves es la estimacion tapandola.
+      cerrarDetalle();
       morph(pickOf(id), () => panelOf(id), () => { open = id; });
     }
 
     function closePanel() {
       if (!open) return;
+      cerrarDetalle();
       const from = panelOf(open);
       const back = pickOf(open);
       morph(from, () => back, () => { open = null; });
@@ -643,6 +663,13 @@
         b.addEventListener('click', () => { b.classList.toggle('is-on'); render(); });
       });
     });
+
+    if (sumbar && sumbox) {
+      sumbar.addEventListener('click', () => {
+        const abierto = sumbox.classList.toggle('is-detail');
+        sumbar.setAttribute('aria-expanded', String(abierto));
+      });
+    }
 
     addEventListener('keydown', e => {
       if (e.key === 'Escape' && open && !(dlg && dlg.open)) closePanel();

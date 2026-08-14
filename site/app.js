@@ -24,7 +24,8 @@
   let vwPrev, vhPrev, hhMax = 0;
   let steps, words, panels, dots, rig;
   let procPr = 0, procOn = false;
-  let ink, inkBases, proceso, nosotros, bgColor, bgLum;
+  let ink, inkBases, proceso, nosotros, galeria, bgColor, bgLum;
+  let galRig, galFrame;
   let grid = null;
   const INK_TARGETS = {
     strong: [255, 255, 255], muted: [221, 227, 255], word: [143, 166, 255],
@@ -124,6 +125,20 @@
       dots.forEach((dt, i) => { dt.style.opacity = i === active ? '1' : '.22'; });
     }
 
+    /* Galeria: siempre a pantalla completa, la entrada es un push-in desde el negro con el
+       que termina "Proceso" — la imagen sale de la nada y se asienta justo cuando el frame
+       queda clavado arriba. El recorrido es el ultimo viewport antes de que agarre el pin. */
+    if (galFrame === undefined) {
+      galRig = document.getElementById('galeria');
+      galFrame = galRig ? galRig.querySelector('.js-trail-content') : null;
+    }
+    // 848px == el breakpoint 52.99em del CSS, donde el pin y la entrada se apagan
+    if (galFrame && vw >= 848) {
+      const t = ez(cl((vh - galRig.getBoundingClientRect().top) / vh, 0, 1));
+      galFrame.style.opacity = cl(t * 1.35, 0, 1).toFixed(3);
+      galFrame.style.transform = 'scale(' + (1 + .1 * (1 - t)).toFixed(4) + ')';
+    }
+
     paintBackdrop(vh);
 
     // nav: full-width bar, colour follows whatever is behind it
@@ -153,6 +168,9 @@
       ink = Array.from(document.querySelectorAll('[data-ink]'));
       proceso = document.getElementById('proceso');
       nosotros = document.getElementById('nosotros');
+      // la galeria es lo primero negro despues de "Proceso": el fondo tiene que quedar en
+      // negro desde que entra ella, no desde "Nosotros", o el rig de 200vh vuelve al azul
+      galeria = document.getElementById('galeria');
       inkBases = ink.map(node => {
         const c = getComputedStyle(node).color.match(/[\d.]+/g).map(Number);
         return [c[0], c[1], c[2]];
@@ -169,7 +187,7 @@
 
     // the services section stays black-on-white: the blue only starts once "Proceso" is nearly at the top
     const p1 = enter(proceso, .3, .34);
-    const p2 = enter(nosotros, .5);
+    const p2 = enter(galeria || nosotros, .5);
     // white -> pale blue (dark ink still reads) -> full blue, with the ink flip inside the short last leg
     const q = cl(p1 / .34, 0, 1);
     const leg = .88;

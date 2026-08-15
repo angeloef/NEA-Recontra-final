@@ -186,10 +186,12 @@ a:hover{color:var(--lima)}
   font-family:ui-monospace,'Cascadia Mono',Consolas,'DejaVu Sans Mono',monospace;
   font-variant-ligatures:none;letter-spacing:0;user-select:none}
 
-/* Estrellas de "Diseñar": cada una muestra un cuadro de la tira compartida.
+/* Estrellas de "Diseñar": cada una muestra un cuadro de una tira compartida.
+   Hay dos modelos de estrella, cada uno con su tira; .v2 es la de cuatro puntas.
    Reemplazan a los destellos SVG planos (.nea-spark) que habia antes. */
 .nea-estrella{position:absolute;left:0;top:0;background-image:url(uploads/estrella-sprite.webp);
   background-repeat:no-repeat;will-change:transform,opacity;opacity:0}
+.nea-estrella.v2{background-image:url(uploads/estrella2-sprite.webp)}
 
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -215,8 +217,8 @@ a:hover{color:var(--lima)}
 </div>
 
 <!-- Estrellas de "Diseñar": caen al entrar la seccion, se estacionan, y giran al pasar
-     el mouse. Los divs los crea app.js a partir de uploads/estrella-sprite.webp, una
-     tira de 24 cuadros (6x4) que comparten todas. -->
+     el mouse. Los divs los crea app.js a partir de dos tiras de 24 cuadros (6x4):
+     uploads/estrella-sprite.webp y uploads/estrella2-sprite.webp. -->
 <div id="nea-estrellas" aria-hidden="true" style="position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden"></div>
 
 <div style="position:relative">

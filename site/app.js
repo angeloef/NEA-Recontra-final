@@ -605,10 +605,12 @@
     const ALTURA = 900, TRAMO = .38, ESCALONADO = .01, REBOTE = 1.1, DERIVA = 115;
     const FPS = 30, GIRA_HOVER = true, FPS_HOVER = 24;
 
-    // x/y en % del viewport; k escala entre TAM_MIN y TAM_MAX
+    // x/y en % del viewport; k escala entre TAM_MIN y TAM_MAX.
+    // v2 usa el segundo modelo de estrella (la de cuatro puntas): va en una grande
+    // y una chica, y separadas, para que la mezcla se lea sin quedar simetrica.
     const SITIOS = [
-      { x: 60, y: 42, k: 1.00 }, { x: 30, y: 76, k: 0.86 }, { x: 46, y: 60, k: 0.34 },
-      { x: 82, y: 74, k: 0.46 }, { x: 15, y: 26, k: 0.40 }
+      { x: 60, y: 42, k: 1.00 }, { x: 30, y: 76, k: 0.86, v2: true }, { x: 46, y: 60, k: 0.34 },
+      { x: 82, y: 74, k: 0.46, v2: true }, { x: 15, y: 26, k: 0.40 }
     ];
 
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -616,7 +618,7 @@
     for (let i = 0; i < CANT; i++) {
       const s = SITIOS[i];
       const nodo = document.createElement('div');
-      nodo.className = 'nea-estrella';
+      nodo.className = s.v2 ? 'nea-estrella v2' : 'nea-estrella';
       campo.appendChild(nodo);
       items.push({
         el: nodo, x: s.x, y: s.y, k: s.k, lado: i % 2 ? 1 : -1,

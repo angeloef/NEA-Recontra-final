@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Lab — posición y tamaño de las estrellas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-400-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-600-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(/site/uploads/fonts/instrumentserif-400-normal-subset.woff2) format('woff2')}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#2A2A2A;-webkit-user-select:none;user-select:none;
+  background:radial-gradient(118% 88% at 104% 44%,#D8FF33 0%,rgba(216,255,51,.82) 16%,rgba(216,255,51,0) 60%),
+             radial-gradient(75% 65% at 6% 94%,rgba(255,205,120,.42) 0%,rgba(255,205,120,0) 58%),
+             linear-gradient(118deg,#FDF9F1 0%,#F8F1E0 46%,#F3EDD4 100%)}
+
+/* --- escena, replica de "Diseñar" --- */
+#escena{position:fixed;inset:0;display:flex;flex-direction:column;
+  padding:clamp(40px,7vw,120px) clamp(20px,2.5vw,48px) clamp(48px,4vw,80px);pointer-events:none;z-index:2}
+.rule{border-top:1px solid rgba(10,10,10,.16);padding-top:13px;font-size:11px;font-weight:600;letter-spacing:.2em}
+.stack{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center}
+.paso{position:absolute;right:0;top:50%;transform:translateY(-50%);width:min(420px,38vw)}
+.num{font-size:12px;font-weight:600;letter-spacing:.16em;color:#8f8f8f;margin-bottom:14px}
+.txt{margin:0;font-size:15px;line-height:1.52}
+.palabra{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(64px,15.6vw,300px);
+  line-height:.94;letter-spacing:-.015em;color:#7C8C5A}
+.dots{display:flex;gap:8px;align-items:center;margin-top:20px}
+.dots span{width:34px;height:3px;border-radius:2px;background:#2A2A2A;opacity:.22}
+.dots span:nth-child(2){opacity:1}
+
+/* --- estrellas --- */
+#campo{position:fixed;inset:0;z-index:3}
+.estrella{position:absolute;background-image:url(/site/uploads/estrella-sprite.webp);
+  background-repeat:no-repeat;cursor:grab;touch-action:none;will-change:transform,opacity}
+.estrella.v2{background-image:url(/site/uploads/estrella2-sprite.webp)}
+.estrella.arrastrando{cursor:grabbing}
+/* el marco de seleccion va en un pseudo para no tocar el sprite */
+.estrella.sel::after{content:'';position:absolute;inset:-6px;border:1.5px dashed rgba(10,10,10,.5);border-radius:10px}
+.estrella::before{content:attr(data-n);position:absolute;left:50%;top:-9px;transform:translate(-50%,-100%);
+  font-size:10px;font-weight:700;color:rgba(10,10,10,.42);opacity:0;transition:opacity .15s}
+.estrella:hover::before,.estrella.sel::before{opacity:1}
+#campo.reglas .estrella::after{content:'';position:absolute;inset:-6px;border:1px dashed rgba(10,10,10,.22);border-radius:10px}
+
+/* --- panel --- */
+#panel{position:fixed;top:0;right:0;bottom:0;width:340px;z-index:10;overflow-y:auto;
+  background:rgba(8,10,20,.93);backdrop-filter:blur(10px);border-left:1px solid rgba(255,255,255,.14);
+  padding:18px;font-size:12.5px;color:#fff;transition:transform .25s}
+#panel.oculto{transform:translateX(100%)}
+/* el boton va FUERA del panel: adentro lo recorta el overflow-y y no se puede reabrir */
+#toggle{position:fixed;top:14px;right:340px;z-index:11;background:rgba(8,10,20,.93);
+  border:1px solid rgba(255,255,255,.14);border-right:0;color:#fff;padding:10px 14px;cursor:pointer;
+  border-radius:10px 0 0 10px;font:inherit;font-size:12.5px;font-weight:600;white-space:nowrap;
+  box-shadow:-4px 0 14px rgba(0,0,0,.18);transition:right .25s}
+#toggle.corrido{right:0}
+#toggle:hover{background:rgba(20,24,40,.97)}
+h1{margin:0 0 4px;font-size:14px;font-weight:700}
+.sub{margin:0 0 14px;font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.5}
+.grupo{margin:0 0 6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);
+  font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.45)}
+.fila{display:flex;align-items:center;gap:10px;margin:9px 0}
+.fila label{flex:1;color:rgba(255,255,255,.82)}
+.fila output{width:60px;text-align:right;font-variant-numeric:tabular-nums;color:#C7FF4A;font-weight:600}
+input[type=range]{width:100%;accent-color:#C7FF4A}
+input[type=checkbox]{accent-color:#C7FF4A;width:auto}
+textarea{width:100%;height:150px;background:rgba(255,255,255,.07);color:#fff;
+  border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:7px 9px;
+  font-family:ui-monospace,monospace;font-size:11px;resize:vertical;-webkit-user-select:text;user-select:text}
+.botones{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+button.acc{background:#C7FF4A;color:#0A0A0A;border:0;border-radius:999px;padding:10px;font:inherit;font-weight:700;cursor:pointer}
+button.sec{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;padding:10px;font:inherit;font-weight:600;cursor:pointer}
+button.sec:disabled{opacity:.35;cursor:not-allowed}
+#aviso{margin-top:8px;min-height:15px;font-size:11px;color:#C7FF4A}
+
+/* lista de estrellas */
+#lista{display:flex;flex-direction:column;gap:5px;margin:10px 0 2px}
+.item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:9px;cursor:pointer;
+  background:rgba(255,255,255,.06);border:1px solid transparent;text-align:left;color:#fff;font:inherit}
+.item:hover{background:rgba(255,255,255,.12)}
+.item.on{border-color:#C7FF4A;background:rgba(199,255,74,.14)}
+.item .chip{width:22px;height:22px;flex:none;border-radius:6px;background-position:center;
+  background-image:url(/site/uploads/estrella-sprite.webp);background-size:600% 400%;background-color:rgba(255,255,255,.1)}
+.item.v2 .chip{background-image:url(/site/uploads/estrella2-sprite.webp)}
+.item .datos{flex:1;font-variant-numeric:tabular-nums;font-size:11.5px;color:rgba(255,255,255,.78)}
+.item .datos b{color:#fff;font-weight:700}
+.atajos{margin:10px 0 0;font-size:11px;line-height:1.7;color:rgba(255,255,255,.45)}
+.atajos kbd{background:rgba(255,255,255,.12);border-radius:4px;padding:1px 5px;font:inherit;font-size:10.5px;color:#fff}
+#hud{position:fixed;left:12px;bottom:10px;z-index:10;font-size:11px;color:rgba(0,0,0,.5);
+  font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<div id="campo"></div>
+
+<div id="escena">
+  <div class="rule">PROCESO</div>
+  <div class="stack">
+    <div class="palabra">Diseñar</div>
+    <div class="paso">
+      <div class="num">02</div>
+      <p class="txt">Armamos un diseño preliminar navegable de las páginas principales, con la estructura e identidad visual definidas: colores, tipografía, imágenes y las animaciones que le dan vida.</p>
+    </div>
+  </div>
+  <div class="dots"><span></span><span></span><span></span></div>
+</div>
+
+<div id="hud">—</div>
+
+<button id="toggle" title="Ocultar controles (tecla H)">&#8677;</button>
+
+<aside id="panel">
+  <h1>Posición y tamaño</h1>
+  <p class="sub"><b>Arrastrá</b> una estrella para moverla y usá la <b>rueda</b> encima para agrandarla. Las posiciones son % del viewport, así que se mantienen en cualquier pantalla; el tamaño va en píxeles, igual que en la landing.</p>
+
+  <div class="grupo">ESTRELLAS</div>
+  <div id="lista"></div>
+  <div class="botones">
+    <button class="sec" id="agregar">Agregar</button>
+    <button class="sec" id="duplicar">Duplicar</button>
+    <button class="sec" id="modelo">Cambiar modelo</button>
+    <button class="sec" id="borrar">Eliminar</button>
+  </div>
+
+  <div class="grupo">LA SELECCIONADA</div>
+  <div class="fila"><label for="sx">Posición X</label><output id="o-sx"></output></div>
+  <input type="range" id="sx" min="0" max="100" step="0.25">
+  <div class="fila"><label for="sy">Posición Y</label><output id="o-sy"></output></div>
+  <input type="range" id="sy" min="0" max="100" step="0.25">
+  <div class="fila"><label for="spx">Tamaño</label><output id="o-spx"></output></div>
+  <input type="range" id="spx" min="30" max="480" step="1">
+
+  <div class="grupo">VISTA</div>
+  <div class="fila"><label for="reglas">Marcar todas las cajas</label><input type="checkbox" id="reglas"></div>
+  <div class="fila"><label for="girar">Girar al pasar el mouse</label><input type="checkbox" id="girar" checked></div>
+  <div class="fila"><label for="caida">Previsualizar la caída</label><input type="checkbox" id="caida"></div>
+
+  <div class="grupo">EXPORTAR</div>
+  <div class="botones">
+    <button class="acc" id="copiar">Copiar para app.js</button>
+    <button class="sec" id="bajar">Descargar JSON</button>
+    <button class="sec" id="aplicar">Aplicar pegado</button>
+    <button class="sec" id="reset">Restaurar</button>
+  </div>
+  <div id="aviso"></div>
+  <textarea id="json" spellcheck="false" placeholder="Acá sale el bloque para pegar en initEstrellas(). También podés pegar un JSON y tocar «Aplicar pegado»."></textarea>
+
+  <p class="atajos">
+    <kbd>↑↓←→</kbd> mover · con <kbd>Shift</kbd> más rápido<br>
+    <kbd>+</kbd> <kbd>−</kbd> tamaño · <kbd>M</kbd> cambiar modelo<br>
+    <kbd>D</kbd> duplicar · <kbd>Supr</kbd> eliminar · <kbd>H</kbd> ocultar panel
+  </p>
+</aside>
+
+<script>
+'use strict';
+
+const COLS = 6, FILAS = 4, TOTAL = 24;   // la tira es 6x4 = 24 cuadros
+const CLAVE = 'nea-lab-estrellas-layout';
+
+// Constantes de la caída, copiadas de initEstrellas() en site/app.js. Acá solo
+// sirven para previsualizar: lo que este lab define es la posición y el tamaño.
+const ALTURA = 900, TRAMO = .38, ESCALONADO = .01, REBOTE = 1.1, DERIVA = 115;
+
+// Estado inicial = lo que hoy está en la landing. El tamaño en px sale de
+// TAM_MIN 70 + (TAM_MAX 260 - TAM_MIN) * k.
+const BASE = [
+  { x: 60, y: 42, px: 260, v2: false },
+  { x: 30, y: 76, px: 233, v2: true  },
+  { x: 46, y: 60, px: 135, v2: false },
+  { x: 82, y: 74, px: 157, v2: true  },
+  { x: 15, y: 26, px: 146, v2: false }
+];
+
+const campo = document.getElementById('campo');
+const cl = (n, a, b) => Math.max(a, Math.min(b, n));
+const outBack = (t, s) => 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2);
+
+let datos = cargar();
+let sel = 0;
+let vista = { reglas: false, girar: true, caida: false };
+
+function cargar() {
+  try {
+    const g = JSON.parse(localStorage.getItem(CLAVE));
+    if (Array.isArray(g) && g.length) return g.map(s => ({ x: +s.x, y: +s.y, px: +s.px, v2: !!s.v2 }));
+  } catch (e) { /* si el guardado quedó corrupto, se arranca de cero */ }
+  return BASE.map(s => Object.assign({}, s));
+}
+const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(datos)); } catch (e) {} };
+
+/* ---------------- construccion ---------------- */
+
+let nodos = [];
+
+function construir() {
+  campo.innerHTML = '';
+  nodos = datos.map((s, i) => {
+    const el = document.createElement('div');
+    el.dataset.n = i + 1;
+    el.addEventListener('pointerdown', ev => empezarArrastre(ev, i));
+    el.addEventListener('wheel', ev => rueda(ev, i), { passive: false });
+    el.addEventListener('pointerenter', () => { nodos[i].hover = true; });
+    el.addEventListener('pointerleave', () => { nodos[i].hover = false; });
+    campo.appendChild(el);
+    return { el: el, cuadro: 0, estado: 'quieta', meta: 0, hover: false };
+  });
+  medir();
+  pintarLista();
+}
+
+function medir() {
+  datos.forEach((s, i) => {
+    const el = nodos[i].el, tam = Math.round(s.px);
+    el.className = 'estrella' + (s.v2 ? ' v2' : '') + (i === sel ? ' sel' : '');
+    el.style.width = tam + 'px';
+    el.style.height = tam + 'px';
+    el.style.backgroundSize = (tam * COLS) + 'px ' + (tam * FILAS) + 'px';
+    el.style.left = 'calc(' + s.x + '% - ' + (tam / 2) + 'px)';
+    el.style.top = 'calc(' + s.y + '% - ' + (tam / 2) + 'px)';
+  });
+}
+
+/* ---------------- arrastre y rueda ---------------- */
+
+let arr = null;
+
+function empezarArrastre(ev, i) {
+  ev.preventDefault();
+  seleccionar(i);
+  const s = datos[i];
+  arr = { i: i, dx: ev.clientX - innerWidth * s.x / 100, dy: ev.clientY - innerHeight * s.y / 100 };
+  nodos[i].el.classList.add('arrastrando');
+  nodos[i].el.setPointerCapture(ev.pointerId);
+}
+
+addEventListener('pointermove', ev => {
+  if (!arr) return;
+  const s = datos[arr.i];
+  s.x = +cl((ev.clientX - arr.dx) / innerWidth * 100, 0, 100).toFixed(2);
+  s.y = +cl((ev.clientY - arr.dy) / innerHeight * 100, 0, 100).toFixed(2);
+  medir(); pintarLista(); pintarControles();
+});
+
+addEventListener('pointerup', () => {
+  if (!arr) return;
+  nodos[arr.i].el.classList.remove('arrastrando');
+  arr = null;
+  guardar();
+});
+
+function rueda(ev, i) {
+  ev.preventDefault();
+  cambiarTam(i, ev.deltaY < 0 ? 6 : -6);
+}
+
+function cambiarTam(i, delta) {
+  datos[i].px = Math.round(cl(datos[i].px + delta, 30, 480));
+  medir(); pintarLista(); pintarControles(); guardar();
+}
+
+/* ---------------- seleccion y lista ---------------- */
+
+function seleccionar(i) {
+  sel = cl(i, 0, datos.length - 1);
+  medir(); pintarLista(); pintarControles();
+}
+
+function pintarLista() {
+  const lista = document.getElementById('lista');
+  lista.innerHTML = '';
+  datos.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'item' + (s.v2 ? ' v2' : '') + (i === sel ? ' on' : '');
+    b.innerHTML = '<span class="chip"></span><span class="datos"><b>' + (i + 1) + '</b> · ' +
+      s.x + '% , ' + s.y + '% · ' + Math.round(s.px) + 'px</span>';
+    b.addEventListener('click', () => seleccionar(i));
+    lista.appendChild(b);
+  });
+  document.getElementById('borrar').disabled = datos.length <= 1;
+}
+
+function pintarControles() {
+  const s = datos[sel];
+  if (!s) return;
+  const set = (id, v, txt) => {
+    document.getElementById(id).value = v;
+    document.getElementById('o-' + id).textContent = txt;
+  };
+  set('sx', s.x, s.x + '%');
+  set('sy', s.y, s.y + '%');
+  set('spx', s.px, Math.round(s.px) + 'px');
+}
+
+['sx', 'sy', 'spx'].forEach(id => {
+  document.getElementById(id).addEventListener('input', ev => {
+    const v = parseFloat(ev.target.value);
+    if (id === 'spx') datos[sel].px = v; else datos[sel][id === 'sx' ? 'x' : 'y'] = v;
+    medir(); pintarLista(); pintarControles(); guardar();
+  });
+});
+
+/* ---------------- alta, baja y modelo ---------------- */
+
+document.getElementById('agregar').addEventListener('click', () => {
+  datos.push({ x: 50, y: 50, px: 160, v2: false });
+  sel = datos.length - 1;
+  construir(); pintarControles(); guardar();
+});
+document.getElementById('duplicar').addEventListener('click', () => {
+  const s = datos[sel];
+  datos.splice(sel + 1, 0, { x: cl(s.x + 6, 0, 100), y: cl(s.y + 6, 0, 100), px: s.px, v2: s.v2 });
+  sel = sel + 1;
+  construir(); pintarControles(); guardar();
+});
+document.getElementById('modelo').addEventListener('click', () => {
+  datos[sel].v2 = !datos[sel].v2;
+  medir(); pintarLista(); guardar();
+});
+document.getElementById('borrar').addEventListener('click', () => {
+  if (datos.length <= 1) return;
+  datos.splice(sel, 1);
+  sel = cl(sel, 0, datos.length - 1);
+  construir(); pintarControles(); guardar();
+});
+
+/* ---------------- vista ---------------- */
+
+document.getElementById('reglas').addEventListener('change', ev => {
+  vista.reglas = ev.target.checked;
+  campo.classList.toggle('reglas', vista.reglas);
+});
+document.getElementById('girar').addEventListener('change', ev => { vista.girar = ev.target.checked; });
+document.getElementById('caida').addEventListener('change', ev => { vista.caida = ev.target.checked; t0 = 0; });
+
+/* ---------------- exportar ---------------- */
+
+// La landing deriva el tamaño de k entre TAM_MIN y TAM_MAX, así que del lado de
+// acá se hace la cuenta al revés: los extremos salen de las estrellas que hay.
+function comoSitios() {
+  const px = datos.map(s => Math.round(s.px));
+  const min = Math.min.apply(null, px), max = Math.max.apply(null, px);
+  const rango = max - min;
+  const filas = datos.map((s, i) => {
+    const k = rango ? (px[i] - min) / rango : 0;
+    return '      { x: ' + s.x + ', y: ' + s.y + ', k: ' + k.toFixed(3) +
+      (s.v2 ? ', v2: true' : '') + ' }';
+  });
+  return '    const CANT = ' + datos.length + ', TAM_MIN = ' + min + ', TAM_MAX = ' + max + ';\n' +
+    '    const SITIOS = [\n' + filas.join(',\n') + '\n    ];';
+}
+
+const aviso = m => {
+  const n = document.getElementById('aviso');
+  n.textContent = m;
+  setTimeout(() => { if (n.textContent === m) n.textContent = ''; }, 2600);
+};
+
+document.getElementById('copiar').addEventListener('click', async () => {
+  const t = comoSitios();
+  document.getElementById('json').value = t;
+  try { await navigator.clipboard.writeText(t); aviso('Copiado: pegalo en initEstrellas()'); }
+  catch (e) { aviso('No pude copiar: usá el cuadro de abajo'); }
+});
+document.getElementById('bajar').addEventListener('click', () => {
+  const t = JSON.stringify(datos, null, 2);
+  document.getElementById('json').value = t;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([t], { type: 'application/json' }));
+  a.download = 'estrellas-posiciones.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  aviso('Descargado estrellas-posiciones.json');
+});
+document.getElementById('aplicar').addEventListener('click', () => {
+  try {
+    const p = JSON.parse(document.getElementById('json').value);
+    if (!Array.isArray(p) || !p.length) throw new Error('esperaba una lista de estrellas');
+    datos = p.map(s => ({
+      x: cl(+s.x || 0, 0, 100), y: cl(+s.y || 0, 0, 100),
+      px: cl(+s.px || 160, 30, 480), v2: !!s.v2
+    }));
+    sel = 0;
+    construir(); pintarControles(); guardar();
+    aviso('Aplicado: ' + datos.length + ' estrellas');
+  } catch (e) { aviso('No pude leerlo: ' + e.message); }
+});
+document.getElementById('reset').addEventListener('click', () => {
+  datos = BASE.map(s => Object.assign({}, s));
+  sel = 0;
+  construir(); pintarControles(); guardar();
+  document.getElementById('json').value = '';
+  aviso('Volvió a como está hoy en la landing');
+});
+
+/* ---------------- panel y teclado ---------------- */
+
+const btn = document.getElementById('toggle');
+const alternarPanel = () => {
+  const oculto = document.getElementById('panel').classList.toggle('oculto');
+  btn.classList.toggle('corrido', oculto);
+  btn.textContent = oculto ? '⚙ Controles' : '⇥';
+  btn.title = oculto ? 'Mostrar controles' : 'Ocultar controles (tecla H)';
+};
+btn.addEventListener('click', alternarPanel);
+
+addEventListener('keydown', ev => {
+  if (/^(INPUT|TEXTAREA)$/.test(ev.target.tagName)) return;
+  const s = datos[sel];
+  const paso = ev.shiftKey ? 2 : 0.25;
+  let toco = true;
+  switch (ev.key) {
+    case 'ArrowLeft':  s.x = +cl(s.x - paso, 0, 100).toFixed(2); break;
+    case 'ArrowRight': s.x = +cl(s.x + paso, 0, 100).toFixed(2); break;
+    case 'ArrowUp':    s.y = +cl(s.y - paso, 0, 100).toFixed(2); break;
+    case 'ArrowDown':  s.y = +cl(s.y + paso, 0, 100).toFixed(2); break;
+    case '+': case '=': cambiarTam(sel, ev.shiftKey ? 20 : 6); return;
+    case '-': case '_': cambiarTam(sel, ev.shiftKey ? -20 : -6); return;
+    case 'm': case 'M': document.getElementById('modelo').click(); return;
+    case 'd': case 'D': document.getElementById('duplicar').click(); return;
+    case 'Delete': case 'Backspace': document.getElementById('borrar').click(); return;
+    case 'h': case 'H': alternarPanel(); return;
+    case 'Tab': seleccionar((sel + 1) % datos.length); ev.preventDefault(); return;
+    default: toco = false;
+  }
+  if (!toco) return;
+  ev.preventDefault();
+  medir(); pintarLista(); pintarControles(); guardar();
+});
+
+addEventListener('resize', medir, { passive: true });
+
+/* ---------------- bucle ---------------- */
+
+let t0 = 0, tPrev = 0;
+function pintar(ts) {
+  requestAnimationFrame(pintar);
+  if (!t0) { t0 = ts; tPrev = ts; }
+  const dt = Math.min(.05, (ts - tPrev) / 1000);
+  tPrev = ts;
+
+  // progreso 0→1 en bucle, solo cuando se previsualiza la caída
+  const p = vista.caida ? ((ts - t0) / 5000) % 1 : 1;
+
+  datos.forEach((s, i) => {
+    const n = nodos[i], el = n.el;
+    let vis = 1, dx = 0, dy = 0;
+
+    if (vista.caida) {
+      const ent = cl((p - i * ESCALONADO) / TRAMO, 0, 1);
+      const sal = cl((p - (1 - TRAMO)) / TRAMO, 0, 1);
+      vis = ent * (1 - sal);
+      dy = (1 - outBack(ent, REBOTE)) * -ALTURA + sal * sal * sal * -ALTURA;
+      dx = (1 - ent) * DERIVA * (i % 2 ? 1 : -1);
+    }
+    el.style.opacity = vis.toFixed(3);
+    el.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0)';
+
+    // el giro cierra siempre la vuelta: nunca queda a mitad de camino
+    const pide = (vista.girar && n.hover) || (vista.caida && vis > .001 && vis < .999);
+    if (pide) n.estado = 'girando';
+    else if (n.estado === 'girando') {
+      n.estado = 'cerrando';
+      n.meta = Math.ceil(n.cuadro / TOTAL) * TOTAL;
+      if (n.meta <= n.cuadro + .001) n.meta += TOTAL;
+    }
+    if (n.estado !== 'quieta') {
+      n.cuadro += 24 * dt;
+      if (n.estado === 'cerrando' && n.cuadro >= n.meta) { n.cuadro = 0; n.estado = 'quieta'; }
+    }
+    const tam = Math.round(s.px);
+    const c = Math.floor(n.cuadro) % TOTAL;
+    el.style.backgroundPosition = (-(c % COLS) * tam) + 'px ' + (-Math.floor(c / COLS) * tam) + 'px';
+  });
+
+  const s = datos[sel];
+  document.getElementById('hud').textContent =
+    'viewport ' + innerWidth + '×' + innerHeight + ' · ' + datos.length + ' estrellas · ' +
+    'seleccionada ' + (sel + 1) + ': ' + s.x + '% , ' + s.y + '% , ' + Math.round(s.px) + 'px';
+}
+requestAnimationFrame(pintar);
+
+construir();
+pintarControles();
+</script>
+</body>
+</html>

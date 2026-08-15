@@ -34,6 +34,8 @@ body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#2A2A2A;
 #campo{position:fixed;inset:0;z-index:1;pointer-events:none}
 .estrella{position:absolute;background-image:url(/site/uploads/estrella-sprite.webp);
   background-repeat:no-repeat;pointer-events:auto;will-change:transform,opacity}
+/* segundo modelo: la estrella de cuatro puntas, misma tira de 24 cuadros (6x4) */
+.estrella.v2{background-image:url(/site/uploads/estrella2-sprite.webp)}
 
 /* --- panel --- */
 #panel{position:fixed;top:0;right:0;bottom:0;width:330px;z-index:10;overflow-y:auto;
@@ -141,11 +143,12 @@ button.sec{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255
 const COLS = 6, FILAS = 4, TOTAL = 24;   // la tira es 6x4 = 24 cuadros
 
 // Posiciones base, en % del viewport. La cantidad toma las primeras N.
+// v2 marca las que usan el segundo modelo de estrella.
 const SITIOS = [
   { x: 60, y: 42, k: 1.00 },
-  { x: 30, y: 76, k: 0.86 },
+  { x: 30, y: 76, k: 0.86, v2: true },
   { x: 46, y: 60, k: 0.34 },
-  { x: 82, y: 74, k: 0.46 },
+  { x: 82, y: 74, k: 0.46, v2: true },
   { x: 15, y: 26, k: 0.40 },
   { x: 70, y: 18, k: 0.30 },
   { x: 38, y: 20, k: 0.24 },
@@ -178,7 +181,7 @@ function construir() {
   for (let i = 0; i < n; i++) {
     const s = SITIOS[i % SITIOS.length];
     const el = document.createElement('div');
-    el.className = 'estrella';
+    el.className = s.v2 ? 'estrella v2' : 'estrella';
     el._h = false;
     el.addEventListener('pointerenter', () => { el._h = true; });
     el.addEventListener('pointerleave', () => { el._h = false; });

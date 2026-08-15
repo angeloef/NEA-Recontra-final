@@ -20,6 +20,17 @@
   const pace = Math.max(1.8, Math.min(5, SCROLL_PACE));
   if (el.runway) el.runway.style.height = (pace * 100) + 'vh';
 
+  /* El video del hero es el unico movimiento que corre sin que el usuario haga nada:
+     con prefers-reduced-motion queda en el primer frame (el poster ya cubre el resto).
+     Se escucha el cambio de preferencia, no solo el valor al cargar. */
+  (() => {
+    if (!el.scene) return;
+    const mq = matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => { mq.matches ? el.scene.pause() : el.scene.play().catch(() => {}); };
+    mq.addEventListener('change', apply);
+    apply();
+  })();
+
   /* ---- estado de layout cacheado entre frames ---- */
   let vwPrev, vhPrev, hhMax = 0;
   let steps, words, panels, dots, rig;
@@ -221,6 +232,29 @@
     bgColor = bg;
 
     const t = bgLum < .21 ? 1 : 0;
+
+    /* Palabra ambiental legible sobre cualquier punto del degradado.
+       Elige el extremo (blanco o negro) que deje mas recorrido de contraste desde el
+       fondo, y avanza hacia el hasta cruzar WORD_CR. Si ni el extremo puro alcanza
+       —pasa con fondos de luminancia media—, se queda en el extremo: es el maximo
+       posible contra ese fondo. Busqueda binaria de 12 pasos, 3 nodos por frame. */
+    const WORD_CR = 3.2;
+    const relLum = c => .2126 * lin(c[0]) + .7152 * lin(c[1]) + .0722 * lin(c[2]);
+    const ratio = (a, b) => {
+      const L1 = relLum(a), L2 = relLum(b);
+      return (Math.max(L1, L2) + .05) / (Math.min(L1, L2) + .05);
+    };
+    function wordColor(bgArr) {
+      const dest = ratio(bgArr, WHITE) >= ratio(bgArr, BLACK) ? WHITE : BLACK;
+      if (ratio(bgArr, dest) <= WORD_CR) return rgb(bgArr.map(Math.round), dest, 1);
+      let lo = 0, hi = 1;
+      for (let k = 0; k < 12; k++) {
+        const mid = (lo + hi) / 2;
+        if (ratio(mix(bgArr, dest, mid), bgArr) < WORD_CR) lo = mid; else hi = mid;
+      }
+      return rgb(bgArr.map(Math.round), dest, hi);
+    }
+
     ink.forEach((node, i) => {
       const kind = node.dataset.ink;
       if (kind === 'chip') {
@@ -228,7 +262,11 @@
         node.style.color = rgb(WHITE, BLACK, t);
         return;
       }
-      if (kind === 'word') node.style.color = rgb(arr.map(Math.round), t ? WHITE : BLACK, .32);
+      // La palabra gigante sale del fondo mismo, empujada hacia el extremo con mas aire.
+      // No sirve una mezcla fija: el fondo barre blanco -> azul -> lima -> negro, y el
+      // mismo factor que alcanza sobre negro deja 2.2:1 sobre el azul. Se resuelve por
+      // contraste, no por mezcla: se empuja lo justo hasta cruzar el 3:1 de texto grande.
+      if (kind === 'word') node.style.color = wordColor(arr);
       else node.style.color = rgb(inkBases[i], INK_TARGETS[kind] || WHITE, t);
       if (kind === 'line' || kind === 'rule') {
         node.style.borderTopColor = t
@@ -541,7 +579,10 @@
       picks.forEach(b => {
         const id = b.getAttribute('data-pick');
         const on = id === open;
-        b.setAttribute('aria-checked', on ? 'true' : 'false');
+        // aria-pressed y no aria-checked: son <button> que ademas despliegan un panel.
+        // role=radio prometia navegacion con flechas y un solo tab stop, que este widget
+        // no implementa; como botones de dos estados el contrato se cumple entero.
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
         b.setAttribute('aria-expanded', on ? 'true' : 'false');
         b.classList.toggle('is-on', on);
         // Marca discreta: este producto ya lo tenias armado
@@ -683,7 +724,7 @@
         planOpts.forEach(x => {
           const on = x === o;
           x.classList.toggle('is-on', on);
-          x.setAttribute('aria-checked', on ? 'true' : 'false');
+          x.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
         render();
       });

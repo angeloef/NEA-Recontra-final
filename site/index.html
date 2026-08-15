@@ -91,226 +91,47 @@
 @font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(uploads/fonts/instrumentserif-400-normal-subset.woff2) format('woff2')}
 @font-face{font-family:'Jersey 10 Charted';font-style:normal;font-weight:400;font-display:swap;src:url(uploads/fonts/jersey10charted-400-normal-subset.woff2) format('woff2')}
 
+/* Los tokens son los mismos de las paginas de seccion: un solo sistema para todo el sitio.
+   Si cambia el lima o el negro de marca, se cambia aca y en el :root de las subsecciones. */
+:root{
+  --ink:#0A0A0A;
+  --ink-soft:#3d3d3d;
+  --ink-mute:#6e6e6e;
+  --line:rgba(10,10,10,.14);
+  --paper:#FFFFFF;
+  --paper-2:#F5F4F0;
+  --lima:#C7FF4A;
+  --azul:#3157FF;
+  --plum:#1b0406;
+  --ink-ghost:#8c8c8c;
+}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:#FFFFFF;color:#0A0A0A;font-family:"Plus Jakarta Sans","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Plus Jakarta Sans","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-a:hover{color:#3157FF}
+a:hover{color:var(--azul)}
+
+/* Los reveals del scroll solo esconden algo si app.js esta vivo para volver a mostrarlo.
+   La clase la pone el script inline del <head>, antes del primer paint. Sin JS (o si
+   app.js falla) la home se lee entera, quieta. */
+.js #nea-nav,.js #nea-s2text,.js [data-nea-panel]{opacity:0}
+
+/* El link de salto: fuera de pantalla hasta que lo enfoca el teclado */
+.nea-skip{position:absolute;left:-9999px;top:0;z-index:200;padding:12px 20px;
+  background:var(--ink);color:#fff;font-size:15px;font-weight:600;border-radius:0 0 8px 0}
+.nea-skip:focus{left:0;color:#fff}
+
+/* 44px de area tactil sin cambiar la metrica visual */
+.nea-footnav a,#nea-navlinks a,#nea-navlinksA a,#nea-nav a[href="#contacto"],#nea-frame a[href="#contacto"]{display:inline-flex;align-items:center;min-height:44px}
+.nea-solcard{transition:transform .22s cubic-bezier(.22,1,.36,1)}
+.nea-solcard:hover{transform:translateY(-4px);color:inherit}
+.nea-solcard:hover [data-ink="strong"]{color:var(--azul)}
+.nea-solcard:focus-visible{outline:2px solid var(--ink);outline-offset:6px;border-radius:14px}
 [data-ink]{transition:color .12s linear,background-color .12s linear,border-top-color .12s linear}
 @keyframes neaCaret{0%,48%{opacity:1}49%,100%{opacity:0}}
 
-/* ============================================================== Estimador
-   Estado 0: dos columnas (lista + estimacion). Al elegir un producto la
-   lista se angosta y nace la columna del medio con la card expandida.
-   La expansion se anima con la View Transitions API: sin dependencias, y
-   donde no existe simplemente aparece sin morph. */
-/* Tope de ancho: a 1920 sin esto las cards miden 700px para una linea de texto
-   y la card expandida se vuelve tan alta que no entra en pantalla. */
-.nea-esthead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);gap:clamp(24px,3vw,56px);align-items:end;max-width:1400px}
-.nea-est{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:clamp(18px,2.2vw,40px);align-items:start;max-width:1400px}
-/* Tres columnas solo con ancho de sobra: por debajo, la del medio ahoga al
-   video vertical y al texto que va a su lado. */
-@media (min-width:1361px){
-  .nea-est.is-open{grid-template-columns:270px minmax(0,1fr) 340px}
-}
-/* Entre 901 y 1360: dos columnas, y la card expandida cae debajo de la lista */
-@media (min-width:901px) and (max-width:1360px){
-  .nea-est.is-open{grid-template-columns:minmax(0,1fr) 340px}
-  .nea-est.is-open > :first-child{grid-column:1;grid-row:1}
-  .nea-est.is-open > #nea-panels{grid-column:1;grid-row:2}
-  .nea-est.is-open > .nea-sum{grid-column:2;grid-row:1 / span 2}
-}
-
-/* En el estado 0 el contenedor de paneles esta vacio, pero si sigue en el grid
-   se come la segunda celda y tira la estimacion a la fila de abajo. */
-.nea-est:not(.is-open) > #nea-panels{display:none}
-
-.nea-picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.nea-est.is-open .nea-picks{grid-template-columns:minmax(0,1fr);gap:10px}
-
-/* Card reducida: sin precio. El gancho es el nombre + la linea de "para vos si" */
-.nea-pick{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.04);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s,transform .18s}
-.nea-pick:hover{border-color:rgba(199,255,74,.6);transform:translateY(-2px)}
-.nea-pick:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
-.nea-pick.is-on{border-color:#C7FF4A;background:rgba(199,255,74,.10)}
-.nea-pick .nea-dot{flex:none;width:18px;height:18px;margin-top:3px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;transition:border-color .18s}
-.nea-pick.is-on .nea-dot{border-color:#C7FF4A}
-.nea-pick .nea-fill{width:9px;height:9px;border-radius:999px;background:#C7FF4A;opacity:0;transition:opacity .18s}
-.nea-pick.is-on .nea-fill{opacity:1}
-.nea-pick .nea-pickname{font-size:16px;font-weight:600;letter-spacing:-.01em}
-.nea-pick .nea-pickdesc{font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.62);text-wrap:pretty}
-.nea-est.is-open .nea-pick{padding:14px 16px}
-.nea-est.is-open .nea-pick .nea-pickdesc{display:none}
-/* Marca discreta: este producto ya lo armaste antes */
-.nea-pick .nea-mark{margin-left:auto;padding-left:10px;font-size:11px;font-weight:600;letter-spacing:.12em;color:#C7FF4A;opacity:0;transition:opacity .18s}
-.nea-pick.has-extras .nea-mark{opacity:.85}
-
-/* Card expandida: video vertical 9:16 a la izquierda, contenido a la derecha */
-/* El alto lo manda el video, no el texto. Con el media al 50% del ancho y en
-   9:16, el alto de la card es ancho x 0,889 => aspect-ratio 9/8. Sin esto, un
-   producto con muchos extras estira la card y deja un hueco al lado del video.
-   El video recorta con object-fit y el contenido scrollea.
-   Se ancla con sticky para que la card entre entera bajo el nav: sin eso, en
-   pantallas de 1080 el final queda debajo del borde inferior. */
-.nea-panel{border-radius:18px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);position:sticky;top:104px;aspect-ratio:9/8;max-height:calc(100vh - 132px)}
-.nea-panel[hidden]{display:none}
-.nea-panelmedia{position:relative;height:100%;background:#141414;overflow:hidden}
-.nea-panelmedia video,.nea-panelmedia img{width:100%;height:100%;object-fit:cover;display:block}
-/* Placeholder hasta que existan los videos de 2-5s */
-/* Centrado, no al pie: con la card alta el texto anclado abajo quedaba fuera
-   de pantalla y el video se leia como un bloque gris vacio. */
-.nea-panelimg{width:100%;height:100%;object-fit:cover;display:block}
-.nea-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:22px;background:linear-gradient(160deg,#1d1d1d,#0f0f0f 55%,#171717)}
-.nea-ph::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 20% 15%,rgba(199,255,74,.14),transparent 60%)}
-.nea-ph b{position:relative;font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(199,255,74,.8)}
-.nea-ph span{position:relative;font-size:13px;line-height:1.45;color:rgba(255,255,255,.42);text-wrap:pretty}
-.nea-panelbody{padding:clamp(20px,1.8vw,30px);overflow-y:auto;display:flex;flex-direction:column;gap:18px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent}
-.nea-panelbody::-webkit-scrollbar{width:6px}
-.nea-panelbody::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:99px}
-.nea-panelbody::-webkit-scrollbar-track{background:transparent}
-.nea-panelclose{position:absolute;top:14px;right:14px;z-index:2;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(10,10,10,.55);backdrop-filter:blur(6px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s,border-color .18s}
-.nea-panelclose:hover{background:rgba(199,255,74,.18);border-color:#C7FF4A}
-.nea-panelclose:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
-.nea-panelkicker{font-size:11px;font-weight:600;letter-spacing:.2em;color:#C7FF4A}
-.nea-paneltitle{margin:6px 0 0;font-size:clamp(21px,1.9vw,28px);line-height:1.1;font-weight:700;letter-spacing:-.025em;color:#fff}
-.nea-panelfrom{margin-top:10px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.14);font-size:15px;font-weight:600;color:rgba(255,255,255,.8)}
-.nea-panelfrom b{color:#C7FF4A}
-.nea-eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.5);margin-bottom:12px}
-.nea-inc{list-style:none;margin:0;padding:0;display:grid;gap:9px}
-.nea-inc li{position:relative;padding-left:24px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.74);text-wrap:pretty}
-.nea-inc li::before{content:"";position:absolute;left:2px;top:7px;width:9px;height:9px;border-radius:999px;border:1.5px solid #C7FF4A}
-.nea-extras{display:grid;gap:9px}
-
-/* Mas de 8 opciones no se leen: el resto vive en un <details> nativo.
-   Cero JS para abrir y cerrar; el contador avisa si adentro quedo algo tildado. */
-/* Obligatorio: .nea-extras{display:grid} le gana a la regla del navegador que
-   oculta el contenido de un <details> cerrado, y quedaba todo siempre visible. */
-.nea-more:not([open])>.nea-extras{display:none}
-.nea-more>summary{list-style:none;cursor:pointer;padding:11px 15px;border-radius:12px;border:1px dashed rgba(255,255,255,.2);font-size:13px;font-weight:600;color:rgba(255,255,255,.58);text-align:center;transition:color .18s,border-color .18s}
-.nea-more>summary::-webkit-details-marker{display:none}
-.nea-more>summary:hover{color:#C7FF4A;border-color:rgba(199,255,74,.5)}
-.nea-more>summary:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
-.nea-more[open]>summary{margin-bottom:9px;border-style:solid}
-.nea-more[open]>summary::after{content:" ↑"}
-.nea-more:not([open])>summary::after{content:" ↓"}
-.nea-more [data-morecount]{color:#C7FF4A}
-
-/* Add-ons: mismo lenguaje que las opciones, pero cuadrado (multiple) y mas compacto */
-.nea-add{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:13px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s}
-.nea-add:hover{border-color:rgba(199,255,74,.5)}
-.nea-add:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
-.nea-add.is-on{border-color:#C7FF4A;background:rgba(199,255,74,.09)}
-.nea-add .nea-box{flex:none;width:18px;height:18px;border-radius:5px;border:1px solid rgba(255,255,255,.42);display:flex;align-items:center;justify-content:center;transition:border-color .18s,background .18s}
-.nea-add.is-on .nea-box{border-color:#C7FF4A;background:#C7FF4A}
-.nea-add .nea-tick{width:11px;height:11px;opacity:0;transition:opacity .18s}
-.nea-add.is-on .nea-tick{opacity:1}
-.nea-add .nea-addname{font-size:14px;font-weight:500;letter-spacing:-.005em;text-wrap:pretty}
-.nea-add .nea-addprice{margin-left:auto;padding-left:12px;text-align:right;font-size:13px;font-weight:600;color:rgba(255,255,255,.5);white-space:nowrap;transition:color .18s}
-.nea-add.is-on .nea-addprice{color:#C7FF4A}
-.nea-add .nea-addmes{display:block;font-size:11px;font-weight:500;color:rgba(255,255,255,.38)}
-.nea-add.is-on .nea-addmes{color:rgba(199,255,74,.7)}
-/* Sistemas a medida no cotiza: sus items se listan, no se tildan */
-.nea-scope{display:grid;gap:9px}
-.nea-scope li{list-style:none;padding:13px 15px;border-radius:12px;border:1px dashed rgba(255,255,255,.18);font-size:14px;color:rgba(255,255,255,.66)}
-
-/* Columna de estimacion */
-.nea-sum{border-radius:16px;padding:clamp(22px,2vw,30px);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);position:sticky;top:104px}
-.nea-sumline{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:13px;color:rgba(255,255,255,.6);padding:5px 0}
-.nea-sumline b{font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap}
-.nea-cta{margin-top:22px;width:100%;height:52px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:0 24px;border:0;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:opacity .18s}
-.nea-cta:hover{opacity:.88}
-.nea-cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
-
-/* Selector de años de soporte prepago */
-.nea-plan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px;padding:4px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
-.nea-planopt{padding:9px 4px;border:0;border-radius:9px;background:none;color:rgba(255,255,255,.6);font:inherit;font-size:12.5px;font-weight:600;line-height:1.25;cursor:pointer;transition:background .18s,color .18s}
-.nea-planopt b{display:block;font-size:11px;font-weight:700;color:#C7FF4A;opacity:.75}
-.nea-planopt:hover{color:#fff}
-.nea-planopt:focus-visible{outline:2px solid #C7FF4A;outline-offset:1px}
-.nea-planopt.is-on{background:#C7FF4A;color:#0A0A0A}
-.nea-planopt.is-on b{color:#0A0A0A;opacity:.6}
-
-/* Plantilla previa a WhatsApp */
-.nea-dlg{width:min(560px,92vw);max-height:88vh;padding:0;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:#111;color:#F5F4F0;overflow:auto}
-.nea-dlg::backdrop{background:rgba(10,10,10,.72);backdrop-filter:blur(6px)}
-.nea-dlgin{padding:clamp(22px,2.4vw,32px);display:flex;flex-direction:column;gap:18px}
-.nea-field{display:flex;flex-direction:column;gap:7px}
-.nea-field label{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.7)}
-.nea-field input,.nea-field select{height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:14.5px}
-.nea-field input:focus,.nea-field select:focus{outline:2px solid #C7FF4A;outline-offset:1px}
-.nea-field select option{background:#111}
-
-/* Con la card debajo de la lista hay lugar de sobra: la lista vuelve a dos
-   columnas y recupera su linea de "esto es para vos si". */
-@media (min-width:901px) and (max-width:1360px){
-  .nea-est.is-open .nea-picks{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .nea-est.is-open .nea-pick .nea-pickdesc{display:block}
-}
-@media (max-width:900px){
-  .nea-esthead,.nea-est,.nea-est.is-open{grid-template-columns:minmax(0,1fr)}
-  .nea-picks,.nea-est.is-open .nea-picks{grid-template-columns:minmax(0,1fr)}
-  /* Sin la linea de "esto es para vos si": en telefono ocupaba dos tercios de
-     cada card y hacia falta scrollear para saber que la lista tenia seis
-     opciones. El nombre alcanza para elegir; el detalle esta al abrir. */
-  .nea-pick .nea-pickdesc{display:none}
-  .nea-pick{padding:15px 18px;align-items:center}
-  .nea-pick .nea-dot{margin-top:0}
-  /* Mobile: la card expandida toma la pantalla completa.
-     Los tres resets de abajo son obligatorios, no cosmeticos: sin ellos el
-     aspect-ratio y el max-height de escritorio le ganan a inset:0 y la card
-     quedaba de 333 px de alto flotando sobre la lista, con el cuerpo
-     recortado y sin scroll. */
-  /* z-index 100 y no 60: a pantalla completa la card es un modal y tiene que
-     tapar la barra de navegacion del sitio, que esta en 90. Con 60 la barra
-     quedaba encima y se comia el boton de cerrar. */
-  .nea-panel{position:fixed;inset:0;z-index:100;border-radius:0;border:0;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;overflow-y:auto;overscroll-behavior:contain;background:#0A0A0A;aspect-ratio:auto;max-height:none;top:0;padding-top:env(safe-area-inset-top)}
-  /* La muestra es un mockup vertical: a pantalla completa se lleva media
-     pantalla y empuja el precio fuera de vista. 34vh la deja presente y
-     todavia deja ver el titulo y el "desde" sin scrollear. */
-  .nea-panelmedia{aspect-ratio:auto;height:34vh;min-height:200px}
-  /* Las muestras son mockups verticales y lo que vende esta arriba: la grilla
-     de productos, el calendario, el tablero. Recortadas al centro se veia el
-     fondo. */
-  .nea-panelimg{object-position:center 40%}
-  /* La fila del cuerpo va en auto, no en 1fr: con 1fr quedaba clavada al alto
-     de la pantalla y recortaba 567 px de extras, con el "ver mas opciones"
-     tapado por la barra y sin forma de llegar. El padding despeja esa barra. */
-  .nea-panelbody{overflow:visible;padding-bottom:132px}
-  .nea-sum{position:static}
-  /* ...y la estimacion se reduce a una barra fija con los dos numeros */
-  /* top:auto es obligatorio: sin el, hereda el top:104px del sticky y la
-     barra se estira de arriba a abajo tapando la pantalla entera. */
-  .nea-est.is-open .nea-sum{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:101;border-radius:0;border:0;border-top:1px solid rgba(255,255,255,.16);background:rgba(14,14,14,.94);backdrop-filter:blur(10px);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
-  .nea-est.is-open .nea-sum .nea-sumfull{display:none}
-  /* Desplegado: el detalle completo entra arriba del CTA, con scroll propio
-     para que nunca empuje al boton fuera de la pantalla. */
-  .nea-est.is-open .nea-sum.is-detail .nea-sumfull{display:block;max-height:52vh;overflow-y:auto;overscroll-behavior:contain;margin-top:2px}
-  .nea-est.is-open .nea-sum .nea-cta{margin-top:10px;height:48px}
-  .nea-est.is-open .nea-sum.is-detail .nea-sumbar .nea-sumchev{transform:rotate(180deg)}
-  /* Objetivos tactiles: la cruz de cerrar y el "ver mas opciones" quedaban en
-     34 y 40 px. En pantalla tactil el minimo es 44. */
-  .nea-panelclose{width:44px;height:44px}
-  .nea-more>summary{padding:14px 15px}
-}
-.nea-sumbar{display:none}
-.nea-sumchev{margin-left:2px;font-size:15px;line-height:1;color:rgba(255,255,255,.5);transition:transform .22s cubic-bezier(.22,1,.36,1)}
-@media (max-width:900px){
-  .nea-est.is-open .nea-sumbar{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:44px;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
-  .nea-est.is-open .nea-sumbar:focus-visible{outline:2px solid #C7FF4A;outline-offset:3px;border-radius:8px}
-  .nea-est.is-open .nea-sumbar #nea-barmes{margin-left:auto}
-  /* Con la card a pantalla completa, el fondo no puede seguir scrolleando
-     detras: al cerrar volvias a otro punto de la pagina. */
-  html.nea-locked,html.nea-locked body{overflow:hidden}
-}
-
-/* El morph de la card. Sin View Transitions, el panel simplemente aparece. */
-@media (prefers-reduced-motion:no-preference){
-  ::view-transition-old(neacard),::view-transition-new(neacard){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
-  ::view-transition-group(neacard){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
-}
-
 /* Destellos de "Diseñar": negro translucido, asi funcionan sobre cualquier color del degradado */
-.nea-spark{position:absolute;transform:translate(-50%,-50%);aspect-ratio:1;height:auto;fill:#0A0A0A;opacity:.075}
+.nea-spark{position:absolute;transform:translate(-50%,-50%);aspect-ratio:1;height:auto;fill:var(--ink);opacity:.075}
 
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -318,8 +139,11 @@ a:hover{color:#3157FF}
 </style>
 
 <script src="./app.js" defer></script>
+<script>document.documentElement.className='js'</script>
 </head>
 <body>
+
+<a class="nea-skip" href="#contenido">Saltar al contenido</a>
 
 <!-- Grilla topografica del paso "Analizar". El dibujo lo hace app.js sobre canvas:
      ondas de base + deformacion siguiendo el cursor. Solo anima mientras se ve. -->
@@ -339,54 +163,60 @@ a:hover{color:#3157FF}
 
 <div style="position:relative">
 
-  <div id="nea-nav" style="position:fixed;left:0;right:0;top:0;z-index:90;display:flex;justify-content:center;pointer-events:none;opacity:0">
-    <div id="nea-navbg" style="pointer-events:auto;width:100%;height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 32px;background:rgba(10,10,10,0);border-radius:0;overflow:hidden;color:#FFFFFF">
+  <div id="nea-nav" style="position:fixed;left:0;right:0;top:0;z-index:90;display:flex;justify-content:center;pointer-events:none">
+    <div id="nea-navbg" style="pointer-events:auto;width:100%;height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 32px;background:rgba(10,10,10,0);border-radius:0;overflow:hidden;color:var(--paper)">
       <a href="#top" id="nea-navlogo" style="display:flex;align-items:center;flex:none">
         <img id="nea-navlogoimg" src="uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="120" height="26" style="height:26px;width:auto;display:block">
       </a>
       <nav id="nea-navlinks" aria-label="Principal" style="display:flex;align-items:center;gap:44px;font-size:15px;font-weight:500;white-space:nowrap">
-        <a href="#soluciones">Soluciones</a><a href="#servicios">Servicios</a><a href="#precios">Precios</a><a href="#nosotros">Nosotros</a>
+        <a href="#soluciones">Servicios</a><a href="#proceso">Proceso</a><a href="precios/">Precios</a><a href="nosotros/">Nosotros</a>
       </nav>
       <div style="display:flex;align-items:center;gap:20px;flex:none">
-        <a href="#contacto" style="display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;white-space:nowrap;color:#FFFFFF">
+        <a href="#contacto" style="display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;white-space:nowrap;color:var(--paper)">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.5"></circle><circle cx="12" cy="10" r="2.7" stroke="currentColor" stroke-width="1.5"></circle><path d="M6.7 19c1-2.6 2.9-3.9 5.3-3.9s4.3 1.3 5.3 3.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
           Contacto
         </a>
-        <a href="#mockup" id="nea-navcta" style="height:44px;display:flex;align-items:center;padding:0 24px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:15px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
+        <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" id="nea-navcta" style="height:44px;display:flex;align-items:center;padding:0 24px;border-radius:999px;background:var(--lima);color:var(--ink);font-size:15px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
       </div>
     </div>
   </div>
+
+  <main id="contenido">
 
   <div id="nea-runway" style="position:relative;height:300vh">
     <div id="nea-stage" style="position:sticky;top:0;height:100vh;overflow:hidden;background:transparent">
 
       <div id="nea-s2bg" style="position:absolute;inset:0;opacity:0;background:transparent"></div>
 
-      <div id="nea-s2text" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(20px,2.9vw,56px);opacity:0;max-width:min(760px,62vw)">
-        <h2 style="margin: 0; font-size: clamp(30px,5.2vw,64px); line-height: 1; font-weight: 500; letter-spacing: -.02em; text-wrap: pretty; color: #0A0A0A">Trabajamos con empresas y negocios <span style="color:#747474">donde la imagen y la confianza es clave.</span></h2>
-        <div style="margin-top:clamp(22px,3.1vh,34px);font-size:clamp(15px,1.5vw,19px);line-height:1.62;color:#747474">
+      <!-- Texto de transicion del rig, no un encabezado de seccion: va como <p> para que
+           el primer encabezado del documento siga siendo el titulo h1 del hero. -->
+      <div id="nea-s2text" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(20px,2.9vw,56px);max-width:min(760px,62vw)">
+        <p style="margin: 0; font-size: clamp(30px,5.2vw,64px); line-height: 1; font-weight: 500; letter-spacing: -.02em; text-wrap: pretty; color: var(--ink)">Trabajamos con empresas y negocios <span style="color:var(--ink-mute)">donde la imagen y la confianza es clave.</span></p>
+        <div style="margin-top:clamp(22px,3.1vh,34px);font-size:clamp(15px,1.5vw,19px);line-height:1.62;color:var(--ink-mute)">
           <div>Estrategia. Diseño. Contenido. Impacto.</div>
           <div>Soluciones visuales que construyen marcas líderes</div>
         </div>
       </div>
 
-      <div id="nea-video" style="position:absolute;left:8px;right:8px;top:570px;bottom:0;border-radius:24px 24px 0 0;overflow:hidden;background:#1b0406;z-index:20">
-        <video id="nea-scene" src="uploads/hero-ar.mp4" poster="uploads/hero-poster.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></video>
+      <div id="nea-video" style="position:absolute;left:8px;right:8px;top:570px;bottom:0;border-radius:24px 24px 0 0;overflow:hidden;background:var(--plum);z-index:20">
+        <!-- preload=metadata: el poster ya cubre el primer paint, el mp4 no compite con el LCP.
+             Con prefers-reduced-motion queda en el primer frame (ver script de abajo). -->
+        <video id="nea-scene" src="uploads/hero-ar.mp4" poster="uploads/hero-poster.webp" autoplay muted loop playsinline preload="metadata" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></video>
         <div style="position:absolute;left:0;right:0;top:0;height:210px;background:linear-gradient(rgba(10,10,10,.68),rgba(10,10,10,.34) 55%,rgba(10,10,10,0));pointer-events:none"></div>
         <div style="position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(rgba(10,10,10,0),rgba(10,10,10,.62));pointer-events:none"></div>
       </div>
 
-      <div id="nea-frame" style="position:absolute;left:0;right:0;top:0;height:570px;background:#0A0A0A;color:#F5F4F0;z-index:30">
+      <div id="nea-frame" style="position:absolute;left:0;right:0;top:0;height:570px;background:var(--ink);color:var(--paper-2);z-index:30">
         <div style="height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 clamp(20px,2.5vw,48px)">
           <div id="nea-navlinksA" style="display:flex;align-items:center;gap:clamp(24px,2.3vw,44px);font-size:15px;font-weight:500;white-space:nowrap">
-            <a href="#soluciones">Soluciones</a><a href="#servicios">Servicios</a><a href="#precios">Precios</a><a href="#nosotros">Nosotros</a>
+            <a href="#soluciones">Servicios</a><a href="#proceso">Proceso</a><a href="precios/">Precios</a><a href="nosotros/">Nosotros</a>
           </div>
           <div style="display:flex;align-items:center;gap:20px;flex:none">
             <a href="#contacto" style="display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;white-space:nowrap">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.5"></circle><circle cx="12" cy="10" r="2.7" stroke="currentColor" stroke-width="1.5"></circle><path d="M6.7 19c1-2.6 2.9-3.9 5.3-3.9s4.3 1.3 5.3 3.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
               Contacto
             </a>
-            <a href="#mockup" style="height:44px;display:flex;align-items:center;padding:0 24px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:15px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
+            <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" style="height:44px;display:flex;align-items:center;padding:0 24px;border-radius:999px;background:var(--lima);color:var(--ink);font-size:15px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
           </div>
         </div>
         <a href="#top" id="nea-logo" style="position:absolute;left:clamp(20px,2.9vw,56px);top:178px;display:flex;align-items:center">
@@ -395,78 +225,82 @@ a:hover{color:#3157FF}
       </div>
 
       <div id="nea-hero" style="position:absolute;left:clamp(20px,2.5vw,48px);right:clamp(20px,2.5vw,48px);top:353px;z-index:40;will-change:transform">
-        <h1 id="nea-h1" style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.115;font-weight:700;letter-spacing:-.025em;color:#FFFFFF;text-wrap:pretty">
-          Más que una página web.<br>El sistema para que tu negocio <span id="nea-typed" style="font-weight:400;letter-spacing:-.02em">crezca todos los días</span><span id="nea-caret" aria-hidden="true" style="display:inline-block;width:3px;height:.82em;margin-left:.1em;background:#FFFFFF;vertical-align:-.06em;animation:neaCaret 1.05s step-end infinite"></span>
+        <h1 id="nea-h1" style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.115;font-weight:700;letter-spacing:-.025em;color:var(--paper);text-wrap:pretty">
+          Más que una página web.<br>El sistema para que tu negocio <span id="nea-typed" style="font-weight:400;letter-spacing:-.02em">crezca todos los días</span><span id="nea-caret" aria-hidden="true" style="display:inline-block;width:3px;height:.82em;margin-left:.1em;background:var(--paper);vertical-align:-.06em;animation:neaCaret 1.05s step-end infinite"></span>
         </h1>
         <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:clamp(20px,2.6vh,28px)">
-          <a href="#mockup" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
-          <a href="#llamada" id="nea-cta2" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;border:1px solid rgba(255,255,255,.45);color:#FFFFFF;font-size:16px;font-weight:500;white-space:nowrap">Hablemos 15 minutos</a>
+          <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;background:var(--lima);color:var(--ink);font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
+          <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20coordinar%20una%20llamada%20de%2015%20minutos" id="nea-cta2" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;border:1px solid rgba(255,255,255,.45);color:var(--paper);font-size:16px;font-weight:500;white-space:nowrap">Hablemos 15 minutos</a>
         </div>
       </div>
 
     </div>
   </div>
 
-  <section id="soluciones" style="background:transparent;color:#0A0A0A;padding:clamp(56px,5.7vw,110px) clamp(20px,2.9vw,56px) clamp(48px,4.7vw,90px)">
-    <div data-ink="rule" style="border-top:1px solid rgba(10,10,10,.16);padding-top:13px;margin-bottom:clamp(26px,2.6vw,50px);font-size:11px;font-weight:600;letter-spacing:.2em;color:#0A0A0A">SERVICIOS</div>
+  <section id="soluciones" style="background:transparent;color:var(--ink);padding:clamp(56px,5.7vw,110px) clamp(20px,2.9vw,56px) clamp(48px,4.7vw,90px)">
+    <!-- Queda la hairline, se va la etiqueta: "SERVICIOS" solo repetia el id de la seccion
+         y el <h2> de abajo ya dice de que se trata. La regla es la grilla editorial de la
+         pagina; el kicker en cada seccion era andamiaje. El unico que sobrevive es
+         CONTACTO, en el pie, porque ahi no hay encabezado que lo nombre. -->
+    <div data-ink="rule" style="border-top:1px solid var(--line);margin-bottom:clamp(26px,2.6vw,50px)"></div>
     <h2 data-ink="strong" style="margin:0 0 clamp(28px,2.7vw,52px);font-size:clamp(20px,2.9vw,36px);line-height:1.36;font-weight:500;letter-spacing:-.02em;text-wrap:pretty;max-width:1560px">Trabajo bello, funcional y tecnológicamente adelantado.<br>Eleva y unifica la experiencia en cada superficie donde vive tu marca.</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(16px,1.6vw,26px)">
 
 
-      <div>
+      <a href="diseno-web/" class="nea-solcard" style="display:block">
         <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#F4E9D8 url('uploads/feature-web-a-medida.webp') center/cover no-repeat"></div>
-        <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:#0A0A0A">Una web hecha a medida</div>
-        <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:#8f8f8f">#&nbsp;WEB</div>
-      </div>
+        <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:var(--ink)">Una web hecha a medida</div>
+        <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:var(--ink-mute)">#&nbsp;WEB</div>
+      </a>
 
-      <div>
+      <a href="tienda-online/" class="nea-solcard" style="display:block">
         <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#E7E8F7 url('uploads/feature-tienda-online.webp') center/cover no-repeat"></div>
-        <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:#0A0A0A">Una tienda online con todo integrado</div>
-        <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:#8f8f8f">#&nbsp;E-COMMERCE</div>
-      </div>
+        <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:var(--ink)">Una tienda online con todo integrado</div>
+        <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:var(--ink-mute)">#&nbsp;E-COMMERCE</div>
+      </a>
 
-      <div>
+      <a href="seo/" class="nea-solcard" style="display:block">
         <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#F7F1E6 url('uploads/feature-google-seo.webp') center/cover no-repeat"></div>
-        <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:#0A0A0A">Aparecer primero en Google</div>
-        <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:#8f8f8f">#&nbsp;SEO</div>
-      </div>
+        <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:var(--ink)">Aparecer primero en Google</div>
+        <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:var(--ink-mute)">#&nbsp;SEO</div>
+      </a>
 
-      <div>
+      <a href="sistemas-a-medida/" class="nea-solcard" style="display:block">
         <div style="aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#2a2622 url('uploads/feature-4.e0d80c43.webp') center/cover no-repeat"></div>
-        <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:#0A0A0A">Sistemas que trabajan por vos</div>
-        <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:#8f8f8f">#&nbsp;SISTEMAS</div>
-      </div>
+        <div data-ink="strong" style="margin-top:16px;font-size:clamp(15px,1.15vw,18px);font-weight:500;letter-spacing:-.01em;color:var(--ink)">Sistemas que trabajan por vos</div>
+        <div data-ink="muted" style="margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.18em;color:var(--ink-mute)">#&nbsp;SISTEMAS</div>
+      </a>
 
     </div>
   </section>
 
-  <section id="proceso" style="background:transparent;color:#0A0A0A">
+  <section id="proceso" style="background:transparent;color:var(--ink)">
     <div id="nea-procrig" style="position:relative;height:360vh">
       <div id="nea-procpin" style="position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:clamp(80px,7vw,120px) clamp(20px,2.5vw,48px) clamp(48px,4vw,80px)">
-        <div data-ink="rule" style="border-top:1px solid rgba(10,10,10,.16);padding-top:13px;font-size:11px;font-weight:600;letter-spacing:.2em;color:#0A0A0A">PROCESO</div>
+        <div data-ink="rule" style="border-top:1px solid var(--line)"></div>
         <div id="nea-procstack" style="position:relative;flex:1;overflow:hidden;margin-top:clamp(20px,2vw,40px)">
-        <div data-nea-panel="1" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;will-change:transform,opacity">
+        <div data-nea-panel="1" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;will-change:transform,opacity">
           <div data-nea-step="1" style="position:absolute;left:0;top:50%;transform:translateY(-50%);width:min(460px,42vw);z-index:2">
-            <div data-ink="muted" style="font-size:12px;font-weight:600;letter-spacing:.16em;color:#8f8f8f;margin-bottom:16px">01</div>
-            <p style="margin:0;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;color:#0A0A0A;text-wrap:pretty" data-ink="strong">Estudiamos tu negocio y a tu competencia, y te damos el informe antes de que pagues nada: qué te está frenando, qué hace tu competencia y qué conviene mejorar primero.</p>
+            <div data-ink="muted" style="font-size:12px;font-weight:600;letter-spacing:.16em;color:var(--ink-mute);margin-bottom:16px">01</div>
+            <p style="margin:0;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;color:var(--ink);text-wrap:pretty" data-ink="strong">Estudiamos tu negocio y a tu competencia, y te damos el informe antes de que pagues nada: qué te está frenando, qué hace tu competencia y qué conviene mejorar primero.</p>
           </div>
-          <div data-nea-word="1" style="text-align:right;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-weight:700;font-size:clamp(64px,15.6vw,300px);line-height:.94;letter-spacing:-.04em;color:#b4b4b4;white-space:nowrap" data-ink="word">Analizar</div>
+          <div data-nea-word="1" style="text-align:right;font-family:'Plus Jakarta Sans',Helvetica,Arial,sans-serif;font-weight:700;font-size:clamp(64px,15.6vw,300px);line-height:.94;letter-spacing:-.04em;color:var(--ink-ghost);white-space:nowrap" data-ink="word">Analizar</div>
         </div>
 
-        <div data-nea-panel="2" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;will-change:transform,opacity">
+        <div data-nea-panel="2" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;will-change:transform,opacity">
           <div data-nea-step="2" style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:min(460px,42vw);z-index:2">
-            <div data-ink="muted" style="font-size:12px;font-weight:600;letter-spacing:.16em;color:#8f8f8f;margin-bottom:16px">02</div>
-            <p style="margin:0;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;color:#0A0A0A;text-wrap:pretty" data-ink="strong">Armamos un diseño preliminar navegable de las páginas principales, con la estructura e identidad visual definidas: colores, tipografía, imágenes y las animaciones que le dan vida. Cuando lo aprobás, ya sabés exactamente cómo va a verse el sitio.</p>
+            <div data-ink="muted" style="font-size:12px;font-weight:600;letter-spacing:.16em;color:var(--ink-mute);margin-bottom:16px">02</div>
+            <p style="margin:0;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;color:var(--ink);text-wrap:pretty" data-ink="strong">Armamos un diseño preliminar navegable de las páginas principales, con la estructura e identidad visual definidas: colores, tipografía, imágenes y las animaciones que le dan vida. Cuando lo aprobás, ya sabés exactamente cómo va a verse el sitio.</p>
           </div>
-          <div data-nea-word="2" style="text-align:left;font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(64px,15.6vw,300px);line-height:.94;letter-spacing:-.015em;color:#b4b4b4;white-space:nowrap" data-ink="word">Diseñar</div>
+          <div data-nea-word="2" style="text-align:left;font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(64px,15.6vw,300px);line-height:.94;letter-spacing:-.015em;color:var(--ink-ghost);white-space:nowrap" data-ink="word">Diseñar</div>
         </div>
 
-        <div data-nea-panel="3" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;will-change:transform,opacity">
+        <div data-nea-panel="3" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;will-change:transform,opacity">
           <div data-nea-step="3" style="position:absolute;left:0;top:50%;transform:translateY(-50%);width:min(460px,42vw);z-index:2">
-            <div data-ink="muted" style="font-size:12px;font-weight:600;letter-spacing:.16em;color:#8f8f8f;margin-bottom:16px">03</div>
-            <p style="margin:0 0 26px;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;color:#0A0A0A;text-wrap:pretty" data-ink="strong">Construimos la web completa y los sistemas que hayas elegido del informe. Se integran con las herramientas que ya usás, así que nadie tiene que aprender a trabajar de nuevo. De la parte complicada nos ocupamos nosotros: vos solo lo usás.</p><a href="#mockup" style="height:52px;display:inline-flex;align-items:center;gap:12px;padding:0 26px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis <span aria-hidden="true" style="font-size:14px;opacity:.6">→</span></a>
+            <div data-ink="muted" style="font-size:12px;font-weight:600;letter-spacing:.16em;color:var(--ink-mute);margin-bottom:16px">03</div>
+            <p style="margin:0 0 26px;font-size:clamp(15px,.94vw,18px);line-height:1.52;font-weight:400;color:var(--ink);text-wrap:pretty" data-ink="strong">Construimos la web completa y los sistemas que hayas elegido del informe. Se integran con las herramientas que ya usás, así que nadie tiene que aprender a trabajar de nuevo. De la parte complicada nos ocupamos nosotros: vos solo lo usás.</p><a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" style="height:52px;display:inline-flex;align-items:center;gap:12px;padding:0 26px;border-radius:999px;background:var(--lima);color:var(--ink);font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis <span aria-hidden="true" style="font-size:14px;opacity:.6">→</span></a>
           </div>
-          <div data-nea-word="3" style="text-align:right;font-family:'Jersey 10 Charted',ui-monospace,monospace;font-weight:400;font-size:clamp(64px,15.6vw,300px);line-height:.94;letter-spacing:-.015em;color:#b4b4b4;white-space:nowrap" data-ink="word">Construir.</div>
+          <div data-nea-word="3" style="text-align:right;font-family:'Jersey 10 Charted',ui-monospace,monospace;font-weight:400;font-size:clamp(64px,15.6vw,300px);line-height:.94;letter-spacing:-.015em;color:var(--ink-ghost);white-space:nowrap" data-ink="word">Construir.</div>
         </div>
         </div>
         <div id="nea-procdots" aria-hidden="true" style="display:flex;gap:8px;align-items:center;margin-top:clamp(16px,1.6vw,28px)">
@@ -488,21 +322,24 @@ a:hover{color:#3157FF}
     <div class="nea-trail-pin">
       <div class="nea-trail-frame js-trail-frame">
         <div class="nea-trail-content js-trail-content">
+          <!-- Etiquetas de imagen y no background-image: asi cada pieza tiene alt (la galeria es el
+               portfolio, un lector de pantalla tiene que poder leerlo) y entra con
+               loading=lazy, que un fondo CSS no permite. -->
           <div class="nea-trail-strip js-trail-strip">
             <div class="nea-trail-col">
-              <div class="nea-trail-img" data-first style="background-image:url(uploads/galeria/galeria-01.webp)"></div>
-              <div class="nea-trail-img" style="background-image:url(uploads/galeria/galeria-02.webp)"></div>
-              <div class="nea-trail-img" style="background-image:url(uploads/galeria/galeria-03.webp)"></div>
+              <img class="nea-trail-img" data-first src="uploads/galeria/galeria-01.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="VERTA, estudio de arquitectura de Buenos Aires: portada con una casa de hormigón sobre el río al atardecer.">
+              <img class="nea-trail-img" src="uploads/galeria/galeria-02.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="MARZO, marca de moda: campaña de temporada en rojo saturado sobre fondo del mismo color.">
+              <img class="nea-trail-img" src="uploads/galeria/galeria-03.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="LUMA, cosmética: frasco de sérum suspendido en una corona de agua rosada.">
             </div>
             <div class="nea-trail-col">
-              <div class="nea-trail-img" style="background-image:url(uploads/galeria/galeria-04.webp)"></div>
-              <div class="nea-trail-img" style="background-image:url(uploads/galeria/galeria-05.webp)"></div>
-              <div class="nea-trail-img" style="background-image:url(uploads/galeria/galeria-06.webp)"></div>
+              <img class="nea-trail-img" src="uploads/galeria/galeria-04.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="Kingsley Barrett, family office: oficina en penumbra con la ciudad de noche detrás del ventanal.">
+              <img class="nea-trail-img" src="uploads/galeria/galeria-05.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="Maison Vasseur, relojería: reloj de oro en la muñeca, apoyado sobre mármol.">
+              <img class="nea-trail-img" src="uploads/galeria/galeria-06.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="Mugshots, tienda de cerámica: cinco tazas flotando sobre un fondo durazno.">
             </div>
             <div class="nea-trail-col">
-              <div class="nea-trail-img" data-dup style="background-image:url(uploads/galeria/galeria-06.webp)"></div>
-              <div class="nea-trail-img" style="background-image:url(uploads/galeria/galeria-07.webp)"></div>
-              <div class="nea-trail-img" style="background-image:url(uploads/galeria/galeria-08.webp)"></div>
+              <img class="nea-trail-img" data-dup src="uploads/galeria/galeria-06.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="">
+              <img class="nea-trail-img" src="uploads/galeria/galeria-07.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="LARREA, estudio de arquitectura de Misiones: portada con mosaico de obras terminadas.">
+              <img class="nea-trail-img" src="uploads/galeria/galeria-08.webp" width="1920" height="1080" loading="lazy" decoding="async" alt="Little Riot, chili crisp: cuchara levantando salsa de un frasco sobre fondo crema.">
             </div>
           </div>
         </div>
@@ -518,17 +355,19 @@ a:hover{color:#3157FF}
     /* el rig da el recorrido: 1 pantalla para que la galeria entre + 1 pinneada.
        Sin margenes negativos: si se solapa con el rig de "Proceso", sus efectos de fondo
        (la grilla de Analizar, la textura de Disenar) siguen vivos y se ven de nuevo aca. */
-    .nea-trail{position:relative;height:200vh;padding:0;margin:0;background:#0A0A0A}
+    .nea-trail{position:relative;height:200vh;padding:0;margin:0;background:var(--ink)}
     .nea-trail-pin{position:sticky;top:0;height:100vh}
     /* pantalla completa siempre: nunca es una card */
-    .nea-trail-frame{position:relative;width:100%;height:100vh;background:#0A0A0A;overflow:hidden}
+    .nea-trail-frame{position:relative;width:100%;height:100vh;background:var(--ink);overflow:hidden}
     /* la entrada la escribe el scroll (app.js): sale del negro con un push-in */
     .nea-trail-content{position:absolute;inset:0;isolation:isolate;overflow:hidden;
-      opacity:0;transform:scale(1.1);transform-origin:50% 50%;will-change:opacity,transform}
+      transform-origin:50% 50%;will-change:opacity,transform}
+    /* el push-in solo esconde la galeria si app.js esta para traerla de vuelta */
+    .js .nea-trail-content{opacity:0;transform:scale(1.1)}
     /* en desktop strip y columnas son solo pasamanos: las imagenes se apilan en el mismo
        lugar y la copia de la 06 que existe para completar la tercera columna no cuenta */
     .nea-trail-strip,.nea-trail-col{position:absolute;inset:0}
-    .nea-trail-img{position:absolute;inset:0;background-size:cover;background-position:center;
+    .nea-trail-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
       opacity:0;will-change:transform;transition:transform 1.2s cubic-bezier(.19,1,.22,1)}
     .nea-trail-img[data-first]{opacity:1}
     .nea-trail-img[data-dup]{display:none}
@@ -559,7 +398,7 @@ a:hover{color:#3157FF}
         transition:transform .55s cubic-bezier(.19,1,.22,1);will-change:transform}
       .nea-trail-col{position:relative;inset:auto;flex:none;width:calc(100% / 3);
         display:flex;flex-direction:column}
-      .nea-trail-img{position:relative;inset:auto;flex:none;width:100%;aspect-ratio:16 / 9;
+      .nea-trail-img{position:relative;inset:auto;flex:none;width:100%;height:auto;aspect-ratio:16 / 9;
         opacity:1!important;transform:none!important;transition:none}
       .nea-trail-img[data-dup]{display:block}
       .nea-trail-hint{display:none}
@@ -698,9 +537,9 @@ a:hover{color:#3157FF}
   })();
   </script>
 
-  <section id="nosotros" style="background:transparent;color:#0A0A0A;padding:clamp(52px,5vw,96px) clamp(20px,2.5vw,48px) clamp(56px,5.2vw,100px)">
-    <div data-ink="rule" style="border-top:1px solid rgba(10,10,10,.16);padding-top:13px;margin-bottom:clamp(26px,2.6vw,50px);font-size:11px;font-weight:600;letter-spacing:.2em;color:#0A0A0A">NOSOTROS</div>
-    <h2 data-ink="strong" style="margin:0;font-size:clamp(26px,3.3vw,40px);line-height:1.18;font-weight:400;letter-spacing:-.02em;color:#0A0A0A">Todas las agencias prometen.<br>Nosotros mostramos primero.</h2>
+  <section id="nosotros" style="background:transparent;color:var(--ink);padding:clamp(52px,5vw,96px) clamp(20px,2.5vw,48px) clamp(56px,5.2vw,100px)">
+    <div data-ink="rule" style="border-top:1px solid var(--line);margin-bottom:clamp(26px,2.6vw,50px)"></div>
+    <h2 data-ink="strong" style="margin:0;font-size:clamp(26px,3.3vw,40px);line-height:1.18;font-weight:400;letter-spacing:-.02em;color:var(--ink)">Todas las agencias prometen.<br>Nosotros mostramos primero.</h2>
     <p data-ink="muted" style="margin:clamp(16px,1.6vw,28px) 0 clamp(28px,2.8vw,54px);font-size:clamp(14px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:#1c1c1c">El diagnóstico de tu negocio es gratis y llega con los precios. Recién ahí decidís si seguís.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:20px">
 
@@ -708,435 +547,56 @@ a:hover{color:#3157FF}
         <div style="position:absolute;inset:auto 0 0 0;padding:30px;background:linear-gradient(rgba(248,249,251,0),rgba(248,249,251,.8) 34%,rgba(248,249,251,.97) 58%)">
           <div style="font-size:clamp(24px,2.6vw,34px);line-height:1.16;font-weight:700;letter-spacing:-.02em;color:#111">Primero el diagnóstico.<br>Después decidís si pagás.</div>
           <p style="margin:14px 0 20px;font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:#2a2a2a;max-width:640px">Llega en menos de 24 horas, con todos los entregables y sus precios. Si no te cierra, te vas sin deber nada.</p>
-          <a href="#proceso" aria-label="Ver cómo trabajamos" data-ink="chip" style="width:34px;height:34px;border-radius:999px;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">→</a>
+          <a href="#proceso" aria-label="Ver cómo trabajamos" data-ink="chip" style="width:34px;height:34px;border-radius:999px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">→</a>
         </div>
       </div>
 
-      <div style="position:relative;aspect-ratio:890/495;border-radius:14px;overflow:hidden;background:#1b0406">
+      <div style="position:relative;aspect-ratio:890/495;border-radius:14px;overflow:hidden;background:var(--plum)">
         <div style="position:absolute;inset:auto 0 0 0;padding:30px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.62) 40%)">
           <div style="font-size:clamp(24px,2.6vw,34px);line-height:1.16;font-weight:700;letter-spacing:-.02em;color:#fff">Nuestro portfolio<br>es esta misma web.</div>
           <p style="margin:14px 0 20px;font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:rgba(255,255,255,.92);max-width:640px">La estás usando hace un minuto. Abrí la de cualquier otra agencia y compará: ninguna plantilla reciclada aguanta al lado.</p>
-          <a href="#estimacion" aria-label="Ver estimación de precios" data-ink="chip" style="width:34px;height:34px;border-radius:999px;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">→</a>
+          <a href="#estimacion" aria-label="Ver estimación de precios" data-ink="chip" style="width:34px;height:34px;border-radius:999px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">→</a>
         </div>
       </div>
 
     </div>
   </section>
 
-  <section id="estimacion" style="color:#F5F4F0;padding:clamp(52px,5vw,96px) clamp(20px,2.5vw,48px) clamp(56px,5.2vw,100px)">
-    <div style="border-top:1px solid rgba(255,255,255,.24);padding-top:13px;margin-bottom:clamp(26px,2.6vw,50px);font-size:11px;font-weight:600;letter-spacing:.2em;color:#FFFFFF;max-width:1400px">PRESUPUESTO</div>
-
-    <div class="nea-esthead" style="margin-bottom:clamp(32px,3.4vw,60px)">
-      <h2 style="margin:0;font-size:clamp(30px,4vw,54px);line-height:1.06;font-weight:700;letter-spacing:-.03em;color:#FFFFFF;text-wrap:pretty">Armá tu presupuesto</h2>
-      <p style="margin:0;font-size:clamp(14px,1.1vw,16px);line-height:1.55;font-weight:400;color:rgba(255,255,255,.66);text-wrap:pretty">Elegí lo que necesitás y mirá una estimación al instante. Es orientativo: el número final lo cerramos en la reunión. <b style="font-weight:600;color:#C7FF4A">El primer año de soporte va incluido en todos.</b></p>
-    </div>
-
-    <div class="nea-est" id="nea-est">
+  <!-- El estimador se mudo a /precios/: alli la intencion ya esta declarada, y
+       aterrizar en el desde otra pagina no cae en medio de los rigs de scroll
+       de la home. Aca queda la invitacion. -->
+  <!-- Fondo propio, no heredado del body que pinta app.js: de "Galeria" en adelante el
+       fondo ya es negro fijo, asi que declararlo aca no cambia nada visualmente y saca
+       a las dos ultimas secciones de la dependencia del JS. -->
+  <section id="estimacion" style="background:var(--ink);color:var(--paper-2);padding:clamp(52px,5vw,96px) clamp(20px,2.5vw,48px) clamp(56px,5.2vw,100px)">
+    <div style="border-top:1px solid rgba(255,255,255,.24);margin-bottom:clamp(26px,2.6vw,50px);max-width:1400px"></div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,3vw,56px);align-items:center;max-width:1400px">
       <div>
-        <div id="nea-optlabel" style="font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.55);margin-bottom:14px">¿QUÉ NECESITÁS?</div>
-        <div role="radiogroup" aria-labelledby="nea-optlabel" class="nea-picks">
-
-          <button type="button" role="radio" aria-checked="false" aria-expanded="false" aria-controls="nea-panel-landing" data-pick="landing" data-name="Landing page" data-base="220000" class="nea-pick">
-            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
-            <span style="display:flex;flex-direction:column;gap:5px">
-              <span class="nea-pickname">Landing page</span>
-              <span class="nea-pickdesc">Tenés un servicio o una promoción y necesitás que te escriban</span>
-            </span>
-            <span class="nea-mark" aria-hidden="true">●</span>
-          </button>
-
-          <button type="button" role="radio" aria-checked="false" aria-expanded="false" aria-controls="nea-panel-rediseno" data-pick="rediseno" data-name="Rediseño de tu sitio" data-base="280000" class="nea-pick">
-            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
-            <span style="display:flex;flex-direction:column;gap:5px">
-              <span class="nea-pickname">Rediseño de tu sitio</span>
-              <span class="nea-pickdesc">Ya tenés web pero te da vergüenza mandarla</span>
-            </span>
-            <span class="nea-mark" aria-hidden="true">●</span>
-          </button>
-
-          <button type="button" role="radio" aria-checked="false" aria-expanded="false" aria-controls="nea-panel-institucional" data-pick="institucional" data-name="Sitio institucional" data-base="390000" class="nea-pick">
-            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
-            <span style="display:flex;flex-direction:column;gap:5px">
-              <span class="nea-pickname">Sitio institucional</span>
-              <span class="nea-pickdesc">Tu empresa ya existe y necesita una presencia seria</span>
-            </span>
-            <span class="nea-mark" aria-hidden="true">●</span>
-          </button>
-
-          <button type="button" role="radio" aria-checked="false" aria-expanded="false" aria-controls="nea-panel-reservas" data-pick="reservas" data-name="Reservas y turnos" data-base="520000" class="nea-pick">
-            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
-            <span style="display:flex;flex-direction:column;gap:5px">
-              <span class="nea-pickname">Reservas y turnos</span>
-              <span class="nea-pickdesc">Vivís contestando «¿tenés lugar el jueves?»</span>
-            </span>
-            <span class="nea-mark" aria-hidden="true">●</span>
-          </button>
-
-          <button type="button" role="radio" aria-checked="false" aria-expanded="false" aria-controls="nea-panel-tienda" data-pick="tienda" data-name="Tienda online" data-base="700000" class="nea-pick">
-            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
-            <span style="display:flex;flex-direction:column;gap:5px">
-              <span class="nea-pickname">Tienda online</span>
-              <span class="nea-pickdesc">Vendés productos y querés mostrarlos y cobrarlos bien</span>
-            </span>
-            <span class="nea-mark" aria-hidden="true">●</span>
-          </button>
-
-          <button type="button" role="radio" aria-checked="false" aria-expanded="false" aria-controls="nea-panel-sistemas" data-pick="sistemas" data-name="Sistemas y automatizaciones" data-quote="1" class="nea-pick">
-            <span class="nea-dot" aria-hidden="true"><span class="nea-fill"></span></span>
-            <span style="display:flex;flex-direction:column;gap:5px">
-              <span class="nea-pickname">Sistemas y automatizaciones</span>
-              <span class="nea-pickdesc">Manejás procesos en planillas o repetís a mano lo que haría una máquina</span>
-            </span>
-            <span class="nea-mark" aria-hidden="true">●</span>
-          </button>
-
-        </div>
+        <h2 style="margin:0;font-size:clamp(30px,4vw,54px);line-height:1.06;font-weight:700;letter-spacing:-.03em;color:var(--paper);text-wrap:pretty">Armá tu presupuesto</h2>
+        <p style="margin:clamp(14px,1.4vw,22px) 0 0;max-width:62ch;font-size:clamp(14px,1.1vw,16px);line-height:1.55;color:rgba(255,255,255,.66);text-wrap:pretty">Elegí lo que necesitás, sumale los extras y mirá una estimación al instante. Es orientativo: el número final lo cerramos en la reunión. <b style="font-weight:600;color:var(--lima)">El primer año de soporte va incluido en todos.</b></p>
       </div>
-
-      <!-- Columna del medio: una card expandida por producto. Viven en el HTML
-           (crawleables) y se muestran de a una. Cada panel guarda el estado de
-           sus propios extras, asi volver a un producto recupera lo que armaste. -->
-      <div id="nea-panels">
-
-        <article class="nea-panel" id="nea-panel-landing" data-panel="landing" hidden>
-          <button type="button" class="nea-panelclose" data-close aria-label="Cerrar Landing page"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-          <div class="nea-panelmedia"><img class="nea-panelimg" data-src="uploads/muestra-landing.webp" alt="Landing page de una marca de tazas, vista en notebook y celular" width="900" height="1613" decoding="async"></div>
-          <div class="nea-panelbody">
-            <div>
-              <div class="nea-panelkicker">UNA PÁGINA, UN OBJETIVO</div>
-              <h3 class="nea-paneltitle">Landing page</h3>
-              <div class="nea-panelfrom">Desde <b>$220.000</b></div>
-            </div>
-            <div>
-              <div class="nea-eyebrow">QUÉ INCLUYE</div>
-              <ul class="nea-inc">
-                <li>Una página de 5 secciones, pensada de arriba a abajo para que te contacten</li>
-                <li>Diseño propio, no una plantilla</li>
-                <li>Formulario de contacto que te llega por mail</li>
-                <li>Adaptada a celular, tablet y escritorio</li>
-                <li>Carga rápida y lista para Google</li>
-                <li>Primer año de soporte sin cargo: hosting, dominio, seguridad, copias y actualizaciones</li>
-                <li>SEO local y ficha de Google Business configurada</li>
-              </ul>
-            </div>
-            <div>
-              <div class="nea-eyebrow">SUMALE</div>
-              <div class="nea-extras" role="group" aria-label="Extras de Landing page">
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="identidad" data-addname="Identidad visual y logotipo" data-price="40000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Identidad visual y logotipo</span><span class="nea-addprice">+40.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="whatsapp" data-addname="Integración con WhatsApp" data-price="20000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Integración con WhatsApp</span><span class="nea-addprice">+20.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="idioma" data-addname="Segundo idioma" data-price="50000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Segundo idioma</span><span class="nea-addprice">+50.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="metricas" data-addname="Google Analytics y panel de métricas" data-price="50000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Google Analytics y panel de métricas</span><span class="nea-addprice">+50.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="mapa" data-addname="Mapa, cómo llegar y sucursales" data-price="30000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Mapa, cómo llegar y sucursales</span><span class="nea-addprice">+30.000</span></button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="nea-panel" id="nea-panel-rediseno" data-panel="rediseno" hidden>
-          <button type="button" class="nea-panelclose" data-close aria-label="Cerrar Rediseño de tu sitio"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-          <div class="nea-panelmedia"><img class="nea-panelimg" data-src="uploads/muestra-rediseno.webp" alt="Sitio de una marca de chili crisp: la versión vieja arriba y el rediseño abajo" width="900" height="1599" decoding="async"></div>
-          <div class="nea-panelbody">
-            <div>
-              <div class="nea-panelkicker">LO QUE YA TENÉS, PERO BIEN</div>
-              <h3 class="nea-paneltitle">Rediseño de tu sitio</h3>
-              <div class="nea-panelfrom">Desde <b>$280.000</b></div>
-            </div>
-            <div>
-              <div class="nea-eyebrow">QUÉ INCLUYE</div>
-              <ul class="nea-inc">
-                <li>Revisión de lo que tenés hoy: qué funciona y qué te está costando consultas</li>
-                <li>Diseño nuevo respetando tu marca, sin perder lo que ya te posiciona</li>
-                <li>Todo el contenido pasado al sitio nuevo</li>
-                <li>Redirecciones 301 incluidas: las direcciones viejas siguen funcionando y no perdés lo que Google ya te indexó</li>
-                <li>Adaptado a celular, tablet y escritorio</li>
-                <li>Primer año de soporte sin cargo: hosting, dominio, seguridad, copias y actualizaciones</li>
-                <li>SEO local y ficha de Google Business configurada</li>
-              </ul>
-            </div>
-            <div>
-              <div class="nea-eyebrow">SUMALE</div>
-              <div class="nea-extras" role="group" aria-label="Extras de Rediseño de tu sitio">
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="novedades" data-addname="Sección de novedades autoadministrable" data-price="70000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Sección de novedades autoadministrable</span><span class="nea-addprice">+70.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="whatsapp" data-addname="Integración con WhatsApp" data-price="20000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Integración con WhatsApp</span><span class="nea-addprice">+20.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="idioma" data-addname="Segundo idioma" data-price="50000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Segundo idioma</span><span class="nea-addprice">+50.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="fotos" data-addname="Retoque de tu material fotográfico" data-price="30000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Retoque de tu material fotográfico</span><span class="nea-addprice">+30.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="panel" data-addname="Panel para que edites el contenido vos" data-price="70000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Panel para que edites el contenido vos</span><span class="nea-addprice">+70.000</span></button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="nea-panel" id="nea-panel-institucional" data-panel="institucional" hidden>
-          <button type="button" class="nea-panelclose" data-close aria-label="Cerrar Sitio institucional"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-          <div class="nea-panelmedia"><img class="nea-panelimg" data-src="uploads/muestra-institucional.webp" alt="Sitio institucional de una empresa de ingenieria industrial, con la home y cuatro paginas internas" width="900" height="1599" decoding="async"></div>
-          <div class="nea-panelbody">
-            <div>
-              <div class="nea-panelkicker">LA CARA DE TU EMPRESA</div>
-              <h3 class="nea-paneltitle">Sitio institucional</h3>
-              <div class="nea-panelfrom">Desde <b>$390.000</b></div>
-            </div>
-            <div>
-              <div class="nea-eyebrow">QUÉ INCLUYE</div>
-              <ul class="nea-inc">
-                <li>Las páginas que tu empresa necesite: inicio, nosotros, servicios y contacto</li>
-                <li>Diseño propio y un sistema visual coherente en todo el sitio</li>
-                <li>Formulario de contacto</li>
-                <li>Adaptado a celular, tablet y escritorio</li>
-                <li>SEO local y ficha de Google Business configurada</li>
-                <li>Primer año de soporte sin cargo: hosting, dominio, seguridad, copias y actualizaciones</li>
-              </ul>
-            </div>
-            <div>
-              <div class="nea-eyebrow">SUMALE</div>
-              <div class="nea-extras" role="group" aria-label="Extras de Sitio institucional">
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="identidad" data-addname="Identidad visual y logotipo" data-price="40000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Identidad visual y logotipo</span><span class="nea-addprice">+40.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="novedades" data-addname="Novedades o blog autoadministrable" data-price="115000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Novedades o blog autoadministrable</span><span class="nea-addprice">+115.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="whatsapp" data-addname="Integración con WhatsApp" data-price="20000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Integración con WhatsApp</span><span class="nea-addprice">+20.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="cotizador" data-addname="Cotizador o calculadora" data-price="30000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Cotizador o calculadora</span><span class="nea-addprice">+30.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="mapa" data-addname="Mapa, cómo llegar y sucursales" data-price="30000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Mapa, cómo llegar y sucursales</span><span class="nea-addprice">+30.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="video" data-addname="Video institucional editado" data-price="50000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Video institucional editado</span><span class="nea-addprice">+50.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="crm" data-addname="Integración con un CRM" data-price="170000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Integración con un CRM</span><span class="nea-addprice">+170.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="chat" data-addname="Chat en vivo" data-price="55000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Chat en vivo</span><span class="nea-addprice">+55.000</span></button>
-                <details class="nea-more">
-                  <summary>Ver 3 opciones más<span data-morecount></span></summary>
-                  <div class="nea-extras">
-                    <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="cv" data-addname="Trabajá con nosotros: recepción de CVs" data-price="40000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Trabajá con nosotros: recepción de CVs</span><span class="nea-addprice">+40.000</span></button>
-                    <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="privada" data-addname="Área privada para clientes" data-price="170000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Área privada para clientes</span><span class="nea-addprice">+170.000</span></button>
-                    <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="idioma" data-addname="Segundo idioma" data-price="50000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Segundo idioma</span><span class="nea-addprice">+50.000</span></button>
-                  </div>
-                </details>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="nea-panel" id="nea-panel-reservas" data-panel="reservas" hidden>
-          <button type="button" class="nea-panelclose" data-close aria-label="Cerrar Reservas y turnos"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-          <div class="nea-panelmedia"><img class="nea-panelimg" data-src="uploads/muestra-reservas.webp" alt="Sistema de reservas de un salon: calendario y horarios en el celular, agenda semanal en la notebook" width="900" height="1613" decoding="async"></div>
-          <div class="nea-panelbody">
-            <div>
-              <div class="nea-panelkicker">QUE RESERVEN SOLOS</div>
-              <h3 class="nea-paneltitle">Reservas y turnos</h3>
-              <div class="nea-panelfrom">Desde <b>$520.000</b></div>
-            </div>
-            <div>
-              <div class="nea-eyebrow">QUÉ INCLUYE</div>
-              <ul class="nea-inc">
-                <li>Tus clientes reservan solos, desde el celular, a cualquier hora</li>
-                <li>Agenda con tus horarios, feriados y días que no atendés</li>
-                <li>Panel para ver, mover y cancelar turnos</li>
-                <li>Aviso de turno nuevo por mail y WhatsApp</li>
-                <li>Página de presentación de tu negocio incluida</li>
-                <li>Primer año de soporte sin cargo: hosting, dominio, seguridad, copias y actualizaciones</li>
-                <li>SEO local y ficha de Google Business configurada</li>
-              </ul>
-            </div>
-            <div>
-              <div class="nea-eyebrow">SUMALE</div>
-              <div class="nea-extras" role="group" aria-label="Extras de Reservas y turnos">
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="recordar" data-addname="Recordatorios automáticos por WhatsApp" data-price="45000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Recordatorios automáticos por WhatsApp</span><span class="nea-addprice">+45.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="senia" data-addname="Seña o pago anticipado del turno" data-price="60000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Seña o pago anticipado del turno</span><span class="nea-addprice">+60.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="ficha" data-addname="Ficha de cliente con historial de visitas" data-price="40000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Ficha de cliente con historial de visitas</span><span class="nea-addprice">+40.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="resenias" data-addname="Pedido automático de reseña después del turno" data-price="30000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Pedido automático de reseña después del turno</span><span class="nea-addprice">+30.000</span></button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="nea-panel" id="nea-panel-tienda" data-panel="tienda" hidden>
-          <button type="button" class="nea-panelclose" data-close aria-label="Cerrar Tienda online"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-          <div class="nea-panelmedia"><img class="nea-panelimg" data-src="uploads/muestra-tienda.webp" alt="Tienda online de cosmetica: catalogo con precios en el celular y ficha de producto en la notebook" width="900" height="1609" decoding="async"></div>
-          <div class="nea-panelbody">
-            <div>
-              <div class="nea-panelkicker">MOSTRAR Y COBRAR</div>
-              <h3 class="nea-paneltitle">Tienda online</h3>
-              <div class="nea-panelfrom">Desde <b>$700.000</b></div>
-            </div>
-            <div>
-              <div class="nea-eyebrow">QUÉ INCLUYE</div>
-              <ul class="nea-inc">
-                <li>Catálogo con categorías, fichas de producto y buscador</li>
-                <li>Panel para que actualices precios y stock vos mismo</li>
-                <li>Carrito y pedidos que te llegan por WhatsApp y mail</li>
-                <li>Fichas con variantes de talle y color</li>
-                <li>Adaptada a celular, tablet y escritorio</li>
-                <li>Primer año de soporte sin cargo: hosting, dominio, seguridad, copias y actualizaciones</li>
-                <li>SEO local y ficha de Google Business configurada</li>
-              </ul>
-            </div>
-            <div>
-              <div class="nea-eyebrow">SUMALE</div>
-              <div class="nea-extras" role="group" aria-label="Extras de Tienda online">
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="cobro" data-addname="Cobro online (Mercado Pago / tarjetas)" data-price="60000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Cobro online (Mercado Pago / tarjetas)</span><span class="nea-addprice">+60.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="envios" data-addname="Cálculo automático de envíos" data-price="40000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Cálculo automático de envíos</span><span class="nea-addprice">+40.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="carga" data-addname="Carga inicial de tus productos" data-price="25000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Carga inicial de tus productos</span><span class="nea-addprice">+25.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="filtros" data-addname="Filtros avanzados y buscador" data-price="40000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Filtros avanzados y buscador</span><span class="nea-addprice">+40.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="mayorista" data-addname="Precios mayoristas o lista por cliente" data-price="30000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Precios mayoristas o lista por cliente</span><span class="nea-addprice">+30.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="stock" data-addname="Sincronización de stock con tu sistema" data-price="80000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Sincronización de stock con tu sistema</span><span class="nea-addprice">+80.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="afip" data-addname="Facturación automática AFIP" data-price="190000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Facturación automática AFIP</span><span class="nea-addprice">+190.000</span></button>
-                <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="pdf" data-addname="Lista de precios en PDF actualizada sola" data-price="30000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Lista de precios en PDF actualizada sola</span><span class="nea-addprice">+30.000</span></button>
-                <details class="nea-more">
-                  <summary>Ver 5 opciones más<span data-morecount></span></summary>
-                  <div class="nea-extras">
-                    <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="identidad" data-addname="Identidad visual y logotipo" data-price="40000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Identidad visual y logotipo</span><span class="nea-addprice">+40.000</span></button>
-                    <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="retiro" data-addname="Retiro en local y puntos de entrega" data-price="80000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Retiro en local y puntos de entrega</span><span class="nea-addprice">+80.000</span></button>
-                    <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="resenias" data-addname="Reseñas de productos" data-price="75000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Reseñas de productos</span><span class="nea-addprice">+75.000</span></button>
-                    <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="reportes" data-addname="Reportes de ventas y más vendidos" data-price="80000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Reportes de ventas y más vendidos</span><span class="nea-addprice">+80.000</span></button>
-                    <button type="button" role="checkbox" aria-checked="false" class="nea-add" data-add="idioma" data-addname="Segundo idioma" data-price="50000"><span class="nea-box" aria-hidden="true"><svg class="nea-tick" viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.6 8.8 10 3.4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nea-addname">Segundo idioma</span><span class="nea-addprice">+50.000</span></button>
-                  </div>
-                </details>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="nea-panel" id="nea-panel-sistemas" data-panel="sistemas" hidden>
-          <button type="button" class="nea-panelclose" data-close aria-label="Cerrar Sistemas y automatizaciones"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-          <div class="nea-panelmedia"><img class="nea-panelimg" data-src="uploads/muestra-sistemas.webp" alt="Sistema interno de una distribuidora: tablero con ventas y stock, conteo por codigo de barras y factura AFIP" width="900" height="1613" decoding="async"></div>
-          <div class="nea-panelbody">
-            <div>
-              <div class="nea-panelkicker">SE RELEVA, NO SE TILDA</div>
-              <h3 class="nea-paneltitle">Sistemas y automatizaciones</h3>
-              <div class="nea-panelfrom">Se cotiza después de entender tu proceso</div>
-            </div>
-            <div>
-              <div class="nea-eyebrow">QUÉ INCLUYE</div>
-              <ul class="nea-inc">
-                <li>Relevamiento de tu proceso actual y diseño de la solución</li>
-                <li>Sistema web privado, con usuarios y contraseña</li>
-                <li>Módulos para cargar, listar y editar tus datos</li>
-                <li>Automatizaciones: avisos, recordatorios y conexión con lo que ya usás</li>
-                <li>Capacitación de tu equipo</li>
-                <li>Primer año de soporte sin cargo: servidor, respaldos diarios y actualizaciones</li>
-              </ul>
-            </div>
-            <div>
-              <div class="nea-eyebrow">LO QUE SE LE SUELE SUMAR</div>
-              <ul class="nea-scope">
-                <li>Facturación electrónica AFIP</li>
-                <li>Control de stock, depósitos y listas de precios</li>
-                <li>Caja, cobranzas y cuentas corrientes de clientes</li>
-                <li>Presupuestos, remitos y órdenes en PDF automáticos</li>
-                <li>Avisos y recordatorios automáticos por WhatsApp</li>
-                <li>Reemplazo de tus planillas de Excel, importando lo que ya tenés</li>
-                <li>Tablero del dueño con los números del día en vivo</li>
-                <li>Usuarios y permisos por empleado</li>
-              </ul>
-            </div>
-          </div>
-        </article>
-
-      </div>
-
-      <div class="nea-sum" id="nea-sum">
-        <div style="font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.6)">TU ESTIMACIÓN</div>
-
-        <div class="nea-sumfull" id="nea-sumfull">
-          <div style="margin-top:22px;font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.45)" id="nea-totallabel">PAGO ÚNICO</div>
-          <div id="nea-total" aria-live="polite" style="margin-top:8px;font-size:clamp(26px,2.6vw,38px);line-height:1.08;font-weight:700;letter-spacing:-.03em;color:#FFFFFF">Elegí una opción</div>
-          <div id="nea-note" style="margin-top:10px;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.6);text-wrap:pretty">Elegí una opción y el número aparece acá.</div>
-
-          <div id="nea-detail" style="margin-top:16px;display:none"></div>
-
-          <div id="nea-mesblock" style="margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14)">
-            <div style="font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.45)">PLAN DE SOPORTE <span style="color:#C7FF4A">· 1er AÑO GRATIS</span></div>
-
-            <!-- Prepago por varios años: cuanto mas largo, mas barato el mes -->
-            <div class="nea-plan" role="radiogroup" aria-label="Años de soporte contratados">
-              <button type="button" role="radio" aria-checked="true" class="nea-planopt is-on" data-plan="1" data-off="0">1 año <b>Incluido</b></button>
-              <button type="button" role="radio" aria-checked="false" class="nea-planopt" data-plan="3" data-off="30">3 años <b>−30%</b></button>
-              <button type="button" role="radio" aria-checked="false" class="nea-planopt" data-plan="5" data-off="50">5 años <b>−50%</b></button>
-            </div>
-
-            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:14px">
-              <span id="nea-meslabel" style="font-size:12.5px;color:rgba(255,255,255,.55)">Por 1 año</span>
-              <span id="nea-mes" style="font-size:17px;font-weight:700;letter-spacing:-.02em;color:#C7FF4A">—</span>
-            </div>
-            <div id="nea-ahorro" style="margin-top:6px;font-size:12.5px;font-weight:600;color:#C7FF4A;display:none"></div>
-            <div id="nea-mesnote" style="margin-top:8px;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.5);text-wrap:pretty">El primer año va incluido en el precio del proyecto: hosting, dominio, copias de seguridad y actualizaciones, sin costo. Recién del año 2 en adelante se factura, por adelantado.</div>
-          </div>
-
-          <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.42)">Estimación orientativa, sujeta a revisión. El presupuesto final se define en la reunión inicial.</div>
-        </div>
-
-        <!-- Version resumida: solo aparece en mobile, dentro de la barra fija.
-             Es un boton porque despliega el detalle completo: sin eso, en mobile
-             el selector de años de soporte y los descuentos no existian. -->
-        <button type="button" class="nea-sumbar" id="nea-sumbar" aria-expanded="false" aria-controls="nea-sumfull">
-          <span id="nea-barlabel" style="font-size:13px;color:rgba(255,255,255,.6)">Elegí una opción</span>
-          <span id="nea-barmes" style="font-size:12.5px;font-weight:600;color:#C7FF4A"></span>
-          <span class="nea-sumchev" aria-hidden="true">⌃</span>
-        </button>
-
-        <button type="button" class="nea-cta" id="nea-cta">Enviar por WhatsApp <span aria-hidden="true" style="font-size:14px;opacity:.55">↗</span></button>
-      </div>
-    </div>
-    <!-- Plantilla previa al chat: el resumen ya armado mas unas preguntas que
-         nos ahorran media reunion. Todo viaja en el texto del mensaje. -->
-    <dialog class="nea-dlg" id="nea-dlg" aria-labelledby="nea-dlgtitle">
-      <form method="dialog" class="nea-dlgin" id="nea-dlgform">
-        <div>
-          <div style="font-size:11px;font-weight:600;letter-spacing:.2em;color:#C7FF4A">ANTES DE ESCRIBIRNOS</div>
-          <h3 id="nea-dlgtitle" style="margin:8px 0 0;font-size:23px;font-weight:700;letter-spacing:-.025em;color:#fff">Contanos un poco y arrancamos más rápido</h3>
-          <p style="margin:8px 0 0;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.55);text-wrap:pretty">Todo es opcional: si preferís, mandá el mensaje así como está.</p>
-        </div>
-
-        <div id="nea-dlgsummary" style="padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.75);white-space:pre-line"></div>
-
-        <div class="nea-field">
-          <label for="nea-q-rubro">¿A qué se dedica tu negocio?</label>
-          <input id="nea-q-rubro" name="rubro" type="text" autocomplete="organization" placeholder="Ferretería, estudio contable, indumentaria…">
-        </div>
-        <div class="nea-field">
-          <label for="nea-q-sitio">¿Ya tenés sitio web?</label>
-          <select id="nea-q-sitio" name="sitio">
-            <option value="">Elegí una opción</option>
-            <option>No, sería el primero</option>
-            <option>Sí, y quiero rehacerlo</option>
-            <option>Sí, y quiero mejorarlo</option>
-          </select>
-        </div>
-        <div class="nea-field">
-          <label for="nea-q-material">¿Tenés logo y textos listos?</label>
-          <select id="nea-q-material" name="material">
-            <option value="">Elegí una opción</option>
-            <option>Tengo todo</option>
-            <option>Tengo el logo, me faltan los textos</option>
-            <option>No tengo nada todavía</option>
-          </select>
-        </div>
-        <div class="nea-field">
-          <label for="nea-q-plazo">¿Para cuándo lo necesitás?</label>
-          <select id="nea-q-plazo" name="plazo">
-            <option value="">Elegí una opción</option>
-            <option>Lo antes posible</option>
-            <option>En uno o dos meses</option>
-            <option>Todavía estoy averiguando</option>
-          </select>
-        </div>
-
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px">
-          <button type="submit" value="send" class="nea-cta" style="flex:1;margin-top:0">Abrir WhatsApp <span aria-hidden="true" style="font-size:14px;opacity:.55">↗</span></button>
-          <button type="submit" value="cancel" style="height:52px;padding:0 20px;border-radius:999px;border:1px solid rgba(255,255,255,.24);background:none;color:rgba(255,255,255,.7);font:inherit;font-size:15px;cursor:pointer">Cancelar</button>
-        </div>
-      </form>
-    </dialog>
-  </section>
+      <a href="precios/#estimacion" style="height:52px;display:inline-flex;align-items:center;gap:10px;padding:0 28px;border-radius:999px;background:var(--lima);color:var(--ink);font-size:16px;font-weight:600;white-space:nowrap">Armá tu presupuesto <span aria-hidden="true" style="font-size:14px;opacity:.6">→</span></a>
     </div>
   </section>
 
-  <footer id="contacto" data-ink="strong" style="background:transparent;color:#0A0A0A;padding:clamp(48px,4.4vw,84px) clamp(20px,2.5vw,48px) clamp(28px,2.4vw,44px)">
-    <div data-ink="rule" style="border-top:1px solid rgba(10,10,10,.16);padding-top:13px;margin-bottom:clamp(26px,2.6vw,50px);font-size:11px;font-weight:600;letter-spacing:.2em;color:#0A0A0A">CONTACTO</div>
+  </main>
+
+  <footer id="contacto" style="background:var(--ink);color:var(--paper-2);padding:clamp(48px,4.4vw,84px) clamp(20px,2.5vw,48px) clamp(28px,2.4vw,44px)">
+    <div style="border-top:1px solid rgba(255,255,255,.28);padding-top:13px;margin-bottom:clamp(26px,2.6vw,50px);font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--paper)">CONTACTO</div>
     <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:32px">
       <a href="#top" style="display:flex;align-items:center">
         <img id="nea-footlogo" src="uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="240" height="52" style="height:clamp(38px,3vw,52px);width:auto;display:block">
       </a>
-      <nav aria-label="Pie" style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,2.3vw,44px);font-size:15px;font-weight:500">
-        <a href="#soluciones">Soluciones</a><a href="#servicios">Servicios</a><a href="#precios">Precios</a><a href="#nosotros">Nosotros</a>
+      <!-- Pie: es la unica navegacion de la home hacia las paginas de seccion.
+           La barra de arriba sigue siendo de anclas, a proposito: el recorrido
+           de la home es el scroll, no un menu. -->
+      <!-- padding vertical: sube el area tactil de cada link a 44px sin mover la tipografia -->
+      <nav aria-label="Pie" class="nea-footnav" style="display:flex;flex-wrap:wrap;align-items:center;column-gap:clamp(14px,1.7vw,32px);font-size:15px;font-weight:500">
+        <a href="diseno-web/">Diseño web</a><a href="tienda-online/">Tienda online</a><a href="sistemas-a-medida/">Sistemas a medida</a><a href="marketing-digital/">Marketing digital</a><a href="seo/">SEO</a><a href="google-ads/">Google Ads</a><a href="precios/">Precios</a><a href="casos/">Casos</a><a href="nosotros/">Nosotros</a>
       </nav>
-      <a href="#mockup" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
+      <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;background:var(--lima);color:var(--ink);font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
     </div>
-    <div style="margin-top:clamp(36px,3.4vw,64px);padding-top:22px;border-top:1px solid rgba(10,10,10,.12);display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;font-size:13.5px;color:#747474" data-ink="line">
+    <div style="margin-top:clamp(36px,3.4vw,64px);padding-top:22px;border-top:1px solid rgba(255,255,255,.18);display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;font-size:13.5px;color:rgba(255,255,255,.62)">
       <span>© 2026 Nea Sistemas</span>
       <span>Misiones, Argentina — trabajamos con todo el país</span>
     </div>

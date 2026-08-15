@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Lab — estrellas de Diseñar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-400-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-600-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(/site/uploads/fonts/instrumentserif-400-normal-subset.woff2) format('woff2')}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#2A2A2A;
+  background:radial-gradient(118% 88% at 104% 44%,#D8FF33 0%,rgba(216,255,51,.82) 16%,rgba(216,255,51,0) 60%),
+             radial-gradient(75% 65% at 6% 94%,rgba(255,205,120,.42) 0%,rgba(255,205,120,0) 58%),
+             linear-gradient(118deg,#FDF9F1 0%,#F8F1E0 46%,#F3EDD4 100%)}
+
+/* --- escena, replica de "Diseñar" --- */
+#escena{position:fixed;inset:0;display:flex;flex-direction:column;
+  padding:clamp(40px,7vw,120px) clamp(20px,2.5vw,48px) clamp(48px,4vw,80px);pointer-events:none;z-index:2}
+.rule{border-top:1px solid rgba(10,10,10,.16);padding-top:13px;font-size:11px;font-weight:600;letter-spacing:.2em}
+.stack{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center}
+.paso{position:absolute;right:0;top:50%;transform:translateY(-50%);width:min(420px,38vw)}
+.num{font-size:12px;font-weight:600;letter-spacing:.16em;color:#8f8f8f;margin-bottom:14px}
+.txt{margin:0;font-size:15px;line-height:1.52}
+.palabra{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(64px,15.6vw,300px);
+  line-height:.94;letter-spacing:-.015em;color:#7C8C5A}
+.dots{display:flex;gap:8px;align-items:center;margin-top:20px}
+.dots span{width:34px;height:3px;border-radius:2px;background:#2A2A2A;opacity:.22}
+.dots span:nth-child(2){opacity:1}
+
+/* --- estrellas --- */
+#campo{position:fixed;inset:0;z-index:1;pointer-events:none}
+.estrella{position:absolute;background-image:url(/site/uploads/estrella-sprite.webp);
+  background-repeat:no-repeat;pointer-events:auto;will-change:transform,opacity}
+
+/* --- panel --- */
+#panel{position:fixed;top:0;right:0;bottom:0;width:330px;z-index:10;overflow-y:auto;
+  background:rgba(8,10,20,.93);backdrop-filter:blur(10px);border-left:1px solid rgba(255,255,255,.14);
+  padding:18px;font-size:12.5px;color:#fff;transition:transform .25s}
+#panel.oculto{transform:translateX(100%)}
+#toggle{position:absolute;left:-1px;top:14px;transform:translateX(-100%);background:rgba(8,10,20,.93);
+  border:1px solid rgba(255,255,255,.14);border-right:0;color:#fff;padding:10px 14px;cursor:pointer;
+  border-radius:10px 0 0 10px;font:inherit;font-weight:600;white-space:nowrap;
+  box-shadow:-4px 0 14px rgba(0,0,0,.18)}
+#toggle:hover{background:rgba(20,24,40,.97)}
+h1{margin:0 0 4px;font-size:14px;font-weight:700}
+.sub{margin:0 0 14px;font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.45}
+.grupo{margin:0 0 6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);
+  font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.45)}
+.fila{display:flex;align-items:center;gap:10px;margin:9px 0}
+.fila label{flex:1;color:rgba(255,255,255,.82)}
+.fila output{width:52px;text-align:right;font-variant-numeric:tabular-nums;color:#C7FF4A;font-weight:600}
+input[type=range]{width:100%;accent-color:#C7FF4A}
+input[type=checkbox]{accent-color:#C7FF4A;width:auto}
+textarea{width:100%;height:96px;background:rgba(255,255,255,.07);color:#fff;
+  border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:7px 9px;
+  font-family:ui-monospace,monospace;font-size:11px;resize:vertical}
+.botones{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+button.acc{background:#C7FF4A;color:#0A0A0A;border:0;border-radius:999px;padding:10px;font:inherit;font-weight:700;cursor:pointer}
+button.sec{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;padding:10px;font:inherit;font-weight:600;cursor:pointer}
+#aviso{margin-top:8px;min-height:15px;font-size:11px;color:#C7FF4A}
+#hud{position:fixed;left:12px;bottom:10px;z-index:10;font-size:11px;color:rgba(0,0,0,.5);
+  font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<div id="campo"></div>
+
+<div id="escena">
+  <div class="rule">PROCESO</div>
+  <div class="stack">
+    <div class="palabra">Diseñar</div>
+    <div class="paso">
+      <div class="num">02</div>
+      <p class="txt">Armamos un diseño preliminar navegable de las páginas principales, con la estructura e identidad visual definidas: colores, tipografía, imágenes y las animaciones que le dan vida.</p>
+    </div>
+  </div>
+  <div class="dots"><span></span><span></span><span></span></div>
+</div>
+
+<div id="hud">—</div>
+
+<aside id="panel">
+  <button id="toggle">&#8677;</button>
+  <h1>Estrellas de "Diseñar"</h1>
+  <p class="sub">Movés <b>Progreso</b> para simular el scroll: 0 = antes de entrar, 1 = saliendo hacia Construir. Pasá el mouse por una estrella para que gire.</p>
+
+  <div class="grupo">SIMULADOR DE SCROLL</div>
+  <div class="fila"><label for="progreso">Progreso</label><output id="o-progreso"></output></div>
+  <input type="range" id="progreso" min="0" max="1" step="0.005">
+  <div class="fila"><label for="auto">Reproducir en bucle</label><input type="checkbox" id="auto"></div>
+
+  <div class="grupo">CANTIDAD Y TAMAÑO</div>
+  <div class="fila"><label for="cantidad">Cantidad</label><output id="o-cantidad"></output></div>
+  <input type="range" id="cantidad" min="1" max="8" step="1">
+  <div class="fila"><label for="tamMin">Tamaño mínimo</label><output id="o-tamMin"></output></div>
+  <input type="range" id="tamMin" min="40" max="300" step="5">
+  <div class="fila"><label for="tamMax">Tamaño máximo</label><output id="o-tamMax"></output></div>
+  <input type="range" id="tamMax" min="60" max="480" step="5">
+  <div class="fila"><label for="opacidad">Opacidad</label><output id="o-opacidad"></output></div>
+  <input type="range" id="opacidad" min="0.1" max="1" step="0.02">
+
+  <div class="grupo">CAÍDA</div>
+  <div class="fila"><label for="altura">Altura de caída</label><output id="o-altura"></output></div>
+  <input type="range" id="altura" min="200" max="1600" step="20">
+  <div class="fila"><label for="tramo">Tramo del scroll que usa</label><output id="o-tramo"></output></div>
+  <input type="range" id="tramo" min="0.1" max="0.8" step="0.02">
+  <div class="fila"><label for="escalonado">Retraso entre estrellas</label><output id="o-escalonado"></output></div>
+  <input type="range" id="escalonado" min="0" max="0.5" step="0.01">
+  <div class="fila"><label for="rebote">Rebote al aterrizar</label><output id="o-rebote"></output></div>
+  <input type="range" id="rebote" min="0" max="3" step="0.05">
+  <div class="fila"><label for="deriva">Deriva lateral</label><output id="o-deriva"></output></div>
+  <input type="range" id="deriva" min="0" max="200" step="5">
+
+  <div class="grupo">GIRO</div>
+  <div class="fila"><label for="fps">Velocidad (cuadros/seg)</label><output id="o-fps"></output></div>
+  <input type="range" id="fps" min="0" max="48" step="1">
+  <div class="fila"><label for="giraSiempre">Girar siempre</label><input type="checkbox" id="giraSiempre"></div>
+  <div class="fila"><label for="giraHover">Girar al pasar el mouse</label><input type="checkbox" id="giraHover"></div>
+  <div class="fila"><label for="fpsHover">Velocidad con mouse encima</label><output id="o-fpsHover"></output></div>
+  <input type="range" id="fpsHover" min="1" max="48" step="1">
+
+  <div class="grupo">CONFIGURACIÓN</div>
+  <div class="botones">
+    <button class="acc" id="exportar">Exportar JSON</button>
+    <button class="sec" id="copiar">Copiar</button>
+    <button class="sec" id="aplicar">Aplicar pegado</button>
+    <button class="sec" id="reset">Restaurar</button>
+  </div>
+  <div id="aviso"></div>
+  <textarea id="json" spellcheck="false" placeholder="Pegá un JSON y tocá «Aplicar pegado»"></textarea>
+</aside>
+
+<script>
+'use strict';
+
+const COLS = 6, FILAS = 4, TOTAL = 24;   // la tira es 6x4 = 24 cuadros
+
+// Posiciones base, en % del viewport. La cantidad toma las primeras N.
+const SITIOS = [
+  { x: 60, y: 42, k: 1.00 },
+  { x: 30, y: 76, k: 0.86 },
+  { x: 46, y: 60, k: 0.34 },
+  { x: 82, y: 74, k: 0.46 },
+  { x: 15, y: 26, k: 0.40 },
+  { x: 70, y: 18, k: 0.30 },
+  { x: 38, y: 20, k: 0.24 },
+  { x: 88, y: 40, k: 0.28 }
+];
+
+const DEFAULTS = {
+  cantidad: 5, tamMin: 70, tamMax: 260, opacidad: 1,
+  altura: 900, tramo: 0.38, escalonado: 0.08, rebote: 1.1, deriva: 60,
+  fps: 20, giraSiempre: false, giraHover: true, fpsHover: 24,
+  progreso: 0.5, auto: false
+};
+let cfg = Object.assign({}, DEFAULTS);
+
+const NUM = ['cantidad','tamMin','tamMax','opacidad','altura','tramo','escalonado','rebote','deriva','fps','fpsHover','progreso'];
+const BOOL = ['giraSiempre','giraHover','auto'];
+
+const campo = document.getElementById('campo');
+let estrellas = [];
+
+const cl = (n, a, b) => Math.max(a, Math.min(b, n));
+// rebote: pasa de largo y vuelve
+const outBack = (t, s) => 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2);
+const inCubic = t => t * t * t;
+
+function construir() {
+  campo.innerHTML = '';
+  estrellas = [];
+  const n = Math.round(cfg.cantidad);
+  for (let i = 0; i < n; i++) {
+    const s = SITIOS[i % SITIOS.length];
+    const el = document.createElement('div');
+    el.className = 'estrella';
+    el._h = false;
+    el.addEventListener('pointerenter', () => { el._h = true; });
+    el.addEventListener('pointerleave', () => { el._h = false; });
+    campo.appendChild(el);
+    estrellas.push({
+      el: el, x: s.x, y: s.y, k: s.k,
+      lado: i % 2 ? 1 : -1,
+      tam: 0,
+      // giro: arranca y termina SIEMPRE en el cuadro 0
+      cuadro: 0,          // posición del giro, con decimales
+      estado: 'quieta',   // quieta | girando | cerrando
+      meta: 0,            // hasta dónde girar para cerrar la vuelta
+      entPrev: -1, salPrev: -1
+    });
+  }
+  medir();
+}
+
+function medir() {
+  for (let i = 0; i < estrellas.length; i++) {
+    const e = estrellas[i];
+    const tam = Math.round(cfg.tamMin + (cfg.tamMax - cfg.tamMin) * e.k);
+    e.tam = tam;
+    e.el.style.width = tam + 'px';
+    e.el.style.height = tam + 'px';
+    e.el.style.backgroundSize = (tam * COLS) + 'px ' + (tam * FILAS) + 'px';
+    e.el.style.left = 'calc(' + e.x + '% - ' + (tam / 2) + 'px)';
+    e.el.style.top = 'calc(' + e.y + '% - ' + (tam / 2) + 'px)';
+  }
+}
+
+let t0 = 0, tPrev = 0;
+function pintar(ts) {
+  requestAnimationFrame(pintar);
+  if (!t0) { t0 = ts; tPrev = ts; }
+  const dt = Math.min(.05, (ts - tPrev) / 1000);   // tope, por si la pestaña estuvo dormida
+  tPrev = ts;
+
+  if (cfg.auto) {
+    cfg.progreso = ((ts - t0) / 6000) % 1;
+    document.getElementById('progreso').value = cfg.progreso;
+    document.getElementById('o-progreso').textContent = cfg.progreso.toFixed(2);
+  }
+
+  const p = cfg.progreso;
+  const n = estrellas.length;
+  let girando = 0;
+
+  for (let i = 0; i < n; i++) {
+    const e = estrellas[i];
+    const retraso = i * cfg.escalonado;
+
+    // ENTRADA: cae desde arriba dentro de su tramo
+    const ent = cl((p - retraso) / Math.max(.01, cfg.tramo), 0, 1);
+    // SALIDA: sube y se va en el último tramo
+    const sal = cl((p - (1 - cfg.tramo)) / Math.max(.01, cfg.tramo), 0, 1);
+
+    const yEnt = (1 - outBack(ent, cfg.rebote)) * -cfg.altura;
+    const ySal = inCubic(sal) * -cfg.altura;
+    const xEnt = (1 - ent) * cfg.deriva * e.lado;
+
+    const vis = ent * (1 - sal);
+    e.el.style.opacity = (vis * cfg.opacidad).toFixed(3);
+    e.el.style.transform = 'translate3d(' + xEnt.toFixed(1) + 'px,' + (yEnt + ySal).toFixed(1) + 'px,0)';
+
+    /* GIRO — la vuelta nunca queda a medias.
+       Se pide girar mientras el mouse está encima o mientras la caída AVANZA de
+       verdad (no basta con estar a mitad de camino: con el scroll detenido, antes
+       quedaban girando para siempre). Cuando deja de pedirse, sigue hasta el
+       próximo cierre de vuelta y se detiene en el cuadro 0. */
+    const cayendo = Math.abs(ent - e.entPrev) > 1e-4 || Math.abs(sal - e.salPrev) > 1e-4;
+    e.entPrev = ent; e.salPrev = sal;
+    const conMouse = cfg.giraHover && e.el._h;
+    const pideGirar = cfg.giraSiempre || conMouse || (cayendo && vis > .001);
+
+    if (pideGirar) {
+      e.estado = 'girando';
+    } else if (e.estado === 'girando') {
+      e.estado = 'cerrando';
+      e.meta = Math.ceil(e.cuadro / TOTAL) * TOTAL;
+      if (e.meta <= e.cuadro + .001) e.meta += TOTAL;   // ya justo en el borde: una vuelta más
+    }
+
+    if (e.estado !== 'quieta') {
+      e.cuadro += (conMouse ? cfg.fpsHover : cfg.fps) * dt;
+      if (e.estado === 'cerrando' && e.cuadro >= e.meta) { e.cuadro = 0; e.estado = 'quieta'; }
+      girando++;
+    }
+
+    const cuadro = Math.floor(e.cuadro) % TOTAL;
+    const col = cuadro % COLS, fil = Math.floor(cuadro / COLS);
+    e.el.style.backgroundPosition = (-col * e.tam) + 'px ' + (-fil * e.tam) + 'px';
+  }
+
+  document.getElementById('hud').textContent =
+    'progreso ' + p.toFixed(2) + ' · ' + n + ' estrellas · ' + girando + ' girando';
+}
+requestAnimationFrame(pintar);
+
+/* ---------------- controles ---------------- */
+function pintarControles() {
+  NUM.forEach(k => {
+    const el = document.getElementById(k);
+    if (!el) return;
+    el.value = cfg[k];
+    const o = document.getElementById('o-' + k);
+    if (o) o.textContent = cfg[k];
+  });
+  BOOL.forEach(k => { document.getElementById(k).checked = cfg[k]; });
+}
+
+NUM.forEach(k => {
+  const el = document.getElementById(k);
+  if (!el) return;
+  el.addEventListener('input', ev => {
+    cfg[k] = parseFloat(ev.target.value);
+    const o = document.getElementById('o-' + k);
+    if (o) o.textContent = cfg[k];
+    if (k === 'cantidad') construir();
+    if (k === 'tamMin' || k === 'tamMax') medir();
+  });
+});
+BOOL.forEach(k => {
+  document.getElementById(k).addEventListener('change', ev => { cfg[k] = ev.target.checked; });
+});
+
+const aviso = m => {
+  const n = document.getElementById('aviso');
+  n.textContent = m;
+  setTimeout(() => { if (n.textContent === m) n.textContent = ''; }, 2600);
+};
+const comoJson = () => {
+  const o = Object.assign({}, cfg);
+  delete o.progreso; delete o.auto;   // son del simulador, no del efecto
+  return JSON.stringify(o, null, 2);
+};
+
+document.getElementById('exportar').addEventListener('click', () => {
+  document.getElementById('json').value = comoJson();
+  const blob = new Blob([comoJson()], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'estrellas-config.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  aviso('Descargado estrellas-config.json');
+});
+document.getElementById('copiar').addEventListener('click', async () => {
+  document.getElementById('json').value = comoJson();
+  try { await navigator.clipboard.writeText(comoJson()); aviso('Copiado'); }
+  catch (e) { aviso('No pude copiar: usá el cuadro de abajo'); }
+});
+document.getElementById('aplicar').addEventListener('click', () => {
+  try {
+    const p = JSON.parse(document.getElementById('json').value);
+    Object.keys(DEFAULTS).forEach(k => { if (p[k] !== undefined) cfg[k] = p[k]; });
+    pintarControles(); construir();
+    aviso('Configuración aplicada');
+  } catch (e) { aviso('JSON inválido: ' + e.message); }
+});
+document.getElementById('reset').addEventListener('click', () => {
+  cfg = Object.assign({}, DEFAULTS);
+  pintarControles(); construir();
+  document.getElementById('json').value = '';
+  aviso('Valores base restaurados');
+});
+const btn = document.getElementById('toggle');
+const alternarPanel = () => {
+  const oculto = document.getElementById('panel').classList.toggle('oculto');
+  btn.textContent = oculto ? '⚙ Controles' : '⇥';
+  btn.title = oculto ? 'Mostrar controles' : 'Ocultar controles (tecla H)';
+};
+btn.addEventListener('click', alternarPanel);
+// H para ocultar/mostrar sin ir al borde
+addEventListener('keydown', ev => {
+  if (ev.key === 'h' || ev.key === 'H') alternarPanel();
+});
+addEventListener('resize', medir, { passive: true });
+
+pintarControles();
+construir();
+</script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Lab — ASCII art de Construir</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-400-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url(/site/uploads/fonts/plusjakartasans-700-normal-latin.woff2) format('woff2')}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:#0A0A0A;color:#F5F4F0;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+
+#escena{position:fixed;inset:0;display:flex;flex-direction:column;
+  padding:clamp(30px,5vw,90px) clamp(20px,2.5vw,48px) clamp(40px,3.5vw,70px);z-index:1}
+.rule{border-top:1px solid rgba(255,255,255,.28);padding-top:13px;font-size:11px;font-weight:600;letter-spacing:.2em}
+.stack{position:relative;flex:1;display:flex;align-items:center;justify-content:flex-end}
+.paso{position:absolute;left:0;top:50%;transform:translateY(-50%);width:min(400px,32vw);z-index:2}
+.num{font-size:12px;font-weight:600;letter-spacing:.16em;color:#8f8f8f;margin-bottom:14px}
+.txt{margin:0 0 24px;font-size:15px;line-height:1.52}
+.cta{height:52px;display:inline-flex;align-items:center;gap:12px;padding:0 26px;border-radius:999px;
+  background:#C7FF4A;color:#0A0A0A;font-size:16px;font-weight:600;text-decoration:none}
+
+/* El arte: un <pre> monoespaciado. No usa la fuente pixelada del sitio. */
+#arte{margin:0;font-family:ui-monospace,'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace;
+  white-space:pre;color:#b4b4b4;user-select:none;letter-spacing:0;font-variant-ligatures:none}
+#molde{display:none}
+.dots{display:flex;gap:8px;align-items:center;margin-top:16px}
+.dots span{width:34px;height:3px;border-radius:2px;background:#fff;opacity:.22}
+.dots span:nth-child(3){opacity:1}
+
+/* panel */
+#panel{position:fixed;top:0;right:0;bottom:0;width:330px;z-index:10;overflow-y:auto;
+  background:rgba(8,10,20,.95);border-left:1px solid rgba(255,255,255,.14);padding:18px;
+  font-size:12.5px;transition:transform .25s}
+#panel.oculto{transform:translateX(100%)}
+/* El boton va FUERA del panel: adentro lo recortaba el overflow-y del scroll */
+#toggle{position:fixed;top:14px;right:330px;z-index:11;background:rgba(8,10,20,.95);
+  border:1px solid rgba(255,255,255,.14);border-right:0;color:#fff;padding:10px 14px;cursor:pointer;
+  border-radius:10px 0 0 10px;font:inherit;font-weight:600;white-space:nowrap;
+  transition:right .25s;box-shadow:-6px 0 18px rgba(0,0,0,.35)}
+#toggle.solo{right:0}
+#toggle:hover{background:rgba(26,30,48,.98)}
+h1{margin:0 0 4px;font-size:14px;font-weight:700}
+.sub{margin:0 0 14px;font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.45}
+.grupo{margin:0 0 6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);
+  font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.45)}
+.fila{display:flex;align-items:center;gap:10px;margin:9px 0}
+.fila label{flex:1;color:rgba(255,255,255,.82)}
+.fila output{width:52px;text-align:right;font-variant-numeric:tabular-nums;color:#C7FF4A;font-weight:600}
+input[type=range]{width:100%;accent-color:#C7FF4A}
+input[type=checkbox]{accent-color:#C7FF4A;width:auto}
+input[type=color]{width:40px;height:26px;padding:0;border:1px solid rgba(255,255,255,.2);border-radius:6px;background:none;cursor:pointer}
+select,textarea,input[type=text]{width:100%;background:rgba(255,255,255,.07);color:#fff;
+  border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:7px 9px;font:inherit}
+textarea{height:92px;font-family:ui-monospace,monospace;font-size:11px;resize:vertical}
+.botones{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+button.acc{background:#C7FF4A;color:#0A0A0A;border:0;border-radius:999px;padding:10px;font:inherit;font-weight:700;cursor:pointer}
+button.sec{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;padding:10px;font:inherit;font-weight:600;cursor:pointer}
+#aviso{margin-top:8px;min-height:15px;font-size:11px;color:#C7FF4A}
+#hud{position:fixed;left:12px;bottom:10px;z-index:10;font-size:11px;color:rgba(255,255,255,.45);
+  font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<canvas id="molde"></canvas>
+
+<div id="escena">
+  <div class="rule">PROCESO</div>
+  <div class="stack">
+    <pre id="arte"></pre>
+    <div class="paso">
+      <div class="num">03</div>
+      <p class="txt">Construimos la web completa y los sistemas que hayas elegido del informe. Se integran con las herramientas que ya usás.</p>
+      <a class="cta" href="#">Pedí tu diagnóstico gratis <span>→</span></a>
+    </div>
+  </div>
+  <div class="dots"><span></span><span></span><span></span></div>
+</div>
+
+<div id="hud">—</div>
+
+<button id="toggle" title="Ocultar controles (tecla H)">&#8677;</button>
+
+<aside id="panel">
+  <h1>ASCII art de "Construir."</h1>
+  <p class="sub">La palabra se dibuja con caracteres. Movés <b>Progreso</b> para simular el scroll; barra espaciadora para rehacer.</p>
+
+  <div class="grupo">DISPARO</div>
+  <div class="fila"><label for="progreso">Progreso</label><output id="o-progreso"></output></div>
+  <input type="range" id="progreso" min="0" max="1" step="0.005">
+  <div class="fila"><label for="auto">Repetir en bucle</label><input type="checkbox" id="auto"></div>
+
+  <div class="grupo">TEXTO Y RESOLUCIÓN</div>
+  <div class="fila"><label for="palabraTxt">Palabra</label></div>
+  <input type="text" id="palabraTxt" value="Construir.">
+  <div class="fila"><label for="columnas">Columnas (detalle)</label><output id="o-columnas"></output></div>
+  <input type="range" id="columnas" min="20" max="200" step="2">
+  <div class="fila"><label for="tamLetra">Tamaño del carácter</label><output id="o-tamLetra"></output></div>
+  <input type="range" id="tamLetra" min="4" max="28" step="1">
+  <div class="fila"><label for="interlinea">Interlineado</label><output id="o-interlinea"></output></div>
+  <input type="range" id="interlinea" min="0.6" max="1.4" step="0.02">
+  <div class="fila"><label for="grosor">Grosor del molde</label></div>
+  <select id="grosor">
+    <option value="400">Normal</option>
+    <option value="700">Negrita</option>
+    <option value="800">Extra negrita</option>
+  </select>
+
+  <div class="grupo">CARACTERES</div>
+  <div class="fila"><label for="modo">Modo</label></div>
+  <select id="modo">
+    <option value="densidad">Por densidad (sombreado, como la referencia)</option>
+    <option value="ruido">Ruido puro (todos cambian)</option>
+    <option value="mixto">Densidad + chispazos</option>
+  </select>
+  <div class="fila"><label for="rampa">Rampa</label></div>
+  <select id="rampa">
+    <option value=" .:-=+*#%@">.:-=+*#%@ (clásica)</option>
+    <option value=" .·:;+=xX$&@">.·:;+=xX$&@ (fina)</option>
+    <option value=" ░▒▓█">░▒▓█ (bloques)</option>
+    <option value=" .'`^,:;Il!i><~+_-?][}{1)(|\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$">ASCII completa (70 niveles)</option>
+    <option value=" 01">0 y 1</option>
+    <option value=" CONSTRUIR">Letras de CONSTRUIR</option>
+  </select>
+  <div class="fila"><label for="cambios">Cambios por segundo</label><output id="o-cambios"></output></div>
+  <input type="range" id="cambios" min="0" max="40" step="1">
+  <div class="fila"><label for="chispa">Proporción que cambia</label><output id="o-chispa"></output></div>
+  <input type="range" id="chispa" min="0" max="1" step="0.02">
+  <div class="fila"><label for="umbral">Umbral del molde</label><output id="o-umbral"></output></div>
+  <input type="range" id="umbral" min="0.02" max="0.9" step="0.02">
+
+  <div class="grupo">RUIDO Y REVELADO</div>
+  <div class="fila"><label for="ruidoFondo">Densidad del ruido inicial</label><output id="o-ruidoFondo"></output></div>
+  <input type="range" id="ruidoFondo" min="0" max="1" step="0.02">
+  <div class="fila"><label for="duracion">Duración</label><output id="o-duracion"></output></div>
+  <input type="range" id="duracion" min="200" max="4000" step="50">
+  <div class="fila"><label for="orden">Cómo se retira el ruido</label></div>
+  <select id="orden">
+    <option value="azar">Al azar (recomendado)</option>
+    <option value="izq">De izquierda a derecha</option>
+    <option value="der">De derecha a izquierda</option>
+    <option value="arriba">De arriba hacia abajo</option>
+    <option value="juntas">Nunca (queda el ruido)</option>
+  </select>
+  <div class="fila"><label for="color">Color</label><input type="color" id="color"></div>
+
+  <div class="grupo">CONFIGURACIÓN</div>
+  <div class="botones">
+    <button class="acc" id="exportar">Exportar JSON</button>
+    <button class="sec" id="copiar">Copiar</button>
+    <button class="sec" id="aplicar">Aplicar pegado</button>
+    <button class="sec" id="reset">Restaurar</button>
+  </div>
+  <div id="aviso"></div>
+  <textarea id="json" spellcheck="false" placeholder="Pegá un JSON y tocá «Aplicar pegado»"></textarea>
+</aside>
+
+<script>
+'use strict';
+
+const DEFAULTS = {
+  palabra: 'Construir.', columnas: 110, tamLetra: 11, interlinea: 0.86, grosor: '700',
+  modo: 'mixto', rampa: ' .:-=+*#%@', cambios: 18, chispa: 0.35, umbral: 0.12,
+  ruidoFondo: 1, duracion: 2000, orden: 'azar', color: '#b4b4b4',
+  progreso: 1, auto: false
+};
+let cfg = Object.assign({}, DEFAULTS);
+
+const NUM = ['columnas','tamLetra','interlinea','cambios','chispa','umbral','ruidoFondo','duracion','progreso'];
+const BOOL = ['auto'];
+const SEL = ['grosor','modo','rampa','orden'];
+
+const arte = document.getElementById('arte');
+const cv = document.getElementById('molde');
+const ctx = cv.getContext('2d', { willReadFrequently: true });
+
+/* --- El molde: se dibuja la palabra en un canvas fuera de pantalla y se mide
+       cuánta tinta cae en cada celda de la grilla. Eso da la intensidad 0..1
+       con la que después se elige cada carácter. --- */
+let celdas = [], cols = 0, filas = 0;
+
+function generarMolde() {
+  const s = cfg.palabra || ' ';
+  cols = Math.round(cfg.columnas);
+
+  // proporción real del carácter monoespaciado, para no deformar el dibujo
+  const probe = document.createElement('canvas').getContext('2d');
+  probe.font = cfg.tamLetra + 'px ' + getComputedStyle(arte).fontFamily;
+  const anchoCar = probe.measureText('M').width || cfg.tamLetra * .6;
+  const altoCar = cfg.tamLetra * cfg.interlinea;
+  const rel = anchoCar / altoCar;               // <1: el carácter es más alto que ancho
+
+  // dibujo el texto grande y luego lo muestreo
+  const alto = 200;
+  const fuente = cfg.grosor + ' ' + alto + 'px "Plus Jakarta Sans", system-ui, sans-serif';
+  ctx.font = fuente;
+  const m = ctx.measureText(s);
+  const anchoTxt = Math.max(1, Math.ceil(m.width));
+  const asc = m.actualBoundingBoxAscent || alto * .75;
+  const desc = m.actualBoundingBoxDescent || alto * .2;
+  const altoTxt = Math.max(1, Math.ceil(asc + desc));
+
+  cv.width = anchoTxt; cv.height = altoTxt;
+  ctx.font = fuente;
+  ctx.fillStyle = '#fff';
+  ctx.textBaseline = 'alphabetic';
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.fillText(s, 0, asc);
+
+  // filas: mantienen la proporción del texto compensando la forma del carácter
+  filas = Math.max(1, Math.round((altoTxt / anchoTxt) * cols * rel));
+
+  const img = ctx.getImageData(0, 0, cv.width, cv.height).data;
+  const cw = cv.width / cols, ch = cv.height / filas;
+  celdas = new Array(cols * filas);
+  for (let f = 0; f < filas; f++) {
+    for (let c = 0; c < cols; c++) {
+      let suma = 0, n = 0;
+      const x0 = Math.floor(c * cw), x1 = Math.max(x0 + 1, Math.floor((c + 1) * cw));
+      const y0 = Math.floor(f * ch), y1 = Math.max(y0 + 1, Math.floor((f + 1) * ch));
+      for (let y = y0; y < y1; y++) {
+        for (let x = x0; x < x1; x++) { suma += img[(y * cv.width + x) * 4 + 3]; n++; }
+      }
+      celdas[f * cols + c] = n ? (suma / n) / 255 : 0;
+    }
+  }
+  aplicarEstilo();
+}
+
+function aplicarEstilo() {
+  arte.style.fontSize = cfg.tamLetra + 'px';
+  arte.style.lineHeight = cfg.interlinea;
+  arte.style.color = cfg.color;
+}
+
+/* --- Render --- */
+let buffer = [], t0 = 0, corriendo = false, ultimo = 0;
+function arrancar() { t0 = performance.now(); corriendo = true; }
+
+// Dos ruidos estables por celda: uno decide CUÁNDO se apaga, el otro SI tiene
+// ruido de fondo. Son deterministas para que no titilen entre cuadros.
+const hash1 = (c, f) => (((c * 73856093) ^ (f * 19349663)) >>> 0) % 1000 / 1000;
+const hash2 = (c, f) => (((c * 83492791) ^ (f * 29009471)) >>> 0) % 1000 / 1000;
+
+// Momento en que una celda de RUIDO se apaga. La palabra no usa esto: está
+// siempre visible, y aparece justo porque el ruido de alrededor se retira.
+function cuandoSeApaga(c, f) {
+  switch (cfg.orden) {
+    case 'der': return 1 - c / cols;
+    case 'izq': return c / cols;
+    case 'arriba': return f / filas;
+    case 'juntas': return 1;
+    default: return hash1(c, f);   // al azar
+  }
+}
+
+function pintar(ts) {
+  requestAnimationFrame(pintar);
+  if (!celdas.length) return;
+
+  if (cfg.auto && !corriendo && ts - t0 > cfg.duracion + 800) arrancar();
+  const t = corriendo ? Math.min(1, (ts - t0) / cfg.duracion) : cfg.progreso;
+  if (corriendo && (ts - t0) >= cfg.duracion) corriendo = false;
+
+  const rampa = cfg.rampa;
+  const ultimoIdx = rampa.length - 1;
+  const refrescar = cfg.cambios > 0 && (ts - ultimo > 1000 / cfg.cambios);
+  if (refrescar) ultimo = ts;
+
+  if (buffer.length !== celdas.length) buffer = new Array(celdas.length).fill(' ');
+
+  let vivos = 0, ruidosos = 0;
+  let salida = '';
+  for (let f = 0; f < filas; f++) {
+    for (let c = 0; c < cols; c++) {
+      const i = f * cols + c;
+      const v = celdas[i];
+      const esPalabra = v >= cfg.umbral;
+
+      // El ruido de fondo se retira a medida que avanza t; la palabra se queda.
+      // Al principio ambos son caracteres al azar, así que la palabra está
+      // escondida dentro del ruido y va apareciendo sola.
+      if (!esPalabra) {
+        if (hash2(c, f) >= cfg.ruidoFondo || t >= cuandoSeApaga(c, f)) { salida += ' '; continue; }
+        if (refrescar || buffer[i] === ' ') buffer[i] = rampa[1 + Math.floor(Math.random() * ultimoIdx)];
+        salida += buffer[i];
+        ruidosos++;
+        continue;
+      }
+
+      vivos++;
+      let ch = buffer[i];
+      // mientras el ruido todavía cubre, la palabra también es azarosa
+      const disfrazada = t < .82;
+      const toca = refrescar && (disfrazada || cfg.modo === 'ruido' ? true
+                 : cfg.modo === 'mixto' ? Math.random() < cfg.chispa : false);
+      if (ch === ' ' || toca) {
+        if (!disfrazada && (cfg.modo === 'densidad' || (cfg.modo === 'mixto' && !toca))) {
+          ch = rampa[Math.min(ultimoIdx, Math.max(1, Math.round(v * ultimoIdx)))];
+        } else {
+          ch = rampa[1 + Math.floor(Math.random() * ultimoIdx)];
+        }
+        buffer[i] = ch;
+      }
+      salida += ch;
+    }
+    salida += '\n';
+  }
+  arte.textContent = salida;
+  document.getElementById('hud').textContent =
+    cols + '×' + filas + ' celdas · ' + vivos + ' con tinta · progreso ' + t.toFixed(2);
+}
+
+/* ---------------- controles ---------------- */
+function pintarControles() {
+  NUM.forEach(k => {
+    const el = document.getElementById(k);
+    if (!el) return;
+    el.value = cfg[k];
+    const o = document.getElementById('o-' + k);
+    if (o) o.textContent = cfg[k];
+  });
+  BOOL.forEach(k => { document.getElementById(k).checked = cfg[k]; });
+  SEL.forEach(k => { document.getElementById(k).value = cfg[k]; });
+  document.getElementById('palabraTxt').value = cfg.palabra;
+  document.getElementById('color').value = cfg.color;
+}
+
+NUM.forEach(k => {
+  document.getElementById(k).addEventListener('input', ev => {
+    cfg[k] = parseFloat(ev.target.value);
+    const o = document.getElementById('o-' + k);
+    if (o) o.textContent = cfg[k];
+    if (k === 'columnas' || k === 'tamLetra' || k === 'interlinea') { buffer = []; generarMolde(); }
+  });
+});
+BOOL.forEach(k => {
+  document.getElementById(k).addEventListener('change', ev => {
+    cfg[k] = ev.target.checked;
+    if (k === 'auto' && cfg[k]) arrancar();
+  });
+});
+SEL.forEach(k => {
+  document.getElementById(k).addEventListener('change', ev => {
+    cfg[k] = ev.target.value;
+    if (k === 'grosor') { buffer = []; generarMolde(); }
+    if (k === 'rampa' || k === 'modo') buffer = [];
+  });
+});
+document.getElementById('palabraTxt').addEventListener('input', ev => {
+  cfg.palabra = ev.target.value || ' ';
+  buffer = []; generarMolde();
+});
+document.getElementById('color').addEventListener('input', ev => { cfg.color = ev.target.value; aplicarEstilo(); });
+
+const aviso = m => {
+  const n = document.getElementById('aviso');
+  n.textContent = m;
+  setTimeout(() => { if (n.textContent === m) n.textContent = ''; }, 2600);
+};
+const comoJson = () => {
+  const o = Object.assign({}, cfg);
+  delete o.progreso; delete o.auto;
+  return JSON.stringify(o, null, 2);
+};
+document.getElementById('exportar').addEventListener('click', () => {
+  document.getElementById('json').value = comoJson();
+  const blob = new Blob([comoJson()], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'construir-config.json';
+  a.click(); URL.revokeObjectURL(a.href);
+  aviso('Descargado construir-config.json');
+});
+document.getElementById('copiar').addEventListener('click', async () => {
+  document.getElementById('json').value = comoJson();
+  try { await navigator.clipboard.writeText(comoJson()); aviso('Copiado'); }
+  catch (e) { aviso('No pude copiar: usá el cuadro'); }
+});
+document.getElementById('aplicar').addEventListener('click', () => {
+  try {
+    const p = JSON.parse(document.getElementById('json').value);
+    Object.keys(DEFAULTS).forEach(k => { if (p[k] !== undefined) cfg[k] = p[k]; });
+    pintarControles(); buffer = []; generarMolde(); arrancar();
+    aviso('Configuración aplicada');
+  } catch (e) { aviso('JSON inválido: ' + e.message); }
+});
+document.getElementById('reset').addEventListener('click', () => {
+  cfg = Object.assign({}, DEFAULTS);
+  pintarControles(); buffer = []; generarMolde(); arrancar();
+  document.getElementById('json').value = '';
+  aviso('Valores base restaurados');
+});
+
+const btn = document.getElementById('toggle');
+function alternarPanel() {
+  const oculto = document.getElementById('panel').classList.toggle('oculto');
+  btn.classList.toggle('solo', oculto);       // se corre al borde cuando el panel se va
+  btn.textContent = oculto ? '⚙ Controles' : '⇥';
+  btn.title = oculto ? 'Mostrar controles (tecla H)' : 'Ocultar controles (tecla H)';
+}
+btn.addEventListener('click', alternarPanel);
+addEventListener('keydown', ev => {
+  if (ev.code === 'Space') { ev.preventDefault(); arrancar(); }
+  if (ev.key === 'h' || ev.key === 'H') alternarPanel();
+});
+addEventListener('resize', () => { buffer = []; generarMolde(); }, { passive: true });
+
+pintarControles();
+document.fonts.ready.then(generarMolde);
+generarMolde();
+requestAnimationFrame(pintar);
+</script>
+</body>
+</html>

@@ -25,7 +25,7 @@
   let steps, words, panels, dots, rig;
   let procPr = 0, procOn = false;
   let ink, inkBases, proceso, nosotros, bgColor, bgLum;
-  let grid = null;
+  let grid = null, estrellas = null, ascii = null;
   const INK_TARGETS = {
     strong: [255, 255, 255], muted: [221, 227, 255], word: [143, 166, 255],
     line: [255, 255, 255], chip: [255, 255, 255], rule: [255, 255, 255]
@@ -164,7 +164,11 @@
       'rgb(' + Math.round(lp(a[0], b[0], t)) + ',' + Math.round(lp(a[1], b[1], t)) + ',' + Math.round(lp(a[2], b[2], t)) + ')';
     const mix = (a, b, t) => [lp(a[0], b[0], t), lp(a[1], b[1], t), lp(a[2], b[2], t)];
     const WHITE = [255, 255, 255], BLUE = [49, 87, 255], BLACK = [10, 10, 10];
-    const PALE = [221, 227, 255], YELLOW = [199, 255, 74];   // #C7FF4A, el lima de marca
+    // Este es el color PLANO al que llega el fondo en "Diseñar". Tiene que ser el
+    // crema base del gradiente de #nea-designbg (#F8F1E0), no el lima de marca: el
+    // nav pinta este mismo color, y si no coinciden la barra se ve como una franja
+    // de otro tono flotando sobre el gradiente.
+    const PALE = [221, 227, 255], YELLOW = [248, 241, 224];
     const enter = (node, span, at) => cl(((vh * (at || 1)) - node.getBoundingClientRect().top) / (vh * span), 0, 1);
 
     // the services section stays black-on-white: the blue only starts once "Proceso" is nearly at the top
@@ -179,10 +183,13 @@
     // La textura de "Diseñar" sigue la misma curva que el color: entra cuando el fondo
     // vira al lima y se va cuando arranca a apagarse hacia el negro. Asi el cross-fade
     // es continuo y no se ve un corte entre el color plano y la imagen.
+    // Las ventanas siguen al panel REAL. Con 3 paneles, "Diseñar" está pleno entre
+    // seg 1.0 y 1.75 (ver inT/outT en update()), así que el lima y los destellos
+    // viven ahí. Antes se estiraban hasta 2.15 y quedaban encima de "Construir".
     let designT = 0, toYellow = 0;
-    if (procOn && seg > .85) {
-      toYellow = cl((seg - .85) / .3, 0, 1);
-      const toBlack = cl((seg - 1.85) / .3, 0, 1);
+    if (procOn && seg > .8) {
+      toYellow = cl((seg - .8) / .2, 0, 1);          // lima pleno al entrar Diseñar
+      const toBlack = cl((seg - 1.75) / .2, 0, 1);   // negro pleno al entrar Construir
       arr = mix(mix(BLUE, YELLOW, toYellow), BLACK, toBlack);
       designT = toYellow * (1 - toBlack);
     }
@@ -192,6 +199,17 @@
     if (p2 > 0) { arr = BLACK.slice(); designT = 0; gridT = 0; }
     if (el.designbg) el.designbg.style.opacity = designT.toFixed(3);
     if (grid) grid.set(gridT);
+
+    // Las estrellas usan su propio 0→1: "Diseñar" ocupa de seg .8 a 1.95, o sea
+    // que caen al entrar el lima y se van cuando empieza a virar al negro.
+    if (estrellas) {
+      let ep = cl((seg - .8) / 1.15, 0, 1);
+      if (!procOn || p2 > 0) ep = seg > .8 ? 1 : 0;
+      estrellas.set(ep);
+    }
+
+    // El ASCII se rearma cada vez que "Construir." entra en pantalla.
+    if (ascii) ascii.set(procOn && seg > 1.8 && p2 <= 0);
 
     const bg = 'rgb(' + arr.map(Math.round).join(',') + ')';
     document.body.style.backgroundColor = bg;
@@ -246,14 +264,26 @@
     const LUPA_RADIO = 250;
     const LUPA_BORDE = .64;     // aro del visor
 
-    let w = 0, h = 0, raf = 0, vis = 0;
+    let w = 0, h = 0, raf = 0, vis = 0, dpr = 1;
     const mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999, on: false };
 
+    // El canvas de la malla va detras de todo (z-index:-1), asi que no puede tapar
+    // el texto. Este segundo canvas va ENCIMA y pinta solo el circulo de la lupa:
+    // fondo opaco + malla ampliada + la palabra gigante redibujada. Es un canvas,
+    // no una copia del DOM, asi que no hay nada que mantener sincronizado.
+    const cvL = document.createElement('canvas');
+    cvL.setAttribute('aria-hidden', 'true');
+    cvL.style.cssText = 'position:fixed;inset:0;z-index:60;pointer-events:none';
+    document.body.appendChild(cvL);
+    const ctxL = cvL.getContext('2d');
+
     const resize = () => {
-      const dpr = Math.min(2, devicePixelRatio || 1);
+      dpr = Math.min(2, devicePixelRatio || 1);
       w = innerWidth; h = innerHeight;
-      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
-      cv.style.width = w + 'px'; cv.style.height = h + 'px';
+      [cv, cvL].forEach(c => {
+        c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+        c.style.width = w + 'px'; c.style.height = h + 'px';
+      });
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     resize();
@@ -265,31 +295,172 @@
     addEventListener('pointerleave', () => { mouse.on = false; });
 
     // Traza una polilínea suavizada pasando por los puntos medios.
-    function curva(pts) {
-      ctx.beginPath();
-      ctx.moveTo(pts[0].x, pts[0].y);
+    function curva(c, pts) {
+      c.beginPath();
+      c.moveTo(pts[0].x, pts[0].y);
       for (let k = 1; k < pts.length - 1; k++) {
-        ctx.quadraticCurveTo(pts[k].x, pts[k].y, (pts[k].x + pts[k + 1].x) / 2, (pts[k].y + pts[k + 1].y) / 2);
+        c.quadraticCurveTo(pts[k].x, pts[k].y, (pts[k].x + pts[k + 1].x) / 2, (pts[k].y + pts[k + 1].y) / 2);
       }
-      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
-      ctx.stroke();
+      c.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+      c.stroke();
     }
 
-    function pintarMalla(malla, cols, rows) {
-      ctx.lineWidth = GROSOR;
-      ctx.strokeStyle = 'rgba(255,255,255,' + (OPACIDAD * vis).toFixed(3) + ')';
-      for (let j = 0; j < rows; j++) curva(malla[j]);
+    /* --- Texto redibujado para la lupa ---------------------------------
+       Todo se lee del elemento real: posición, tipografía y color. El HTML sigue
+       siendo la única fuente de verdad, no hay copia que mantener sincronizada. */
+
+    const opacidadDe = nodo => {
+      const panel = nodo.closest('[data-nea-panel]');
+      return panel ? parseFloat(panel.style.opacity || '1') : 1;
+    };
+    const fuenteDe = cs => cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+
+    // La caja de línea incluye el interlineado, así que centro el alto real del
+    // glifo dentro de ella en vez de suponer dónde cae la línea de base.
+    function baseline(c, txt, top, alto) {
+      const m = c.measureText(txt);
+      return top + (alto + (m.actualBoundingBoxAscent || 0) - (m.actualBoundingBoxDescent || 0)) / 2;
+    }
+
+    // Elementos de una sola línea: la palabra gigante, el "01" y el "PROCESO"
+    // (que además lleva una rayita arriba, que no es texto sino un border-top).
+    function pintarLinea(c, nodo) {
+      if (!nodo) return;
+      const r = nodo.getBoundingClientRect();
+      if (!r.width || r.bottom < 0 || r.top > h) return;
+      const op = opacidadDe(nodo);
+      if (!(op > .01)) return;
+
+      const cs = getComputedStyle(nodo);
+      const txt = (nodo.textContent || '').trim();
+      if (!txt) return;
+
+      c.save();
+      c.globalAlpha = op;
+      const bw = parseFloat(cs.borderTopWidth) || 0;
+      if (bw > 0) {
+        c.fillStyle = cs.borderTopColor;
+        c.fillRect(r.left, r.top, r.width, bw);
+      }
+      c.font = fuenteDe(cs);
+      if ('letterSpacing' in c) c.letterSpacing = cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing;
+      c.fillStyle = cs.color;
+      const al = cs.textAlign === 'right' ? 'right' : cs.textAlign === 'center' ? 'center' : 'left';
+      c.textAlign = al;
+      c.textBaseline = 'alphabetic';
+      const padTop = parseFloat(cs.paddingTop) || 0;
+      const x = al === 'right' ? r.right : al === 'center' ? (r.left + r.right) / 2 : r.left;
+      c.fillText(txt, x, baseline(c, txt, r.top + bw + padTop, r.height - bw - padTop));
+      c.restore();
+    }
+
+    /* El párrafo sí tiene cortes de línea, y con text-wrap:pretty el navegador los
+       balancea con un algoritmo que no se puede reproducir midiendo palabras. En
+       vez de adivinar dónde corta, se lo preguntamos: recorriendo el nodo de texto
+       con un Range, el carácter donde cambia la coordenada vertical es un salto de
+       línea. Da los cortes exactos que se están viendo.
+       Es O(n) en caracteres, así que se calcula una vez y se guarda; solo se rehace
+       si cambia el ancho de la ventana, que es lo único que altera el wrap. */
+    let lineasCache = null, cacheAncho = 0, cacheNodo = null;
+
+    function medirLineas(p) {
+      const t = p.firstChild;
+      if (!t || t.nodeType !== 3) return [];
+      const s = t.textContent;
+      const base = p.getBoundingClientRect();
+      const rango = document.createRange();
+      const out = [];
+      let ini = 0, top = null, alto = 0, left = 0;
+      for (let i = 1; i <= s.length; i++) {
+        rango.setStart(t, i - 1); rango.setEnd(t, i);
+        const r = rango.getBoundingClientRect();
+        if (!r.height) continue;                       // espacios colapsados al final de línea
+        if (top === null) { top = r.top; alto = r.height; left = r.left; }
+        else if (r.top - top > 1) {                    // cambió de renglón
+          out.push({ txt: s.slice(ini, i - 1).trim(), dx: left - base.left, dy: top - base.top, alto: alto });
+          ini = i - 1; top = r.top; alto = r.height; left = r.left;
+        }
+      }
+      if (top !== null) out.push({ txt: s.slice(ini).trim(), dx: left - base.left, dy: top - base.top, alto: alto });
+      return out;
+    }
+
+    function pintarParrafo(c, p) {
+      if (!p) return;
+      if (!lineasCache || cacheAncho !== w || cacheNodo !== p) {
+        lineasCache = medirLineas(p); cacheAncho = w; cacheNodo = p;
+      }
+      if (!lineasCache.length) return;
+      const op = opacidadDe(p);
+      if (!(op > .01)) return;
+      const r = p.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > h) return;
+
+      const cs = getComputedStyle(p);
+      c.save();
+      c.globalAlpha = op;
+      c.font = fuenteDe(cs);
+      if ('letterSpacing' in c) c.letterSpacing = '0px';
+      c.fillStyle = cs.color;
+      c.textAlign = 'left';
+      c.textBaseline = 'alphabetic';
+      for (let i = 0; i < lineasCache.length; i++) {
+        const L = lineasCache[i];
+        c.fillText(L.txt, r.left + L.dx, baseline(c, L.txt, r.top + L.dy, L.alto));
+      }
+      c.restore();
+    }
+
+    // Las tres rayitas del paginador: rectángulos, no texto.
+    function pintarDots(c) {
+      const cont = document.getElementById('nea-procdots');
+      if (!cont) return;
+      const hijos = cont.children;
+      for (let i = 0; i < hijos.length; i++) {
+        const r = hijos[i].getBoundingClientRect();
+        if (!r.width || r.bottom < 0 || r.top > h) continue;
+        const cs = getComputedStyle(hijos[i]);
+        c.save();
+        c.globalAlpha = parseFloat(cs.opacity || '1');
+        c.fillStyle = cs.backgroundColor;
+        c.fillRect(r.left, r.top, r.width, r.height);
+        c.restore();
+      }
+    }
+
+    // Todo el contenido de la sección, en el orden en que se apila.
+    function pintarSeccion(c) {
+      const pin = document.getElementById('nea-procpin');
+      if (pin) pintarLinea(c, pin.querySelector('[data-ink="rule"]'));
+      pintarLinea(c, document.querySelector('[data-nea-word="1"]'));
+      const paso = document.querySelector('[data-nea-step="1"]');
+      if (paso) {
+        pintarLinea(c, paso.querySelector('[data-ink="muted"]'));
+        pintarParrafo(c, paso.querySelector('p'));
+      }
+      pintarDots(c);
+    }
+
+    function pintarMalla(c, malla, cols, rows) {
+      c.lineWidth = GROSOR;
+      c.strokeStyle = 'rgba(255,255,255,' + (OPACIDAD * vis).toFixed(3) + ')';
+      for (let j = 0; j < rows; j++) curva(c, malla[j]);
       for (let i = 0; i < cols; i++) {
         const col = [];
         for (let j = 0; j < rows; j++) col.push(malla[j][i]);
-        curva(col);
+        curva(c, col);
       }
     }
 
     function draw(ts) {
       raf = 0;
       ctx.clearRect(0, 0, w, h);
-      if (vis <= .001) return;
+      if (vis <= .001) {
+        // fuera de "Analizar" el círculo no debe quedar colgado
+        ctxL.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctxL.clearRect(0, 0, w, h);
+        return;
+      }
 
       // seguimiento elástico: la malla llega al cursor con un leve retraso
       if (mouse.sx < -9000) { mouse.sx = mouse.x; mouse.sy = mouse.y; }
@@ -321,26 +492,32 @@
         malla.push(fila);
       }
 
-      pintarMalla(malla, cols, rows);
+      pintarMalla(ctx, malla, cols, rows);
 
-      // Lupa: recorte circular, se borra lo de adentro y se redibuja la malla escalada.
-      // Se redibuja en vez de estirar el bitmap, asi las lineas quedan nitidas.
+      // Lupa, en el canvas de encima: dentro del círculo se pinta un fondo opaco
+      // (tapa lo de abajo, así nada se ve doble) y sobre él la malla y la palabra
+      // REDIBUJADAS a escala. Redibujar en vez de estirar el bitmap es lo que las
+      // mantiene nítidas, y vale igual para el texto.
+      ctxL.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctxL.clearRect(0, 0, w, h);
       if (mouse.on && LUPA_ZOOM > 1) {
         const x = mouse.sx, y = mouse.sy;
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
-        ctx.clip();
-        ctx.clearRect(0, 0, w, h);
-        ctx.translate(x, y); ctx.scale(LUPA_ZOOM, LUPA_ZOOM); ctx.translate(-x, -y);
-        pintarMalla(malla, cols, rows);
-        ctx.restore();
+        ctxL.save();
+        ctxL.beginPath();
+        ctxL.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
+        ctxL.clip();
+        ctxL.fillStyle = document.body.style.backgroundColor || '#3157FF';
+        ctxL.fillRect(0, 0, w, h);
+        ctxL.translate(x, y); ctxL.scale(LUPA_ZOOM, LUPA_ZOOM); ctxL.translate(-x, -y);
+        pintarMalla(ctxL, malla, cols, rows);
+        pintarSeccion(ctxL);
+        ctxL.restore();
         if (LUPA_BORDE > 0) {
-          ctx.beginPath();
-          ctx.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
-          ctx.lineWidth = 1;
-          ctx.strokeStyle = 'rgba(255,255,255,' + (LUPA_BORDE * vis).toFixed(3) + ')';
-          ctx.stroke();
+          ctxL.beginPath();
+          ctxL.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
+          ctxL.lineWidth = 1;
+          ctxL.strokeStyle = 'rgba(255,255,255,' + (LUPA_BORDE * vis).toFixed(3) + ')';
+          ctxL.stroke();
         }
       }
 
@@ -357,6 +534,281 @@
         cv.style.opacity = v.toFixed(3);
         if (v > .001 && !raf) raf = requestAnimationFrame(draw);
         else if (v <= .001 && antes > .001 && !raf) raf = requestAnimationFrame(draw); // un frame más para limpiar
+      }
+    };
+  }
+
+  /* ----------------------------------------------- estrellas de "Diseñar" */
+
+  // Config definida en el banco de pruebas (lab/estrellas.html) y aprobada por el
+  // cliente. Para retocarla conviene volver a ese lab en vez de tantear acá.
+  function initEstrellas() {
+    const campo = document.getElementById('nea-estrellas');
+    if (!campo) return null;
+
+    const COLS = 6, FILAS = 4, CUADROS = 24;   // la tira es 6x4
+    const CANT = 5, TAM_MIN = 70, TAM_MAX = 260, OPACIDAD = 1;
+    const ALTURA = 900, TRAMO = .38, ESCALONADO = .01, REBOTE = 1.1, DERIVA = 115;
+    const FPS = 30, GIRA_HOVER = true, FPS_HOVER = 24;
+
+    // x/y en % del viewport; k escala entre TAM_MIN y TAM_MAX
+    const SITIOS = [
+      { x: 60, y: 42, k: 1.00 }, { x: 30, y: 76, k: 0.86 }, { x: 46, y: 60, k: 0.34 },
+      { x: 82, y: 74, k: 0.46 }, { x: 15, y: 26, k: 0.40 }
+    ];
+
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const items = [];
+    for (let i = 0; i < CANT; i++) {
+      const s = SITIOS[i];
+      const nodo = document.createElement('div');
+      nodo.className = 'nea-estrella';
+      campo.appendChild(nodo);
+      items.push({
+        el: nodo, x: s.x, y: s.y, k: s.k, lado: i % 2 ? 1 : -1,
+        tam: 0, cx: 0, cy: 0, baseX: 0, baseY: 0,
+        cuadro: 0, estado: 'quieta', meta: 0, prev: -1
+      });
+    }
+
+    function medir() {
+      for (let i = 0; i < items.length; i++) {
+        const e = items[i];
+        const tam = Math.round(TAM_MIN + (TAM_MAX - TAM_MIN) * e.k);
+        e.tam = tam;
+        e.cx = innerWidth * e.x / 100;      // centro, para saber si el mouse está encima
+        e.cy = innerHeight * e.y / 100;
+        e.baseX = e.cx - tam / 2;
+        e.baseY = e.cy - tam / 2;
+        e.el.style.width = tam + 'px';
+        e.el.style.height = tam + 'px';
+        e.el.style.backgroundSize = (tam * COLS) + 'px ' + (tam * FILAS) + 'px';
+      }
+    }
+    medir();
+    addEventListener('resize', medir, { passive: true });
+
+    const cl2 = (n, a, b) => Math.max(a, Math.min(b, n));
+    const outBack = (t, s) => 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2);
+
+    let raf = 0, p = 0, tPrev = 0, activo = false;
+    let mouseX = -9999, mouseY = -9999;
+
+    function frame(ts) {
+      raf = 0;
+      const dt = Math.min(.05, (ts - tPrev) / 1000);
+      tPrev = ts;
+      let vivo = false;
+
+      for (let i = 0; i < items.length; i++) {
+        const e = items[i];
+        const ent = cl2((p - i * ESCALONADO) / TRAMO, 0, 1);
+        const sal = cl2((p - (1 - TRAMO)) / TRAMO, 0, 1);
+        const vis = ent * (1 - sal);
+
+        const dy = (1 - outBack(ent, REBOTE)) * -ALTURA + sal * sal * sal * -ALTURA;
+        const dx = (1 - ent) * DERIVA * e.lado;
+        e.el.style.opacity = (vis * OPACIDAD).toFixed(3);
+        e.el.style.transform = 'translate3d(' + (e.baseX + dx).toFixed(1) + 'px,' + (e.baseY + dy).toFixed(1) + 'px,0)';
+
+        // El giro nunca queda a medias: se pide mientras el mouse está encima o
+        // mientras la caída AVANZA de verdad; al soltarse completa la vuelta y
+        // se detiene en el cuadro 0.
+        const avanza = Math.abs(p - e.prev) > 1e-4;
+        e.prev = p;
+        const encima = GIRA_HOVER && !reduce && vis > .05 &&
+          Math.abs(mouseX - e.cx) < e.tam * .45 && Math.abs(mouseY - e.cy) < e.tam * .45;
+        const pide = !reduce && (encima || (avanza && vis > .001));
+
+        if (pide) e.estado = 'girando';
+        else if (e.estado === 'girando') {
+          e.estado = 'cerrando';
+          e.meta = Math.ceil(e.cuadro / CUADROS) * CUADROS;
+          if (e.meta <= e.cuadro + .001) e.meta += CUADROS;
+        }
+        if (e.estado !== 'quieta') {
+          e.cuadro += (encima ? FPS_HOVER : FPS) * dt;
+          if (e.estado === 'cerrando' && e.cuadro >= e.meta) { e.cuadro = 0; e.estado = 'quieta'; }
+          vivo = true;
+        }
+        const c = Math.floor(e.cuadro) % CUADROS;
+        e.el.style.backgroundPosition = (-(c % COLS) * e.tam) + 'px ' + (-Math.floor(c / COLS) * e.tam) + 'px';
+      }
+
+      // se apaga solo cuando ninguna gira: en reposo no consume nada
+      if (vivo && activo) raf = requestAnimationFrame(frame);
+    }
+
+    addEventListener('pointermove', ev => {
+      mouseX = ev.clientX; mouseY = ev.clientY;
+      if (activo && !raf) { tPrev = performance.now(); raf = requestAnimationFrame(frame); }
+    }, { passive: true });
+
+    return {
+      set(valor) {
+        p = valor;
+        activo = valor > 0 && valor < 1;
+        campo.style.display = activo ? 'block' : 'none';
+        if (activo && !raf) { tPrev = performance.now(); raf = requestAnimationFrame(frame); }
+      }
+    };
+  }
+
+  /* ------------------------------------------- "Construir." en arte ASCII */
+
+  // Config definida en lab/construir.html y aprobada por el cliente. La palabra se
+  // dibuja en un canvas fuera de pantalla y se mide cuánta tinta cae en cada celda
+  // de la grilla; ese valor decide el carácter. Empieza todo en ruido y la palabra
+  // aparece cuando el ruido de alrededor se retira al azar.
+  function initAscii() {
+    const pre = document.getElementById('nea-ascii');
+    if (!pre) return null;
+
+    const PALABRA = 'Construir.';
+    const GROSOR = '800', RAMPA = ' 01', INTERLINEA = .86;
+    const CAMBIOS = 13, UMBRAL = .16, RUIDO_FONDO = 1, DURACION = 2000;
+
+    // Referencia del cliente: 150 columnas y 12px de carácter en 1920 de ancho.
+    // Abajo se reparte por resolución para que el arte nunca desborde ni quede
+    // ilegible: menos columnas en pantallas chicas, y el cuerpo se calcula para
+    // llenar el ancho disponible.
+    function medidas() {
+      const vw = innerWidth;
+      const cols = vw >= 1440 ? 150 : vw >= 1120 ? 124 : vw >= 860 ? 104 : vw >= 620 ? 82 : 56;
+      const ancho = vw >= 1120 ? vw * .56 : vw * .86;   // en angosto el bloque se apila y usa casi todo
+      return { cols: cols, ancho: ancho };
+    }
+
+    const cv = document.createElement('canvas');
+    const ctx = cv.getContext('2d', { willReadFrequently: true });
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let celdas = [], cols = 0, filas = 0, buffer = [];
+
+    function moler() {
+      const m = medidas();
+      cols = m.cols;
+
+      // proporción real del carácter monoespaciado, para no deformar el dibujo
+      const probe = document.createElement('canvas').getContext('2d');
+      const fam = getComputedStyle(pre).fontFamily;
+      probe.font = '100px ' + fam;
+      const rel = (probe.measureText('M').width / 100) / INTERLINEA;
+      const tam = Math.max(4.5, Math.min(16, m.ancho / (cols * (probe.measureText('M').width / 100))));
+      pre.style.fontSize = tam.toFixed(2) + 'px';
+      pre.style.lineHeight = INTERLINEA;
+
+      const alto = 200;
+      const fuente = GROSOR + ' ' + alto + 'px "Plus Jakarta Sans", system-ui, sans-serif';
+      ctx.font = fuente;
+      const med = ctx.measureText(PALABRA);
+      const aTxt = Math.max(1, Math.ceil(med.width));
+      const asc = med.actualBoundingBoxAscent || alto * .75;
+      const desc = med.actualBoundingBoxDescent || alto * .2;
+      const hTxt = Math.max(1, Math.ceil(asc + desc));
+
+      cv.width = aTxt; cv.height = hTxt;
+      ctx.font = fuente;
+      ctx.fillStyle = '#fff';
+      ctx.textBaseline = 'alphabetic';
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.fillText(PALABRA, 0, asc);
+
+      filas = Math.max(1, Math.round((hTxt / aTxt) * cols * rel));
+
+      const img = ctx.getImageData(0, 0, cv.width, cv.height).data;
+      const cw = cv.width / cols, ch = cv.height / filas;
+      celdas = new Array(cols * filas);
+      for (let f = 0; f < filas; f++) {
+        for (let c = 0; c < cols; c++) {
+          let suma = 0, n = 0;
+          const x0 = Math.floor(c * cw), x1 = Math.max(x0 + 1, Math.floor((c + 1) * cw));
+          const y0 = Math.floor(f * ch), y1 = Math.max(y0 + 1, Math.floor((f + 1) * ch));
+          for (let y = y0; y < y1; y++) {
+            for (let x = x0; x < x1; x++) { suma += img[(y * cv.width + x) * 4 + 3]; n++; }
+          }
+          celdas[f * cols + c] = n ? (suma / n) / 255 : 0;
+        }
+      }
+      buffer = new Array(celdas.length).fill(' ');
+    }
+
+    // El molde depende de dos cosas que al arrancar todavía no están listas: la
+    // webfont y el ancho real de la ventana. Por eso antes sólo se veía bien
+    // después de redimensionar, que es lo que forzaba a recalcularlo.
+    let anchoPrev = -1;
+    function remoler() {
+      if (innerWidth === anchoPrev) return;   // el alto no cambia el molde
+      anchoPrev = innerWidth;
+      moler();
+    }
+    function rehacer() { anchoPrev = -1; remoler(); }
+
+    rehacer();
+
+    // 1. Dibujar en canvas NO dispara la descarga de una webfont: hay que pedirla.
+    //    Sin esto el molde sale con la tipografía de reemplazo, más angosta.
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('800 200px "Plus Jakarta Sans"').then(rehacer).catch(() => {});
+      document.fonts.ready.then(rehacer).catch(() => {});
+    }
+    // 2. El ancho recién es fiable cuando el layout se asienta. ResizeObserver avisa
+    //    de eso, además de los cambios de tamaño posteriores.
+    addEventListener('resize', remoler, { passive: true });
+    if (window.ResizeObserver) new ResizeObserver(remoler).observe(document.documentElement);
+    else addEventListener('load', rehacer);
+
+    // Ruidos estables por celda: uno decide cuándo se apaga, el otro si tiene fondo.
+    const h1 = (c, f) => (((c * 73856093) ^ (f * 19349663)) >>> 0) % 1000 / 1000;
+    const h2 = (c, f) => (((c * 83492791) ^ (f * 29009471)) >>> 0) % 1000 / 1000;
+
+    let raf = 0, t0 = 0, ultimo = 0, visible = false, listo = false;
+
+    function frame(ts) {
+      raf = 0;
+      if (!celdas.length) return;
+
+      const t = reduce ? 1 : Math.min(1, (ts - t0) / DURACION);
+      if (t >= 1) listo = true;
+
+      const ult = RAMPA.length - 1;
+      const refrescar = !reduce && CAMBIOS > 0 && (ts - ultimo > 1000 / CAMBIOS);
+      if (refrescar) ultimo = ts;
+
+      let salida = '';
+      for (let f = 0; f < filas; f++) {
+        for (let c = 0; c < cols; c++) {
+          const i = f * cols + c;
+          const v = celdas[i];
+          if (v < UMBRAL) {
+            // ruido de fondo: se retira al azar a medida que avanza t
+            if (h2(c, f) >= RUIDO_FONDO || t >= h1(c, f)) { salida += ' '; continue; }
+            if (refrescar || buffer[i] === ' ') buffer[i] = RAMPA[1 + Math.floor(Math.random() * ult)];
+            salida += buffer[i];
+            continue;
+          }
+          // la palabra: siempre presente, con los caracteres siempre vivos
+          if (refrescar || buffer[i] === ' ') buffer[i] = RAMPA[1 + Math.floor(Math.random() * ult)];
+          salida += buffer[i];
+        }
+        salida += '\n';
+      }
+      pre.textContent = salida;
+
+      // sigue mientras entre el efecto o mientras los caracteres deban parpadear
+      if (visible && !reduce) raf = requestAnimationFrame(frame);
+    }
+
+    return {
+      set(dentro) {
+        if (dentro && !visible) {          // acaba de entrar: se redispara
+          visible = true; listo = false;
+          t0 = performance.now(); ultimo = 0;
+          buffer.fill(' ');
+          if (!raf) raf = requestAnimationFrame(frame);
+        } else if (!dentro && visible) {
+          visible = false;
+        }
       }
     };
   }
@@ -503,7 +955,10 @@
   addEventListener('resize', onScroll, { passive: true });
   addEventListener('load', onScroll);
 
-  grid = initGrid();   // antes del primer update(): paintBackdrop ya le pasa visibilidad
+  // ambos antes del primer update(): paintBackdrop ya les pasa su progreso
+  grid = initGrid();
+  estrellas = initEstrellas();
+  ascii = initAscii();
   update();
   playVideo();
   initEstimator();

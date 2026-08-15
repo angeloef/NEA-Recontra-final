@@ -29,6 +29,12 @@
     apply();
   })();
 
+  /* En pantallas tactiles se apagan los efectos que dependen del cursor: la lupa de
+     "Analizar" (que sigue al mouse) y el giro de las estrellas de "Diseñar". No es
+     solo que no haya con que dispararlos: en un telefono son dos bucles de animacion
+     compitiendo con el scroll. Se mide una vez, al cargar. */
+  const TACTIL = matchMedia('(hover: none), (max-width: 860px)').matches;
+
   /* ---- estado de layout cacheado entre frames ---- */
   let vwPrev, vhPrev, hhMax = 0;
   let steps, words, panels, dots, rig;
@@ -325,16 +331,22 @@
     // el texto. Este segundo canvas va ENCIMA y pinta solo el circulo de la lupa:
     // fondo opaco + malla ampliada + la palabra gigante redibujada. Es un canvas,
     // no una copia del DOM, asi que no hay nada que mantener sincronizado.
-    const cvL = document.createElement('canvas');
-    cvL.setAttribute('aria-hidden', 'true');
-    cvL.style.cssText = 'position:fixed;inset:0;z-index:60;pointer-events:none';
-    document.body.appendChild(cvL);
-    const ctxL = cvL.getContext('2d');
+    //
+    // En mobile no se crea: la lupa sigue al cursor y sin cursor no tiene sentido.
+    // Ademas es un canvas a pantalla completa por dpr, memoria que ahi no se regala.
+    const cvL = TACTIL ? null : document.createElement('canvas');
+    if (cvL) {
+      cvL.setAttribute('aria-hidden', 'true');
+      cvL.style.cssText = 'position:fixed;inset:0;z-index:60;pointer-events:none';
+      document.body.appendChild(cvL);
+    }
+    const ctxL = cvL ? cvL.getContext('2d') : null;
 
     const resize = () => {
       dpr = Math.min(2, devicePixelRatio || 1);
       w = innerWidth; h = innerHeight;
       [cv, cvL].forEach(c => {
+        if (!c) return;               // en mobile no hay canvas de lupa
         c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
         c.style.width = w + 'px'; c.style.height = h + 'px';
       });
@@ -552,26 +564,28 @@
       // (tapa lo de abajo, así nada se ve doble) y sobre él la malla y la palabra
       // REDIBUJADAS a escala. Redibujar en vez de estirar el bitmap es lo que las
       // mantiene nítidas, y vale igual para el texto.
-      ctxL.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctxL.clearRect(0, 0, w, h);
-      if (mouse.on && LUPA_ZOOM > 1) {
-        const x = mouse.sx, y = mouse.sy;
-        ctxL.save();
-        ctxL.beginPath();
-        ctxL.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
-        ctxL.clip();
-        ctxL.fillStyle = document.body.style.backgroundColor || '#3157FF';
-        ctxL.fillRect(0, 0, w, h);
-        ctxL.translate(x, y); ctxL.scale(LUPA_ZOOM, LUPA_ZOOM); ctxL.translate(-x, -y);
-        pintarMalla(ctxL, malla, cols, rows);
-        pintarSeccion(ctxL);
-        ctxL.restore();
-        if (LUPA_BORDE > 0) {
+      if (ctxL) {
+        ctxL.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctxL.clearRect(0, 0, w, h);
+        if (mouse.on && LUPA_ZOOM > 1) {
+          const x = mouse.sx, y = mouse.sy;
+          ctxL.save();
           ctxL.beginPath();
           ctxL.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
-          ctxL.lineWidth = 1;
-          ctxL.strokeStyle = 'rgba(255,255,255,' + (LUPA_BORDE * vis).toFixed(3) + ')';
-          ctxL.stroke();
+          ctxL.clip();
+          ctxL.fillStyle = document.body.style.backgroundColor || '#3157FF';
+          ctxL.fillRect(0, 0, w, h);
+          ctxL.translate(x, y); ctxL.scale(LUPA_ZOOM, LUPA_ZOOM); ctxL.translate(-x, -y);
+          pintarMalla(ctxL, malla, cols, rows);
+          pintarSeccion(ctxL);
+          ctxL.restore();
+          if (LUPA_BORDE > 0) {
+            ctxL.beginPath();
+            ctxL.arc(x, y, LUPA_RADIO, 0, Math.PI * 2);
+            ctxL.lineWidth = 1;
+            ctxL.strokeStyle = 'rgba(255,255,255,' + (LUPA_BORDE * vis).toFixed(3) + ')';
+            ctxL.stroke();
+          }
         }
       }
 
@@ -601,19 +615,24 @@
     if (!campo) return null;
 
     const COLS = 6, FILAS = 4, CUADROS = 24;   // la tira es 6x4
-    const CANT = 5, TAM_MIN = 70, TAM_MAX = 260, OPACIDAD = 1;
+    const CANT = 4, TAM_MIN = 56, TAM_MAX = 366, OPACIDAD = 1;
     const ALTURA = 900, TRAMO = .38, ESCALONADO = .01, REBOTE = 1.1, DERIVA = 115;
     const FPS = 30, GIRA_HOVER = true, FPS_HOVER = 24;
 
     // x/y en % del viewport; k escala entre TAM_MIN y TAM_MAX.
-    // v2 usa el segundo modelo de estrella (la de cuatro puntas): va en una grande
-    // y una chica, y separadas, para que la mezcla se lea sin quedar simetrica.
+    // v2 usa el segundo modelo de estrella (la de cuatro puntas): va en la mas
+    // grande y en la mas chica, para que la mezcla se lea sin quedar simetrica.
+    // Posiciones y tamaños definidos en lab/estrellas-layout.html.
     const SITIOS = [
-      { x: 60, y: 42, k: 1.00 }, { x: 30, y: 76, k: 0.86, v2: true }, { x: 46, y: 60, k: 0.34 },
-      { x: 82, y: 74, k: 0.46, v2: true }, { x: 15, y: 26, k: 0.40 }
+      { x: 71.72, y: 31.09, k: 0.387 },
+      { x: 81.45, y: 80.16, k: 0.545 },
+      { x: 46.99, y: 36.60, k: 0.000, v2: true },
+      { x: 30.33, y: 97.72, k: 1.000, v2: true }
     ];
 
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // En mobile las estrellas caen pero no giran: quedan siempre en el cuadro 0.
+    const quietas = reduce || TACTIL;
     const items = [];
     for (let i = 0; i < CANT; i++) {
       const s = SITIOS[i];
@@ -672,9 +691,9 @@
         // se detiene en el cuadro 0.
         const avanza = Math.abs(p - e.prev) > 1e-4;
         e.prev = p;
-        const encima = GIRA_HOVER && !reduce && vis > .05 &&
+        const encima = GIRA_HOVER && !quietas && vis > .05 &&
           Math.abs(mouseX - e.cx) < e.tam * .45 && Math.abs(mouseY - e.cy) < e.tam * .45;
-        const pide = !reduce && (encima || (avanza && vis > .001));
+        const pide = !quietas && (encima || (avanza && vis > .001));
 
         if (pide) e.estado = 'girando';
         else if (e.estado === 'girando') {

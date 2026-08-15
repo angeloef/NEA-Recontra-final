@@ -1,0 +1,389 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flujo · Sección Presupuesto</title>
+<style>
+  :root{
+    --bg:#0A0A0A; --ink:#F5F4F0; --dim:rgba(245,244,240,.55); --dim2:rgba(245,244,240,.34);
+    --line:rgba(245,244,240,.16); --acc:#C7FF4A; --card:rgba(255,255,255,.05);
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;padding:clamp(20px,3vw,52px);max-width:1180px}
+  h1{font-size:clamp(24px,3vw,40px);letter-spacing:-.03em;margin:0 0 6px}
+  h2{font-size:11px;letter-spacing:.2em;font-weight:600;color:var(--ink);margin:48px 0 14px;padding-top:12px;border-top:1px solid var(--line)}
+  h3{font-size:15px;margin:0 0 8px;letter-spacing:-.01em}
+  p.lede{color:var(--dim);max-width:74ch;margin:0 0 4px}
+  .meta{font:11px/1.4 var(--mono);color:var(--dim2);letter-spacing:.08em}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .card .meta{margin-bottom:10px}
+  ul{margin:8px 0 0;padding-left:18px;color:var(--dim)}
+  li{margin:3px 0}
+  strong{color:var(--ink);font-weight:600}
+  code{font:12px var(--mono);background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px;color:var(--dim)}
+
+  .wire{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:12px;min-height:225px}
+  .wire.s1{grid-template-columns:1fr 1fr}
+  .wire.mob{grid-template-columns:210px 210px;justify-content:start}
+  .zone{border:1px dashed var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+  .zone.on{border-style:solid;border-color:var(--acc);background:rgba(199,255,74,.05)}
+  .zlabel{font:10px var(--mono);letter-spacing:.14em;color:var(--dim2)}
+  .row{min-height:26px;border-radius:7px;background:rgba(255,255,255,.07);display:flex;align-items:center;padding:5px 9px;font:10px var(--mono);color:var(--dim)}
+  .row.sel{background:rgba(199,255,74,.16);color:var(--acc)}
+  .blob{flex:1;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line);display:grid;place-items:center;font:10px var(--mono);color:var(--dim2);text-align:center;padding:10px;min-height:52px}
+  .steps{display:grid;gap:28px}
+  .step{display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start}
+  .num{width:34px;height:34px;border-radius:99px;border:1px solid var(--line);display:grid;place-items:center;font:12px var(--mono);color:var(--acc)}
+  .open{color:#FFB86B}
+  .open::before{content:"◇ "}
+  .new{color:#7FD4FF}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font:10px var(--mono);letter-spacing:.14em;color:var(--dim2);font-weight:400}
+  td{color:var(--dim)}
+  td.n{font:12px var(--mono);color:var(--acc);white-space:nowrap;text-align:right}
+  .prod{margin-top:18px;border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--card)}
+  .prod header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;justify-content:space-between;margin-bottom:4px}
+  .prod h3{margin:0;font-size:19px}
+  .price{font:13px var(--mono);color:var(--acc)}
+  .who{color:var(--dim);font-size:13.5px;margin:2px 0 12px;max-width:70ch}
+  @media(max-width:820px){.wire,.wire.mob{grid-template-columns:1fr}}
+</style>
+
+<h1>Flujo de usuario · Sección Presupuesto</h1>
+<p class="lede">Documento vivo. <span class="open">Naranja = pregunta abierta.</span> <span class="new">Celeste = propuesta mía, sin validar.</span></p>
+<p class="meta">v7 · catálogo de 6 productos y precios en pesos</p>
+
+<h2>REGLAS DEL SISTEMA</h2>
+<div class="grid">
+  <div class="card"><div class="meta">OBJETIVO</div><h3>Calificar › educar › precio</h3><p style="margin:0;color:var(--dim)">Add-ons flexibles con precio propio. El total se recalcula en vivo.</p></div>
+  <div class="card"><div class="meta">SELECCIÓN</div><h3>Un producto por vez</h3><p style="margin:0;color:var(--dim)">Es un radio, no un carrito. La estimación describe <em>un</em> proyecto.</p></div>
+  <div class="card"><div class="meta">MEMORIA</div><h3>Extras guardados por producto</h3><p style="margin:0;color:var(--dim)">Volver a un producto recupera lo que ya habías armado.</p></div>
+  <div class="card"><div class="meta">CARD EXPANDIDA</div><h3>Video · qué incluye · extras propios</h3><p style="margin:0;color:var(--dim)">Sin lista de «qué NO incluye»: solo lo que sí entra, y los extras como camino de crecimiento.</p></div>
+  <div class="card"><div class="meta">PRECIO</div><h3>«Desde $X» en cinco de los seis</h3><p style="margin:0;color:var(--dim)">Un piso en pesos, no un rango. El total lo construye el usuario sumando extras.</p></div>
+  <div class="card"><div class="meta">MENSUAL</div><h3>Base por producto + recargos</h3><p style="margin:0;color:var(--dim)">22.000 / 22.000 / 28.000 / 42.000 / 55.000 según producto, y ciertos extras suman encima. La derecha muestra dos números vivos.</p></div>
+  <div class="card" style="border-color:#7FD4FF"><div class="meta" style="color:#7FD4FF">EXCEPCIÓN</div><h3>Sistemas a medida no cotiza</h3><p style="margin:0;color:var(--dim)">Sexta card con reglas propias: explica y muestra, pero no tiene precio ni checkboxes. Va directo a la plantilla.</p></div>
+  <div class="card"><div class="meta">LENGUAJE</div><h3>Sin límites numéricos</h3><p style="margin:0;color:var(--dim)">Nada de «hasta 6 páginas» ni «hasta 200 productos»: el alcance se define en la reunión.</p></div>
+</div>
+
+<h2>RECORRIDO · DESKTOP</h2>
+<div class="steps">
+
+  <div class="step">
+    <div class="num">0</div>
+    <div>
+      <h3>Llega a la sección · vacío, 2 columnas</h3>
+      <p class="meta">EL CENTRO NO EXISTE HASTA EL PRIMER CLIC</p>
+      <div class="wire s1" style="margin-top:10px">
+        <div class="zone"><span class="zlabel">IZQ · 6 CARDS REDUCIDAS</span>
+          <div class="row">Landing page</div><div class="row">Rediseño de tu sitio</div><div class="row">Sitio institucional</div><div class="row">Reservas y turnos</div><div class="row">Tienda online</div><div class="row">Sistemas y automatizaciones</div>
+        </div>
+        <div class="zone"><span class="zlabel">DER · TU ESTIMACIÓN</span>
+          <div class="blob">Estado vacío<br>«Elegí una opción»</div>
+        </div>
+      </div>
+      <ul>
+        <li>El precio nunca aparece sin una decisión del usuario. La expansión se siente como recompensa.</li>
+        <li><strong>Sin precio en la lista.</strong> La card reducida se lee por necesidad, no por costo.</li>
+        <li>Consecuencia: la card reducida necesita otro gancho — nombre + una línea de autoidentificación («esto es para vos si…»).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">1</div>
+    <div>
+      <h3>Toca una card reducida · nace el centro</h3>
+      <p class="meta">EXPANDIR ES SELECCIONAR · el layout pasa a 3 columnas</p>
+      <div class="wire" style="margin-top:10px">
+        <div class="zone"><span class="zlabel">IZQ</span>
+          <div class="row sel">● Tienda online</div><div class="row">Landing page</div><div class="row">Rediseño de tu sitio</div><div class="row">Sitio institucional</div><div class="row">Reservas y turnos</div><div class="row">Sistemas y automatizaciones</div>
+        </div>
+        <div class="zone on"><span class="zlabel">CENTRO · CARD EXPANDIDA</span>
+          <div class="row" style="justify-content:flex-end;background:none">✕ cerrar</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1">
+            <div class="blob" style="min-height:150px">VIDEO<br>9:16<br>2–5 s</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div class="row">Desde $700.000</div>
+              <div class="row">✓ Qué incluye</div>
+              <div class="row">+ Extras (c/precio)</div>
+            </div>
+          </div>
+        </div>
+        <div class="zone"><span class="zlabel">DER · STICKY</span>
+          <div class="blob">$965.000 pago único<br>$73.000 / mes</div>
+        </div>
+      </div>
+      <ul>
+        <li>El precio base entra al total en el mismo gesto que abre la card.</li>
+        <li>La columna izquierda nunca desaparece: cambiar de producto es siempre un clic.</li>
+        <li>La <strong>X</strong> devuelve al estado 0. El usuario puede desengancharse; no lo encerramos en el precio.</li>
+        <li>Sin scroll automático. El usuario decide dónde mira.</li>
+        <li>La X no descarta nada: los extras marcados quedan guardados, igual que al cambiar de producto. Una sola regla mental — <strong>nada de lo que armaste se pierde nunca</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">2</div>
+    <div>
+      <h3>Suma extras dentro de la card</h3>
+      <p class="meta">ITERACIÓN · los dos números de la derecha se mueven en vivo</p>
+      <ul>
+        <li>Cada extra muestra su precio único y, si corresponde, su recargo mensual.</li>
+        <li>La derecha detalla línea por línea, no solo el total: ahí se construye la confianza.</li>
+        <li class="new">PROPUESTA: los extras con recargo mensual llevan una marca visible (ej. «+340 · +15/mes») para que nadie descubra el mensual recién en la reunión.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">3</div>
+    <div>
+      <h3>Cambia de producto · sin castigo</h3>
+      <p class="meta">RESUELTO — memoria por producto</p>
+      <ul>
+        <li>Cada producto guarda su propio set de extras. Volver es recuperar, no rehacer.</li>
+        <li>Solo el producto activo cuenta para el total; los demás quedan en espera.</li>
+        <li class="open">ABIERTA: ¿la card reducida de un producto ya armado muestra alguna marca de «tenías esto»?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">4</div>
+    <div>
+      <h3>Cierra por WhatsApp · plantilla intermedia</h3>
+      <p class="meta">SALIDA · única conversión de la sección</p>
+      <ul>
+        <li>El clic <strong>no abre WhatsApp de una</strong>: abre una plantilla con el resumen (producto + extras + totales) más preguntas que agilizan el arranque del trabajo.</li>
+        <li>Ese paso cambia fricción por calificación: el lead llega con contexto en vez de con un «hola».</li>
+        <li>Modal encima de la sección. Respuestas dentro del texto del mensaje, sin backend. Detalle más abajo.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<h2>RECORRIDO · MOBILE (&lt;820px)</h2>
+<p class="lede">Modelo: <strong>card a pantalla completa + resumen de precio siempre visible</strong>. La estimación completa no cabe, pero el número nunca se pierde.</p>
+<div class="wire mob" style="margin-top:14px">
+  <div class="zone"><span class="zlabel">LISTA</span>
+    <div class="row">Landing page</div><div class="row">Rediseño</div><div class="row sel">Tienda online →</div><div class="row">Reservas y turnos</div><div class="row">Sistemas</div>
+    <div class="row" style="margin-top:auto;background:rgba(199,255,74,.16);color:var(--acc)">STICKY · sin selección</div>
+  </div>
+  <div class="zone on"><span class="zlabel">FULLSCREEN · TIENDA ONLINE</span>
+    <div class="row">← Volver</div>
+    <div class="blob">Video</div>
+    <div class="row">✓ incluye</div>
+    <div class="row">+ extras</div>
+    <div class="row" style="background:rgba(199,255,74,.16);color:var(--acc)">STICKY · 965.000 + 73.000/mes →</div>
+  </div>
+</div>
+<ul>
+  <li>La barra sticky inferior es la versión resumida de la estimación: pago único + mensual + botón.</li>
+  <li class="open">ABIERTA: ¿la barra se despliega para ver el detalle de extras?</li>
+</ul>
+
+<h2>MEDIA · VIDEOS CORTOS 9:16</h2>
+<p class="lede">Cada producto lleva un <strong>video vertical 9:16 de 2–5 s</strong>, ocupando la <strong>mitad izquierda</strong> de la card expandida. Placeholder por ahora.</p>
+
+<div class="card" style="border-color:#FFB86B;margin:12px 0">
+  <div class="meta" style="color:#FFB86B">CONSECUENCIA GEOMÉTRICA — LEER ANTES DE DISEÑAR</div>
+  <p style="margin:0 0 8px;color:var(--dim)">Un 9:16 al 50% del ancho fija el alto de la card: <code>alto ≈ ancho_card × 0,89</code>. Si la columna central mide 640px, el video mide 320 × 569 y la card arranca en ~620px de alto.</p>
+  <ul style="margin-top:0">
+    <li>La columna central necesita ser <strong>ancha</strong>. Con 3 columnas, esto pide 1280px+ de viewport para no ahogarse.</li>
+    <li>La mitad derecha (precio + incluye + extras) tiene que <strong>llenar 570px de alto</strong> o queda un vacío raro al lado del video. Tienda online con 8 extras lo llena; landing con 6 apenas.</li>
+    <li>Si el contenido supera al video, decidir: ¿scrollea la mitad derecha, o la card crece y el video queda pegado arriba?</li>
+    <li>En mobile fullscreen el 9:16 casi ocupa la pantalla entera. Ahí probablemente convenga recortarlo a 4:5 o dejarlo scrollear.</li>
+  </ul>
+</div>
+
+<ul style="max-width:74ch">
+  <li>5 videos autoplay = peso. Regla: cargar solo el del producto abierto, nunca los cinco.</li>
+  <li>Necesitan <code>muted</code> <code>loop</code> <code>playsinline</code> y un poster liviano, o el primer frame parpadea.</li>
+  <li>El placeholder debe ocupar exactamente el mismo espacio que el video final, o la card salta cuando lleguen los reales.</li>
+  <li class="open">ABIERTA: ¿respeta <code>prefers-reduced-motion</code> mostrando solo el poster?</li>
+  <li class="open">ABIERTA: ¿qué pasa con el 9:16 en mobile fullscreen?</li>
+</ul>
+
+<h2>PLANTILLA DE WHATSAPP</h2>
+<p class="lede"><strong>Modal encima de la sección</strong>, cierra con Esc y con clic afuera. Las respuestas viajan dentro del texto del mensaje: <strong>cero backend</strong>, todo va en el link de WhatsApp.</p>
+<ul style="max-width:74ch">
+  <li>Arriba del modal, el resumen ya armado (producto + extras + pago único + mensual) para que el usuario vea qué está por mandar.</li>
+  <li>Abajo, las preguntas de calificación. Todas deberían poder saltearse: si alguna es obligatoria, deja de ser un atajo y pasa a ser un formulario.</li>
+  <li>Consecuencia de no guardar nada: si la persona abandona el modal, <strong>el lead se pierde completo</strong>. Es el precio de no tener backend — aceptado.</li>
+  <li class="open">ABIERTA: lista final de preguntas (candidatas: rubro · si ya tiene sitio · si tiene logo y textos · plazo deseado · quién decide).</li>
+  <li class="open">ABIERTA: ¿el modal es el mismo para Sistemas a medida, o ahí lleva preguntas propias sobre el proceso a resolver?</li>
+</ul>
+
+<h2>CATÁLOGO v2 · SEIS PRODUCTOS EN PESOS</h2>
+<p class="lede"><strong>Ancla:</strong> Landing page de 5 secciones = <strong>ARS 220.000</strong>, decidido por vos. Todo lo demás es un múltiplo de ese número según el trabajo real que suma. <span class="new">Celeste = propuesta mía, sin validar.</span></p>
+
+<div class="card" style="border-color:#FFB86B;margin:14px 0">
+  <div class="meta" style="color:#FFB86B">LO QUE EL ANCLA IMPLICA</div>
+  <p style="margin:0 0 8px;color:var(--dim)">220.000 por 1 a 2 semanas de trabajo = entre <strong>11.000 y 22.000 pesos por día</strong>. Es un precio de entrada agresivo, no de posicionamiento premium.</p>
+  <ul style="margin-top:0">
+    <li>El modelo solo cierra con <strong>volumen + mantenimiento recurrente</strong>. Con 2 proyectos al mes no alcanza.</li>
+    <li>Consecuencia directa: el mantenimiento mensual deja de ser un detalle y pasa a ser <strong>la mitad del negocio</strong>. Hay que defenderlo en la card, no esconderlo.</li>
+    <li>Consecuencia de diseño: si el precio es bajo, el sitio no puede verse barato. La sección tiene que compensar con oficio visual lo que no cobra.</li>
+  </ul>
+</div>
+
+<h3 style="margin:26px 0 4px">Los seis, y por qué cada uno se gana su lugar</h3>
+<table>
+  <tr><th>#</th><th>Producto</th><th>A quién le habla</th><th class="n">Desde</th><th class="n">Mensual</th></tr>
+  <tr><td class="n">1</td><td><strong>Landing page</strong></td><td>Un servicio o una promoción. Quiere consultas, no navegación.</td><td class="n">220.000</td><td class="n">22.000</td></tr>
+  <tr><td class="n">2</td><td><strong class="new">Rediseño de tu sitio</strong></td><td class="new">Ya tiene web, es fea o está rota. La venta más fácil que existe: no hay que convencerlo de nada.</td><td class="n">280.000</td><td class="n">22.000</td></tr>
+  <tr><td class="n">3</td><td><strong>Sitio institucional</strong></td><td>Empresa establecida que necesita presencia seria y completa.</td><td class="n">390.000</td><td class="n">28.000</td></tr>
+  <tr><td class="n">4</td><td><strong class="new">Reservas y turnos</strong></td><td class="new">Consultorios, peluquerías, canchas, cabañas. Dolor concreto: el WhatsApp desbordado.</td><td class="n">520.000</td><td class="n">42.000</td></tr>
+  <tr><td class="n">5</td><td><strong>Tienda online</strong></td><td>Vende productos. El cobro online es un extra, no una card aparte.</td><td class="n">700.000</td><td class="n">55.000</td></tr>
+  <tr><td class="n">6</td><td><strong>Sistemas y automatizaciones</strong></td><td>Procesos internos en planillas, bots, integraciones. No cotiza: va a la plantilla.</td><td class="n">a cotizar</td><td class="n">a cotizar</td></tr>
+</table>
+<ul style="max-width:74ch;margin-top:12px">
+  <li><strong>Catálogo online desaparece como card.</strong> Se fusionó en Tienda online: el cobro por internet es un extra. Deja de existir la duda «¿cuál de las dos soy?».</li>
+  <li class="new"><strong>Automatizaciones se fusionó en Sistemas a medida.</strong> Los dos se relevan antes de cotizar y los dos hablan de procesos, no de páginas. Separarlos gastaba dos lugares en el mismo comprador.</li>
+  <li class="open">ABIERTA: sigue sin haber una puerta de entrada barata. El escalón más bajo son 220.000 y no hay nada para el comercio que recién te conoce.</li>
+</ul>
+
+<h3 style="margin:30px 0 4px">Soporte: 5% mensual, prepago por años</h3>
+<p class="lede">El mantenimiento dejó de ser un precio por producto y pasó a ser <strong>una fórmula: 5% del proyecto por mes</strong>, facturado por adelantado. Se puede contratar por 1, 2 o 3 años.</p>
+<table>
+  <tr><th>Plazo</th><th class="n">Descuento</th><th>Ejemplo · tienda de $870.000</th></tr>
+  <tr><td>1 año</td><td class="n">—</td><td>$522.000 · equivale a $43.500/mes</td></tr>
+  <tr><td>2 años</td><td class="n new">−30%</td><td>$730.800 · equivale a $30.450/mes</td></tr>
+  <tr><td>3 años</td><td class="n new">−50%</td><td>$783.000 · equivale a $21.750/mes · ahorra $783.000</td></tr>
+</table>
+<ul style="max-width:74ch;margin-top:10px">
+  <li><strong>Consecuencia buena:</strong> los extras ya no necesitan cargo mensual propio. Al subir el total del proyecto, suben el soporte solos. Desaparecieron todos los «+X/mes» de la lista de extras.</li>
+  <li class="open">5% mensual = <strong>60% del proyecto por año</strong>. El estándar de la industria ronda 15-20% anual. Se sostiene solo si el plan incluye trabajo real todos los meses, no si es hosting y nada más. Decisión tuya, implementada, pero vale revisarla.</li>
+  <li class="new">Descuentos −30% (2 años) y −50% (3 años). A 3 años el cliente paga la mitad: el soporte pasa de 60% a 30% del proyecto por año, que es donde la industria realmente vive.</li>
+</ul>
+
+<h3 style="margin:30px 0 4px">Extras, en pesos</h3>
+<p class="lede">Escalados desde el ancla, redondeados a números que se puedan decir en voz alta. El mensual que suma cada uno está al lado.</p>
+<table>
+  <tr><th>Extra</th><th>Aplica a</th><th class="n">Único</th><th class="n">Suma al mes</th></tr>
+  <tr><td>Identidad visual y logotipo</td><td>Todos</td><td class="n">120.000</td><td class="n">—</td></tr>
+  <tr><td>Redacción de todos los textos</td><td>Todos</td><td class="n">90.000</td><td class="n">—</td></tr>
+  <tr><td>Integración con WhatsApp</td><td>Todos</td><td class="n">45.000</td><td class="n">—</td></tr>
+  <tr><td>SEO local + Google Business</td><td>Todos</td><td class="n">110.000</td><td class="n">4.000</td></tr>
+  <tr><td>Segundo idioma</td><td>Todos</td><td class="n">130.000</td><td class="n">4.000</td></tr>
+  <tr><td>Recorrido animado 360°</td><td>Landing · Rediseño · Institucional</td><td class="n">170.000</td><td class="n">—</td></tr>
+  <tr><td>Sección de novedades autoadministrable</td><td>Institucional · Rediseño</td><td class="n">115.000</td><td class="n">6.000</td></tr>
+  <tr><td class="new">Migración del contenido del sitio viejo</td><td class="new">Rediseño</td><td class="n">85.000</td><td class="n">—</td></tr>
+  <tr><td class="new">Rescate del posicionamiento en Google</td><td class="new">Rediseño</td><td class="n">95.000</td><td class="n">4.000</td></tr>
+  <tr><td>Carga inicial de tus productos</td><td>Tienda</td><td class="n">95.000</td><td class="n">—</td></tr>
+  <tr><td>Filtros avanzados y buscador</td><td>Tienda</td><td class="n">130.000</td><td class="n">4.000</td></tr>
+  <tr><td>Lista de precios en PDF actualizada sola</td><td>Tienda</td><td class="n">100.000</td><td class="n">—</td></tr>
+  <tr><td>Cobro online (Mercado Pago / tarjetas)</td><td>Tienda</td><td class="n">170.000</td><td class="n">12.000</td></tr>
+  <tr><td>Cálculo automático de envíos</td><td>Tienda</td><td class="n">130.000</td><td class="n">6.000</td></tr>
+  <tr><td>Cupones y descuentos</td><td>Tienda</td><td class="n">75.000</td><td class="n">—</td></tr>
+  <tr><td class="new">Recordatorios automáticos por WhatsApp</td><td class="new">Reservas</td><td class="n">140.000</td><td class="n">10.000</td></tr>
+  <tr><td class="new">Seña o pago anticipado del turno</td><td class="new">Reservas</td><td class="n">170.000</td><td class="n">12.000</td></tr>
+  <tr><td class="new">Varios profesionales o sucursales</td><td class="new">Reservas</td><td class="n">150.000</td><td class="n">8.000</td></tr>
+  <tr><td>Cotizador o calculadora</td><td>Tienda · Institucional</td><td class="n">140.000</td><td class="n">4.000</td></tr>
+</table>
+
+<h3 style="margin:30px 0 4px">Qué incluye cada uno</h3>
+
+<div class="prod">
+  <header><h3>1 · Landing page</h3><span class="price">DESDE $220.000 · $22.000/mes</span></header>
+  <p class="who">Tenés un servicio o una promoción y necesitás que te escriban.</p>
+  <ul class="nea-inc" style="list-style:disc;padding-left:20px;color:var(--dim)">
+    <li>Una página de 5 secciones, pensada de arriba a abajo para que te contacten</li>
+    <li>Diseño propio, no una plantilla</li>
+    <li>Formulario de contacto que te llega por mail</li>
+    <li>Adaptada a celular, tablet y escritorio</li>
+    <li>Carga rápida y lista para Google</li>
+    <li>Hosting, dominio y certificado de seguridad el primer año</li>
+  </ul>
+</div>
+
+<div class="prod">
+  <header><h3 class="new">2 · Rediseño de tu sitio</h3><span class="price">DESDE $280.000 · $22.000/mes</span></header>
+  <p class="who">Ya tenés web pero te da vergüenza mandarla. <span class="new">Producto nuevo: el cliente ya entendió que necesita un sitio, no hay que convencerlo.</span></p>
+  <ul class="nea-inc" style="list-style:disc;padding-left:20px;color:var(--dim)">
+    <li>Revisión de lo que tenés hoy: qué funciona, qué se rompe y qué te está costando consultas</li>
+    <li>Diseño nuevo respetando tu marca, sin perder lo que ya te posiciona</li>
+    <li>Todo el contenido pasado al sitio nuevo</li>
+    <li>Las direcciones viejas siguen funcionando: no perdés lo que Google ya te indexó</li>
+    <li>Adaptado a celular, tablet y escritorio</li>
+    <li>Hosting, dominio y certificado de seguridad el primer año</li>
+  </ul>
+</div>
+
+<div class="prod">
+  <header><h3>3 · Sitio institucional</h3><span class="price">DESDE $390.000 · $28.000/mes</span></header>
+  <p class="who">Tu empresa ya existe y necesita una presencia seria.</p>
+  <ul class="nea-inc" style="list-style:disc;padding-left:20px;color:var(--dim)">
+    <li>Las páginas que tu empresa necesite: inicio, nosotros, servicios y contacto</li>
+    <li>Diseño propio y un sistema visual coherente en todo el sitio</li>
+    <li>Formulario de contacto y mapa de ubicación</li>
+    <li>Adaptado a celular, tablet y escritorio</li>
+    <li>Optimización para que Google te encuentre</li>
+    <li>Hosting, dominio y certificado de seguridad el primer año</li>
+  </ul>
+</div>
+
+<div class="prod">
+  <header><h3 class="new">4 · Reservas y turnos</h3><span class="price">DESDE $520.000 · $42.000/mes</span></header>
+  <p class="who">Vivís contestando «¿tenés lugar el jueves?». <span class="new">Producto nuevo: el precio se defiende solo porque reemplaza horas de trabajo humano.</span></p>
+  <ul class="nea-inc" style="list-style:disc;padding-left:20px;color:var(--dim)">
+    <li>Tus clientes reservan solos, desde el celular, a cualquier hora</li>
+    <li>Agenda con tus horarios, feriados y días que no atendés</li>
+    <li>Panel para ver, mover y cancelar turnos</li>
+    <li>Aviso de turno nuevo por mail y WhatsApp</li>
+    <li>Página de presentación de tu negocio incluida</li>
+    <li>Hosting, dominio, seguridad y respaldos el primer año</li>
+  </ul>
+</div>
+
+<div class="prod">
+  <header><h3>5 · Tienda online</h3><span class="price">DESDE $700.000 · $55.000/mes</span></header>
+  <p class="who">Vendés productos y querés mostrarlos bien. <strong>Absorbió al viejo «Catálogo online»:</strong> arranca vendiendo por WhatsApp y el cobro por internet es un extra.</p>
+  <ul class="nea-inc" style="list-style:disc;padding-left:20px;color:var(--dim)">
+    <li>Catálogo con categorías, fichas de producto y buscador</li>
+    <li>Panel para que actualices precios y stock vos mismo</li>
+    <li>Carrito y pedidos que te llegan por WhatsApp y mail</li>
+    <li>Fichas con variantes de talle y color</li>
+    <li>Adaptada a celular, tablet y escritorio</li>
+    <li>Hosting, dominio, seguridad y respaldos el primer año</li>
+  </ul>
+</div>
+
+<div class="prod">
+  <header><h3>6 · Sistemas y automatizaciones <span style="color:#7FD4FF;font-size:11px;font-family:var(--mono);letter-spacing:.14em">· CARD EXCEPCIÓN</span></h3><span class="price">SIN PRECIO · VA A LA PLANTILLA</span></header>
+  <p class="who">Manejás procesos en planillas, o repetís a mano cosas que podría hacer una máquina. <span class="new">Absorbió «Automatizaciones y bots»: los dos se relevan antes de cotizar y los dos hablan de procesos, no de páginas.</span></p>
+  <ul class="nea-inc" style="list-style:disc;padding-left:20px;color:var(--dim)">
+    <li>Relevamiento de tu proceso actual y diseño de la solución</li>
+    <li>Sistema web privado, con usuarios y contraseña</li>
+    <li>Módulos para cargar, listar y editar tus datos</li>
+    <li>Automatizaciones: avisos, recordatorios y conexión con lo que ya usás</li>
+    <li>Capacitación de tu equipo</li>
+    <li>Servidor, respaldo diario y soporte durante el arranque</li>
+  </ul>
+</div>
+
+<h2>PENDIENTES ABIERTOS</h2>
+<ul style="max-width:74ch">
+  <li class="open">Precios de los extras que inventé (pasarela +340 · envíos +260 · filtros +260 · PDF +210 · blog +240 · cupones +150 · carga inicial +190): confirmar o corregir uno por uno.</li>
+  <li class="open">Lista final de preguntas de la plantilla, y si Sistemas lleva las suyas.</li>
+  <li class="open">¿La card reducida de un producto ya armado muestra alguna marca de «tenías esto»?</li>
+  <li class="open">Mobile: ¿la barra sticky se despliega para ver el detalle? ¿Y qué pasa con el video 9:16 a pantalla completa?</li>
+  <li class="open">Card expandida: si el contenido de la derecha supera el alto del video, ¿scrollea esa mitad o crece la card?</li>
+  <li class="open"><code>prefers-reduced-motion</code>: ¿solo poster?</li>
+  <li class="open">Textos definitivos de las 5 líneas «esto es para vos si…» de las cards reducidas.</li>
+</ul>
+
+<h2>IMPLEMENTADO · v1 EN EL SITIO</h2>
+<p class="lede">La sección está construida en <code>site/index.html</code> + <code>site/app.js</code>. Sin dependencias: el morph usa la <strong>View Transitions API</strong> nativa, y donde no existe la card simplemente aparece.</p>
+<ul style="max-width:74ch">
+  <li>Estado 0 a dos columnas · expandir es seleccionar · X que vuelve al estado 0 sin borrar nada.</li>
+  <li>Memoria por producto: sale gratis porque cada panel guarda el estado de sus extras en su propio DOM.</li>
+  <li>Tres columnas solo desde 1361px. Entre 901 y 1360 la card cae debajo de la lista — con el video vertical, la columna del medio no sobrevive a menos ancho.</li>
+  <li><strong>El alto de la card lo manda el video, no el texto:</strong> <code>aspect-ratio:9/8</code> en el panel, con tope de 80vh y el contenido scrolleando. Sin eso, un producto con muchos extras estiraba la card y dejaba un hueco enorme al lado del video.</li>
+  <li>Sistemas a medida: sin precio, sin checkboxes, y la columna derecha se transforma en llamado a la plantilla.</li>
+  <li>Plantilla en <code>&lt;dialog&gt;</code> nativo (Esc y backdrop gratis), con el resumen y 4 preguntas opcionales que viajan en el texto del mensaje.</li>
+</ul>
+<p class="lede" style="margin-top:12px"><span class="open">FALTA ANTES DE PUBLICAR: el número de WhatsApp real, en la constante <code>WA_NUMERO</code> de <code>site/app.js</code>.</span></p>

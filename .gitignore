@@ -1,2 +1,5 @@
 .playwright-mcp/
 .claude/
+
+# Originales pesados de las muestras: quedan locales, el sitio usa los WebP
+assets-fuente/

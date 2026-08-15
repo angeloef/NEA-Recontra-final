@@ -20,11 +20,23 @@
   const pace = Math.max(1.8, Math.min(5, SCROLL_PACE));
   if (el.runway) el.runway.style.height = (pace * 100) + 'vh';
 
+  /* El video del hero es el unico movimiento que corre sin que el usuario haga nada:
+     con prefers-reduced-motion queda en el primer frame (el poster ya cubre el resto).
+     Se escucha el cambio de preferencia, no solo el valor al cargar. */
+  (() => {
+    if (!el.scene) return;
+    const mq = matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => { mq.matches ? el.scene.pause() : el.scene.play().catch(() => {}); };
+    mq.addEventListener('change', apply);
+    apply();
+  })();
+
   /* ---- estado de layout cacheado entre frames ---- */
   let vwPrev, vhPrev, hhMax = 0;
   let steps, words, panels, dots, rig;
   let procPr = 0, procOn = false;
-  let ink, inkBases, proceso, nosotros, bgColor, bgLum;
+  let ink, inkBases, proceso, nosotros, galeria, bgColor, bgLum;
+  let galRig, galFrame;
   let grid = null, estrellas = null, ascii = null;
   const INK_TARGETS = {
     strong: [255, 255, 255], muted: [221, 227, 255], word: [143, 166, 255],
@@ -124,6 +136,20 @@
       dots.forEach((dt, i) => { dt.style.opacity = i === active ? '1' : '.22'; });
     }
 
+    /* Galeria: siempre a pantalla completa, la entrada es un push-in desde el negro con el
+       que termina "Proceso" — la imagen sale de la nada y se asienta justo cuando el frame
+       queda clavado arriba. El recorrido es el ultimo viewport antes de que agarre el pin. */
+    if (galFrame === undefined) {
+      galRig = document.getElementById('galeria');
+      galFrame = galRig ? galRig.querySelector('.js-trail-content') : null;
+    }
+    // 848px == el breakpoint 52.99em del CSS, donde el pin y la entrada se apagan
+    if (galFrame && vw >= 848) {
+      const t = ez(cl((vh - galRig.getBoundingClientRect().top) / vh, 0, 1));
+      galFrame.style.opacity = cl(t * 1.35, 0, 1).toFixed(3);
+      galFrame.style.transform = 'scale(' + (1 + .1 * (1 - t)).toFixed(4) + ')';
+    }
+
     paintBackdrop(vh);
 
     // nav: full-width bar, colour follows whatever is behind it
@@ -153,6 +179,9 @@
       ink = Array.from(document.querySelectorAll('[data-ink]'));
       proceso = document.getElementById('proceso');
       nosotros = document.getElementById('nosotros');
+      // la galeria es lo primero negro despues de "Proceso": el fondo tiene que quedar en
+      // negro desde que entra ella, no desde "Nosotros", o el rig de 200vh vuelve al azul
+      galeria = document.getElementById('galeria');
       inkBases = ink.map(node => {
         const c = getComputedStyle(node).color.match(/[\d.]+/g).map(Number);
         return [c[0], c[1], c[2]];
@@ -173,7 +202,7 @@
 
     // the services section stays black-on-white: the blue only starts once "Proceso" is nearly at the top
     const p1 = enter(proceso, .3, .34);
-    const p2 = enter(nosotros, .5);
+    const p2 = enter(galeria || nosotros, .5);
     // white -> pale blue (dark ink still reads) -> full blue, with the ink flip inside the short last leg
     const q = cl(p1 / .34, 0, 1);
     const leg = .88;
@@ -221,6 +250,29 @@
     bgColor = bg;
 
     const t = bgLum < .21 ? 1 : 0;
+
+    /* Palabra ambiental legible sobre cualquier punto del degradado.
+       Elige el extremo (blanco o negro) que deje mas recorrido de contraste desde el
+       fondo, y avanza hacia el hasta cruzar WORD_CR. Si ni el extremo puro alcanza
+       —pasa con fondos de luminancia media—, se queda en el extremo: es el maximo
+       posible contra ese fondo. Busqueda binaria de 12 pasos, 3 nodos por frame. */
+    const WORD_CR = 3.2;
+    const relLum = c => .2126 * lin(c[0]) + .7152 * lin(c[1]) + .0722 * lin(c[2]);
+    const ratio = (a, b) => {
+      const L1 = relLum(a), L2 = relLum(b);
+      return (Math.max(L1, L2) + .05) / (Math.min(L1, L2) + .05);
+    };
+    function wordColor(bgArr) {
+      const dest = ratio(bgArr, WHITE) >= ratio(bgArr, BLACK) ? WHITE : BLACK;
+      if (ratio(bgArr, dest) <= WORD_CR) return rgb(bgArr.map(Math.round), dest, 1);
+      let lo = 0, hi = 1;
+      for (let k = 0; k < 12; k++) {
+        const mid = (lo + hi) / 2;
+        if (ratio(mix(bgArr, dest, mid), bgArr) < WORD_CR) lo = mid; else hi = mid;
+      }
+      return rgb(bgArr.map(Math.round), dest, hi);
+    }
+
     ink.forEach((node, i) => {
       const kind = node.dataset.ink;
       if (kind === 'chip') {
@@ -228,7 +280,11 @@
         node.style.color = rgb(WHITE, BLACK, t);
         return;
       }
-      if (kind === 'word') node.style.color = rgb(arr.map(Math.round), t ? WHITE : BLACK, .32);
+      // La palabra gigante sale del fondo mismo, empujada hacia el extremo con mas aire.
+      // No sirve una mezcla fija: el fondo barre blanco -> azul -> lima -> negro, y el
+      // mismo factor que alcanza sobre negro deja 2.2:1 sobre el azul. Se resuelve por
+      // contraste, no por mezcla: se empuja lo justo hasta cruzar el 3:1 de texto grande.
+      if (kind === 'word') node.style.color = wordColor(arr);
       else node.style.color = rgb(inkBases[i], INK_TARGETS[kind] || WHITE, t);
       if (kind === 'line' || kind === 'rule') {
         node.style.borderTopColor = t
@@ -854,91 +910,358 @@
     setTimeout(step, 2400);
   }
 
-  /* ------------------------------------------------------------- estimador */
+  /* ------------------------------------------------------------- estimador
+     Estado 0: nada elegido, dos columnas. Al tocar una card reducida nace la
+     columna del medio con la card expandida. Cada panel guarda el estado de
+     sus propios extras en su DOM, asi volver a un producto recupera lo que
+     ya habias armado: la memoria por producto sale gratis.
 
-  // PRECIOS PROVISORIOS — pendientes de definir con el cliente.
-  // Los nombres y descripciones viven en el HTML (crawleables). Acá solo los números.
-  const PRICING = {
-    landing:       { from: 450,  to: 750 },
-    institucional: { from: 850,  to: 1400 },
-    catalogo:      { from: 1200, to: 2000 },
-    tienda:        { from: 1900, to: 3400 },
-    sistemas:      { from: 3500, to: 0 }   // to: 0 => se muestra como "Desde"
-  };
+     El morph usa la View Transitions API. Donde no existe (o con
+     prefers-reduced-motion) el panel simplemente aparece. */
 
-  // Extras de precio fijo. La etiqueta "+280" del HTML tiene que coincidir con esto.
-  const ADDONS = {
-    identidad: 280,
-    textos:    180,
-    recorrido: 350,
-    cotizador: 320,
-    whatsapp:  90,
-    seo:       220,
-    idioma:    260
-  };
+  // Numero de WhatsApp en formato internacional, sin + ni espacios.
+  // TODO: completar con el numero real antes de publicar.
+  const WA_NUMERO = '5493764000000';
 
-  // Obligatorio: no se elige, se informa siempre.
-  const MANTENIMIENTO_MENSUAL = 35;
+  const MORPH = 'neacard';
+
+  // El mantenimiento es un porcentaje del proyecto, no un precio por producto.
+  // Por eso los extras no necesitan cargo mensual propio: al subir el total,
+  // suben el plan solos.
+  const MANTENIMIENTO_MENSUAL = 0.05;   // 5% del proyecto, por mes
+  const MESES_POR_AÑO = 12;             // se factura una vez al año
+  const ANIOS_GRATIS = 1;               // el primer año de soporte va de regalo
 
   function initEstimator() {
-    const optButtons = Array.from(document.querySelectorAll('[data-opt]'));
-    const addButtons = Array.from(document.querySelectorAll('[data-add]'));
-    const labelNode = document.getElementById('nea-pricelabel');
-    const noteNode = document.getElementById('nea-pricenote');
-    const mantNode = document.getElementById('nea-mantenimiento');
-    if (!optButtons.length || !labelNode || !noteNode) return;
+    const root = document.getElementById('nea-est');
+    if (!root) return;
 
-    const fmt = n => 'USD ' + n.toLocaleString('es-AR');
-    const weeks = from => (from < 900 ? '2 a 3' : from < 2000 ? '3 a 5' : '5 a 8');
+    const picks = Array.from(root.querySelectorAll('[data-pick]'));
+    const panels = Array.from(root.querySelectorAll('[data-panel]'));
 
-    let pick = null;
-    const chosen = new Set();
+    // En mobile la estimacion se reduce a una barra de dos numeros y el resto
+    // (plan de soporte, descuentos por varios años, desglose) vive detras de
+    // este toggle. Sin el, en telefono no habia forma de contratar 2 o 3 años.
+    const sumbar = document.getElementById('nea-sumbar');
+    const sumbox = document.getElementById('nea-sum');
+    function cerrarDetalle() {
+      if (!sumbox) return;
+      sumbox.classList.remove('is-detail');
+      if (sumbar) sumbar.setAttribute('aria-expanded', 'false');
+    }
+    const totalNode = document.getElementById('nea-total');
+    const totalLabel = document.getElementById('nea-totallabel');
+    const noteNode = document.getElementById('nea-note');
+    const detailNode = document.getElementById('nea-detail');
+    const mesNode = document.getElementById('nea-mes');
+    const mesLabel = document.getElementById('nea-meslabel');
+    const ahorroNode = document.getElementById('nea-ahorro');
+    const mesBlock = document.getElementById('nea-mesblock');
+    const planOpts = Array.from(document.querySelectorAll('[data-plan]'));
+    const barLabel = document.getElementById('nea-barlabel');
+    const barMes = document.getElementById('nea-barmes');
+    const cta = document.getElementById('nea-cta');
+    const dlg = document.getElementById('nea-dlg');
+    if (!picks.length || !totalNode) return;
 
-    if (mantNode) mantNode.textContent = fmt(MANTENIMIENTO_MENSUAL) + ' / mes';
+    const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
+    const weeks = base => (base < 900 ? '2 a 3' : base < 2000 ? '3 a 5' : '5 a 8');
+    const quiet = matchMedia('(prefers-reduced-motion: reduce)');
 
-    const render = () => {
-      const base = PRICING[pick];
-      const extra = [...chosen].reduce((sum, id) => sum + (ADDONS[id] || 0), 0);
+    let open = null;   // id del producto abierto, o null en el estado 0
 
-      if (!base) {
-        labelNode.textContent = 'Elegí una opción';
-        noteNode.textContent = extra
-          ? 'Elegí qué tipo de proyecto necesitás para ver el total.'
-          : 'Elegí una opción para ver la estimación.';
-      } else if (base.to) {
-        labelNode.textContent = fmt(base.from + extra) + ' – ' + fmt(base.to + extra);
-        noteNode.textContent = 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' +
-          weeks(base.from) + ' semanas.' +
-          (extra ? ' Sumás ' + fmt(extra) + ' en adicionales.' : '');
-      } else {
-        labelNode.textContent = 'Desde ' + fmt(base.from + extra);
-        noteNode.textContent = 'Se cotiza por alcance: relevamiento, arquitectura e integraciones. ' +
-          'Arrancamos con un informe sin costo.' +
-          (extra ? ' Sumás ' + fmt(extra) + ' en adicionales.' : '');
-      }
-
-      optButtons.forEach(b => {
-        const on = b.getAttribute('data-opt') === pick;
-        b.setAttribute('aria-checked', on ? 'true' : 'false');
-        b.classList.toggle('is-on', on);
-      });
-      addButtons.forEach(b => {
-        const on = chosen.has(b.getAttribute('data-add'));
-        b.setAttribute('aria-checked', on ? 'true' : 'false');
-        b.classList.toggle('is-on', on);
-      });
+    const pickOf = id => picks.find(b => b.getAttribute('data-pick') === id);
+    const panelOf = id => panels.find(p => p.getAttribute('data-panel') === id);
+    const extrasOf = id => {
+      const p = panelOf(id);
+      return p ? Array.from(p.querySelectorAll('[data-add]')) : [];
     };
 
-    optButtons.forEach(b => {
-      b.addEventListener('click', () => { pick = b.getAttribute('data-opt'); render(); });
+    // Lo que el usuario armo para el producto abierto.
+    function state() {
+      const btn = open && pickOf(open);
+      if (!btn) return null;
+      const chosen = extrasOf(open).filter(b => b.classList.contains('is-on'));
+      const base = Number(btn.getAttribute('data-base') || 0);
+      const total = base + chosen.reduce((n, b) => n + Number(b.getAttribute('data-price') || 0), 0);
+      const mes = total * MANTENIMIENTO_MENSUAL;
+      const plan = planOpts.find(o => o.classList.contains('is-on')) || planOpts[0];
+      const anios = plan ? Number(plan.getAttribute('data-plan')) : 1;
+      const off = plan ? Number(plan.getAttribute('data-off')) / 100 : 0;
+      // El primer año va de regalo en todos los productos, asi que solo se
+      // cobran los años que siguen. El descuento por prepago se aplica sobre
+      // esos, no sobre el gratis.
+      const aniosPagos = Math.max(0, anios - ANIOS_GRATIS);
+      const lista = mes * MESES_POR_AÑO * aniosPagos;   // sin descuento
+      const soporte = lista * (1 - off);
+      return {
+        id: open,
+        name: btn.getAttribute('data-name'),
+        isQuote: btn.hasAttribute('data-quote'),
+        base: base,
+        total: total,
+        mes: mes,
+        anios: anios,
+        aniosPagos: aniosPagos,
+        soporte: soporte,               // lo que paga por adelantado
+        // Contra el precio de lista de TODA la cobertura, incluido el año regalado.
+        ahorro: mes * MESES_POR_AÑO * anios - soporte,
+        chosen: chosen.map(b => ({
+          name: b.getAttribute('data-addname'),
+          price: Number(b.getAttribute('data-price') || 0)
+        }))
+      };
+    }
+
+    function sumLine(label, value) {
+      const row = document.createElement('div');
+      row.className = 'nea-sumline';
+      const a = document.createElement('span');
+      a.textContent = label;
+      const b = document.createElement('b');
+      b.textContent = value;
+      row.appendChild(a);
+      row.appendChild(b);
+      return row;
+    }
+
+    function render() {
+      root.classList.toggle('is-open', !!open);
+
+      picks.forEach(b => {
+        const id = b.getAttribute('data-pick');
+        const on = id === open;
+        // aria-pressed y no aria-checked: son <button> que ademas despliegan un panel.
+        // role=radio prometia navegacion con flechas y un solo tab stop, que este widget
+        // no implementa; como botones de dos estados el contrato se cumple entero.
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        b.setAttribute('aria-expanded', on ? 'true' : 'false');
+        b.classList.toggle('is-on', on);
+        // Marca discreta: este producto ya lo tenias armado
+        b.classList.toggle('has-extras', !on && extrasOf(id).some(x => x.classList.contains('is-on')));
+      });
+
+      panels.forEach(p => { p.hidden = p.getAttribute('data-panel') !== open; });
+
+      // En mobile la card abierta es un modal a pantalla completa: hay que
+      // frenar el scroll del fondo. La clase no hace nada en escritorio,
+      // donde el panel convive con el resto de la pagina.
+      document.documentElement.classList.toggle('nea-locked', !!open);
+
+      // Las seis muestras pesan 460 KB juntas y no se ven hasta que abris una
+      // card, asi que cada una se baja recien en el primer clic sobre su
+      // producto. loading="lazy" no sirve aca: el panel arranca con hidden y
+      // el navegador no vuelve a evaluarlo cuando se lo destapa.
+      const visible = panels.find(p => !p.hidden);
+      const foto = visible && visible.querySelector('img[data-src]');
+      if (foto) {
+        foto.src = foto.getAttribute('data-src');
+        foto.removeAttribute('data-src');
+      }
+
+      // Si el usuario tildo algo y volvio a cerrar el desplegable, hay que
+      // decirselo: si no, aparece un precio que no sabe de donde salio.
+      panels.forEach(p => p.querySelectorAll('.nea-more').forEach(d => {
+        const n = d.querySelectorAll('[data-add].is-on').length;
+        const tag = d.querySelector('[data-morecount]');
+        if (tag) tag.textContent = n ? ' · ' + n + ' elegido' + (n > 1 ? 's' : '') : '';
+      }));
+      extrasOf(open).forEach(b => {
+        b.setAttribute('aria-checked', b.classList.contains('is-on') ? 'true' : 'false');
+      });
+
+      const s = state();
+
+      if (!s) {
+        totalLabel.textContent = 'PAGO ÚNICO';
+        totalNode.textContent = 'Elegí una opción';
+        noteNode.textContent = 'Elegí una opción y el número aparece acá.';
+        detailNode.style.display = 'none';
+        // Sin producto elegido no hay plan que ofrecer: mostrar descuentos
+        // sobre nada deja un bloque vacio y un guion suelto.
+        mesBlock.style.display = 'none';
+        mesNode.textContent = '—';
+        ahorroNode.style.display = 'none';
+        barLabel.textContent = 'Elegí una opción';
+        barMes.textContent = '';
+        cta.textContent = 'Enviar por WhatsApp';
+        return;
+      }
+
+      if (s.isQuote) {
+        // Sistemas a medida no cotiza: la columna no se apaga, cambia de trabajo.
+        totalLabel.textContent = 'SE COTIZA A MEDIDA';
+        totalNode.textContent = 'Hablemos';
+        noteNode.textContent = 'Los sistemas se presupuestan después de entender tu proceso. Contanos qué necesitás resolver y te mandamos una propuesta con alcance y precio.';
+        detailNode.style.display = 'none';
+        mesBlock.style.display = 'none';
+        barLabel.textContent = 'Sistemas a medida';
+        barMes.textContent = 'A cotizar';
+      } else {
+        totalLabel.textContent = 'PAGO ÚNICO';
+        totalNode.textContent = 'Desde ' + fmt(s.total);
+        noteNode.textContent = 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' + weeks(s.base) + ' semanas.';
+        detailNode.textContent = '';
+        detailNode.style.display = '';
+        detailNode.appendChild(sumLine(s.name, fmt(s.base)));
+        s.chosen.forEach(x => detailNode.appendChild(sumLine(x.name, '+ ' + fmt(x.price))));
+        mesBlock.style.display = '';
+        if (s.aniosPagos === 0) {
+          // El caso por defecto: no paga nada de soporte. El numero grande no
+          // puede ser "$0", que se lee como error; se lee como regalo.
+          mesLabel.textContent = 'Primer año';
+          mesNode.textContent = 'Incluido';
+          ahorroNode.style.display = '';
+          ahorroNode.textContent = 'Te ahorrás ' + fmt(s.ahorro) + ' el primer año';
+        } else {
+          mesLabel.textContent = (s.aniosPagos === 1 ? 'Año 2' : 'Años 2 a ' + s.anios) + ', pago adelantado';
+          mesNode.textContent = fmt(s.soporte);
+          ahorroNode.style.display = '';
+          ahorroNode.textContent = 'Ahorrás ' + fmt(s.ahorro) + ' · te queda en ' +
+            fmt(s.soporte / (s.anios * MESES_POR_AÑO)) + ' por mes';
+        }
+        barLabel.textContent = 'Desde ' + fmt(s.total);
+        barMes.textContent = s.aniosPagos === 0
+          ? 'Soporte 1er año incluido'
+          : '+ ' + fmt(s.soporte) + ' soporte';
+      }
+      cta.textContent = s.isQuote ? 'Contarnos tu caso' : 'Enviar por WhatsApp';
+    }
+
+    // El morph: el nombre de transicion viaja de la card reducida al panel.
+    function morph(from, toGetter, mutate) {
+      if (!document.startViewTransition || quiet.matches) { mutate(); render(); return; }
+      if (from) from.style.viewTransitionName = MORPH;
+      const clear = () => {
+        if (from) from.style.viewTransitionName = '';
+        const to = toGetter();
+        if (to) to.style.viewTransitionName = '';
+      };
+      const t = document.startViewTransition(() => {
+        if (from) from.style.viewTransitionName = '';
+        mutate();
+        render();
+        const to = toGetter();
+        if (to) to.style.viewTransitionName = MORPH;
+      });
+      // Un click rapido cancela la transicion anterior: `ready` rechaza y sin
+      // este catch queda como error sin capturar en la consola.
+      t.ready.catch(() => {});
+      t.finished.then(clear, clear);
+    }
+
+    function openPanel(id) {
+      if (open === id) return;
+      // Al cambiar de producto la hoja de detalle vuelve a cerrarse: si no,
+      // abris una card nueva y lo primero que ves es la estimacion tapandola.
+      cerrarDetalle();
+      morph(pickOf(id), () => panelOf(id), () => { open = id; });
+    }
+
+    function closePanel() {
+      if (!open) return;
+      cerrarDetalle();
+      const from = panelOf(open);
+      const back = pickOf(open);
+      morph(from, () => back, () => { open = null; });
+      if (back) back.focus();
+    }
+
+    picks.forEach(b => {
+      b.addEventListener('click', () => openPanel(b.getAttribute('data-pick')));
     });
-    addButtons.forEach(b => {
-      b.addEventListener('click', () => {
-        const id = b.getAttribute('data-add');
-        if (chosen.has(id)) chosen.delete(id); else chosen.add(id);
+
+    planOpts.forEach(o => {
+      o.addEventListener('click', () => {
+        planOpts.forEach(x => {
+          const on = x === o;
+          x.classList.toggle('is-on', on);
+          x.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
         render();
       });
     });
+
+    panels.forEach(p => {
+      p.querySelectorAll('[data-close]').forEach(x => x.addEventListener('click', closePanel));
+      // La X no descarta nada: los extras marcados quedan en el DOM del panel.
+      p.querySelectorAll('[data-add]').forEach(b => {
+        b.addEventListener('click', () => { b.classList.toggle('is-on'); render(); });
+      });
+    });
+
+    if (sumbar && sumbox) {
+      sumbar.addEventListener('click', () => {
+        const abierto = sumbox.classList.toggle('is-detail');
+        sumbar.setAttribute('aria-expanded', String(abierto));
+      });
+    }
+
+    addEventListener('keydown', e => {
+      if (e.key === 'Escape' && open && !(dlg && dlg.open)) closePanel();
+    });
+
+    /* -------------------------------------------------- plantilla + WhatsApp */
+
+    function mensaje(extra) {
+      const s = state();
+      if (!s) return 'Hola, quiero armar un presupuesto.';
+      const l = ['Hola, armé un presupuesto en la web.', '', 'Necesito: ' + s.name];
+      if (s.isQuote) {
+        l.push('Es un sistema a medida, sé que se cotiza según el alcance.');
+      } else {
+        if (s.chosen.length) {
+          l.push('', 'Le sumo:');
+          s.chosen.forEach(x => l.push('· ' + x.name + ' (+' + fmt(x.price) + ')'));
+        }
+        l.push('', 'Estimación: desde ' + fmt(s.total));
+        if (s.aniosPagos === 0) {
+          l.push('Soporte: primer año incluido');
+        } else {
+          l.push('Soporte por ' + s.anios + ' años: primer año incluido + ' + fmt(s.soporte) +
+                 (s.aniosPagos === 1 ? ' por el año 2' : ' por los años 2 a ' + s.anios));
+          l.push('(ahorro de ' + fmt(s.ahorro) + ')');
+        }
+      }
+      if (extra && extra.length) {
+        l.push('');
+        extra.forEach(x => l.push(x));
+      }
+      return l.join('\n');
+    }
+
+    function abrirWhatsApp(extra) {
+      const url = 'https://wa.me/' + WA_NUMERO + '?text=' + encodeURIComponent(mensaje(extra));
+      const w = window.open(url, '_blank', 'noopener');
+      if (!w) location.href = url;
+    }
+
+    if (dlg && typeof dlg.showModal === 'function') {
+      const form = document.getElementById('nea-dlgform');
+      const resumen = document.getElementById('nea-dlgsummary');
+
+      cta.addEventListener('click', () => {
+        resumen.textContent = mensaje(null);
+        dlg.showModal();
+      });
+
+      form.addEventListener('submit', e => {
+        // "Cancelar" solo cierra: no mandamos nada.
+        if (e.submitter && e.submitter.value === 'cancel') return;
+        const d = new FormData(form);
+        const preguntas = [
+          ['Rubro', d.get('rubro')],
+          ['¿Ya tiene sitio?', d.get('sitio')],
+          ['Logo y textos', d.get('material')],
+          ['Plazo', d.get('plazo')]
+        ].filter(x => x[1]).map(x => x[0] + ': ' + String(x[1]).trim());
+        abrirWhatsApp(preguntas);
+      });
+    } else {
+      // Sin <dialog>, el boton sigue funcionando: va directo al chat.
+      cta.addEventListener('click', () => abrirWhatsApp(null));
+    }
+
     render();
   }
 

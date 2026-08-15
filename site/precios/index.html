@@ -143,14 +143,14 @@ p,li{text-wrap:pretty}
 .dark .eyebrow{color:rgba(255,255,255,.5)}
 
 /* ---------------------------------------------------------------- nav */
-#nav{position:sticky;top:0;z-index:90;background:rgba(10,10,10,.92);backdrop-filter:blur(12px);color:#fff}
-#nav .in{display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,2vw,24px);height:72px;padding:0 var(--pad);max-width:var(--max);margin:0 auto}
+#nav{position:sticky;top:0;z-index:90;background:#0A0A0A;color:#F5F4F0;transition:background-color .18s linear,color .18s linear}
+#nav .in{display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,2vw,24px);height:88px;padding:0 var(--pad);max-width:var(--max);margin:0 auto}
 #nav .in > a:first-child{flex:none}
-#nav nav{display:flex;align-items:center;gap:clamp(18px,2vw,36px);font-size:14.5px;font-weight:500;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
+#nav nav{display:flex;align-items:center;gap:clamp(7px,.92vw,24px);font-size:clamp(11.5px,.72vw,15px);font-weight:500;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
 #nav nav::-webkit-scrollbar{display:none}
 #nav nav a{opacity:.72;transition:opacity .18s;display:inline-flex;align-items:center;min-height:44px}
 #nav nav a:hover,#nav nav a[aria-current]{opacity:1}
-#nav .cta{height:40px;padding:0 18px;font-size:14.5px}
+#nav .cta{height:44px;padding:0 24px;font-size:15px}
 @media (max-width:900px){#nav .cta{display:none}}
 
 /* ---------------------------------------------------------------- hero */
@@ -246,7 +246,7 @@ p,li{text-wrap:pretty}
 .faq details{border-bottom:1px solid var(--line)}
 .faq summary{list-style:none;cursor:pointer;padding:clamp(20px,1.9vw,26px) 44px clamp(20px,1.9vw,26px) 0;position:relative;font-size:clamp(16px,1.25vw,19px);font-weight:600;letter-spacing:-.015em;transition:color .18s}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary:hover{color:#3157FF}
+.faq summary:hover{color:#C7FF4A}
 .faq summary::after{content:"";position:absolute;right:8px;top:50%;width:11px;height:11px;margin-top:-7px;border-right:1.8px solid currentColor;border-bottom:1.8px solid currentColor;transform:rotate(45deg);transition:transform .22s cubic-bezier(.22,1,.36,1)}
 .faq details[open] summary::after{transform:rotate(225deg);margin-top:-2px}
 .faq .a{padding:0 clamp(20px,6vw,110px) clamp(22px,2vw,30px) 0;font-size:15px;line-height:1.65;color:var(--ink-soft)}
@@ -261,7 +261,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 .foot-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px}
 .foot-top nav{display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,36px);font-size:15px;font-weight:500}
 .foot-top nav a{display:inline-flex;align-items:center;min-height:44px}
-.foot-top nav a:hover{color:#3157FF}
+.foot-top nav a:hover{color:#C7FF4A}
 .foot-bot{margin-top:clamp(30px,3vw,52px);padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--ink-mute)}
 
 @media (prefers-reduced-motion:reduce){
@@ -492,7 +492,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 
 <header id="nav">
   <div class="in">
-    <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="110" height="24" style="height:24px;width:auto;display:block"></a>
+    <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="185" height="40" style="height:clamp(30px,2.1vw,40px);width:auto;display:block"></a>
     <nav aria-label="Secciones de esta página">
       <a href="#sitios">Sitios web</a>
       <a href="#extras">Extras</a>
@@ -1293,5 +1293,6 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
   </div>
 </footer>
 
+<script src="../nav.js" defer></script>
 </body>
 </html>

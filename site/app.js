@@ -2,8 +2,6 @@
 (() => {
   'use strict';
 
-  const TYPED_WORDS = 'crezca todos los días|venda todos los días|no dependa de vos|genere consultas solo';
-  const AUTO_TYPE = true;
   const SCROLL_PACE = 3;
 
   const cl = (n, a, b) => Math.max(a, Math.min(b, n));
@@ -13,8 +11,8 @@
   const el = {};
   [
     'runway', 'stage', 'frame', 'video', 'scene', 'hero', 's2bg', 's2text', 'h1',
-    'caret', 'cta2', 'nav', 'navbg', 'navlinks', 'navcta', 'navlogo', 'logo',
-    'typed', 'navlinksA', 'designbg'
+    'cta2', 'nav', 'navbg', 'navlinks', 'navcta', 'navlogo', 'logo',
+    'navlinksA', 'designbg'
   ].forEach(k => { el[k] = document.getElementById('nea-' + k); });
 
   const pace = Math.max(1.8, Math.min(5, SCROLL_PACE));
@@ -722,7 +720,7 @@
 
     const PALABRA = 'Construir.';
     const GROSOR = '800', RAMPA = ' 01', INTERLINEA = .86;
-    const CAMBIOS = 13, UMBRAL = .16, RUIDO_FONDO = 1, DURACION = 2000;
+    const CAMBIOS = 13, UMBRAL = .16, RUIDO_FONDO = 1, DURACION = 1000;
 
     // Referencia del cliente: 150 columnas y 12px de carácter en 1920 de ancho.
     // Abajo se reparte por resolución para que el arte nunca desborde ni quede
@@ -730,8 +728,12 @@
     // llenar el ancho disponible.
     function medidas() {
       const vw = innerWidth;
-      const cols = vw >= 1440 ? 150 : vw >= 1120 ? 124 : vw >= 860 ? 104 : vw >= 620 ? 82 : 56;
-      const ancho = vw >= 1120 ? vw * .56 : vw * .86;   // en angosto el bloque se apila y usa casi todo
+      // Lo que decide si la palabra se lee no es el cuerpo del carácter sino cuántas
+      // celdas recibe cada letra. Con 10 letras hacen falta ~9 columnas por letra:
+      // por eso en pantallas chicas SUBEN las columnas y baja el cuerpo, en vez de
+      // lo contrario. Antes había 56 columnas (5,6 por letra) y salía ruido.
+      const cols = vw >= 1440 ? 150 : vw >= 1120 ? 124 : vw >= 860 ? 104 : vw >= 700 ? 96 : 92;
+      const ancho = vw >= 1120 ? vw * .56 : vw * .94;   // en angosto usa casi todo el ancho
       return { cols: cols, ancho: ancho };
     }
 
@@ -757,6 +759,7 @@
       const alto = 200;
       const fuente = GROSOR + ' ' + alto + 'px "Plus Jakarta Sans", system-ui, sans-serif';
       ctx.font = fuente;
+
       const med = ctx.measureText(PALABRA);
       const aTxt = Math.max(1, Math.ceil(med.width));
       const asc = med.actualBoundingBoxAscent || alto * .75;
@@ -880,34 +883,6 @@
     const kick = () => { if (v.paused) go(); };
     ['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach(ev => addEventListener(ev, kick, { passive: true }));
     document.addEventListener('visibilitychange', kick);
-  }
-
-  /* ------------------------------------------------------------ typewriter */
-
-  function startType() {
-    const list = TYPED_WORDS.split('|').map(s => s.trim()).filter(Boolean);
-    if (!list.length || !el.typed) return;
-    let i = 0, j = list[0].length, del = true;
-    const step = () => {
-      const w = list[i];
-      if (!del) {
-        j++;
-        if (j >= w.length) {
-          el.typed.textContent = w;
-          onScroll();
-          del = true;
-          setTimeout(step, 2300);
-          return;
-        }
-      } else {
-        j--;
-        if (j <= 0) { del = false; i = (i + 1) % list.length; j = 0; }
-      }
-      el.typed.textContent = list[i].slice(0, Math.max(0, j));
-      onScroll();
-      setTimeout(step, del ? 34 : 72);
-    };
-    setTimeout(step, 2400);
   }
 
   /* ------------------------------------------------------------- estimador
@@ -1285,5 +1260,4 @@
   update();
   playVideo();
   initEstimator();
-  if (AUTO_TYPE) startType();
 })();

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Página no encontrada (404) — NEA Sistemas</title>
+<meta name="description" content="La página que buscás no existe o cambió de dirección. Volvé al inicio o mirá los servicios de NEA Sistemas.">
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#0A0A0A">
+
+<link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/uploads/favicon-512.png">
+<link rel="apple-touch-icon" href="/uploads/apple-touch-icon.png">
+
+<style>
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(/uploads/fonts/plusjakartasans-400-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url(/uploads/fonts/plusjakartasans-600-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url(/uploads/fonts/plusjakartasans-700-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(/uploads/fonts/instrumentserif-400-normal-subset.woff2) format('woff2')}
+
+:root{
+  --ink:#0A0A0A;
+  --ink-soft:#3d3d3d;
+  --ink-mute:#6e6e6e;
+  --line:rgba(255,255,255,.16);
+  --paper:#FFFFFF;
+  --lima:#C7FF4A;
+  --pad:clamp(20px,2.9vw,56px);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:"Plus Jakarta Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;display:flex;flex-direction:column;
+}
+main{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(64px,10vw,140px) var(--pad);max-width:900px;
+}
+.code{
+  font-size:clamp(64px,14vw,180px);line-height:.85;font-weight:700;
+  letter-spacing:-.05em;color:var(--lima);margin:0 0 clamp(24px,4vw,40px);
+}
+h1{
+  font-size:clamp(30px,5vw,56px);line-height:1.05;letter-spacing:-.03em;
+  font-weight:600;text-wrap:balance;margin:0 0 20px;
+}
+h1 em{font-family:'Instrument Serif',Georgia,serif;font-style:normal;font-weight:400;color:var(--lima)}
+p{font-size:clamp(16px,1.5vw,19px);line-height:1.55;color:rgba(255,255,255,.72);margin:0 0 40px;max-width:56ch}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:clamp(48px,7vw,80px)}
+.btn{
+  display:inline-flex;align-items:center;padding:14px 26px;border-radius:999px;
+  font-size:15px;font-weight:600;text-decoration:none;
+  transition:transform .18s ease,background .18s ease,border-color .18s ease;
+}
+.btn--solid{background:var(--lima);color:var(--ink)}
+.btn--solid:hover{transform:translateY(-2px)}
+.btn--ghost{border:1px solid var(--line);color:var(--paper)}
+.btn--ghost:hover{border-color:#fff;transform:translateY(-2px)}
+.btn:focus-visible{outline:2px solid var(--lima);outline-offset:3px}
+nav h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:600;margin:0 0 18px}
+nav ul{list-style:none;padding:0;margin:0;display:grid;gap:2px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+nav a{
+  display:block;padding:14px 0;border-top:1px solid var(--line);
+  color:rgba(255,255,255,.8);text-decoration:none;font-size:16px;
+  transition:color .18s ease,transform .18s ease;
+}
+nav a:hover{color:var(--lima);transform:translateX(8px)}
+nav a:focus-visible{outline:2px solid var(--lima);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <p class="code" aria-hidden="true">404</p>
+  <h1>Esta página <em>no existe</em>.</h1>
+  <p>Puede que el enlace esté mal escrito o que hayamos movido el contenido. Desde acá llegás a todo lo demás.</p>
+
+  <div class="actions">
+    <a class="btn btn--solid" href="/">Volver al inicio</a>
+    <a class="btn btn--ghost" href="/precios/">Ver precios</a>
+  </div>
+
+  <nav aria-label="Páginas del sitio">
+    <h2>Ir a</h2>
+    <ul>
+      <li><a href="/diseno-web/">Diseño web</a></li>
+      <li><a href="/tienda-online/">Tienda online</a></li>
+      <li><a href="/sistemas-a-medida/">Sistemas a medida</a></li>
+      <li><a href="/seo/">Posicionamiento y SEO</a></li>
+      <li><a href="/google-ads/">Google Ads</a></li>
+      <li><a href="/marketing-digital/">Marketing digital</a></li>
+      <li><a href="/casos/">Trabajos y proceso</a></li>
+      <li><a href="/precios/">Precios</a></li>
+      <li><a href="/nosotros/">Nosotros</a></li>
+    </ul>
+  </nav>
+</main>
+</body>
+</html>

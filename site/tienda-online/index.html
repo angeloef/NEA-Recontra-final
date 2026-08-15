@@ -110,9 +110,9 @@
   --paper:#FFFFFF;
   --paper-2:#F5F4F0;
   --lima:#C7FF4A;
-  --pad:clamp(20px,2.9vw,56px);
+  --pad:clamp(20px,2.5vw,48px);
   --gap-sec:clamp(64px,6.4vw,124px);
-  --max:1560px;
+  --max:none;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -269,6 +269,13 @@ p,li{text-wrap:pretty}
 .pay b{display:block;font-size:15px;font-weight:600}
 .pay em{font-style:normal;font-weight:600;color:var(--ink);font-size:13.5px}
 .pay span{display:block;margin-top:6px;font-size:13.8px;line-height:1.55;color:var(--ink-mute)}
+
+footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad) 26px;max-width:var(--max);margin:0 auto}
+.foot-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px}
+.foot-top nav{display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,36px);font-size:15px;font-weight:500}
+.foot-top nav a{display:inline-flex;align-items:center;min-height:44px}
+.foot-top nav a:hover{color:#C7FF4A}
+.foot-bot{margin-top:clamp(30px,3vw,52px);padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--ink-mute)}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}

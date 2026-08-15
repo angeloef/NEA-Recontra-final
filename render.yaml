@@ -4,7 +4,24 @@ services:
     runtime: static
     staticPublishPath: ./site
     pullRequestPreviewsEnabled: true
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    domains:
+      - neasistemas.com.ar
+      - www.neasistemas.com.ar
+    # ponytail: sin rewrite catch-all. Es un sitio multipagina, no una SPA.
+    # Render sirve site/404.html con status 404 cuando no encuentra el archivo.
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=(), interest-cohort=()

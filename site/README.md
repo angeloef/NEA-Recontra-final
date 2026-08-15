@@ -42,7 +42,7 @@ de `index.html`** (inline y no en un `.css` aparte para no gastar un round-trip 
 el render). No se le pide nada a Google.
 
 **Instrument Serif y Jersey 10 Charted están recortadas** a los glifos de las palabras
-"Diseñar" y "Construir." — pesan 4 KB y 14 KB en vez de 65 KB y 227 KB. Si cambiás ese
+"Diseñar" y "Construir" — pesan 4 KB y 14 KB en vez de 65 KB y 227 KB. Si cambiás ese
 texto en `index.html`, hay que regenerarlas o van a aparecer letras faltantes:
 
     https://fonts.googleapis.com/css2?family=Jersey+10+Charted&text=TEXTO_NUEVO&display=swap

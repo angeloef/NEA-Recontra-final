@@ -241,7 +241,7 @@
       estrellas.set(ep);
     }
 
-    // El ASCII se rearma cada vez que "Construir." entra en pantalla.
+    // El ASCII se rearma cada vez que "Construir" entra en pantalla.
     if (ascii) ascii.set(procOn && seg > 1.8 && p2 <= 0);
 
     const bg = 'rgb(' + arr.map(Math.round).join(',') + ')';
@@ -729,7 +729,7 @@
     };
   }
 
-  /* ------------------------------------------- "Construir." en arte ASCII */
+  /* -------------------------------------------- "Construir" en arte ASCII */
 
   // Config definida en lab/construir.html y aprobada por el cliente. La palabra se
   // dibuja en un canvas fuera de pantalla y se mide cuánta tinta cae en cada celda
@@ -739,7 +739,7 @@
     const pre = document.getElementById('nea-ascii');
     if (!pre) return null;
 
-    const PALABRA = 'Construir.';
+    const PALABRA = 'Construir';
     const GROSOR = '800', RAMPA = ' 01', INTERLINEA = .86;
     const CAMBIOS = 13, UMBRAL = .16, RUIDO_FONDO = 1, DURACION = 1000;
 
@@ -750,9 +750,9 @@
     function medidas() {
       const vw = innerWidth;
       // Lo que decide si la palabra se lee no es el cuerpo del carácter sino cuántas
-      // celdas recibe cada letra. Con 10 letras hacen falta ~9 columnas por letra:
-      // por eso en pantallas chicas SUBEN las columnas y baja el cuerpo, en vez de
-      // lo contrario. Antes había 56 columnas (5,6 por letra) y salía ruido.
+      // celdas recibe cada letra: hacen falta ~9 columnas por letra, y "Construir"
+      // tiene 9. Por eso en pantallas chicas SUBEN las columnas y baja el cuerpo, en
+      // vez de lo contrario. Antes había 56 columnas (5,6 por letra) y salía ruido.
       const cols = vw >= 1440 ? 150 : vw >= 1120 ? 124 : vw >= 860 ? 104 : vw >= 700 ? 96 : 92;
       const ancho = vw >= 1120 ? vw * .56 : vw * .94;   // en angosto usa casi todo el ancho
       return { cols: cols, ancho: ancho };

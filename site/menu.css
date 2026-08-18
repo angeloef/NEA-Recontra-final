@@ -1,0 +1,80 @@
+/* ============================================================ Menu mobile
+   Una sola barra para las diez paginas: abajo de 1000px la tira de links se
+   apaga y queda logo + hamburguesa. El panel y el boton los arma menu.js
+   clonando los links que ya tiene cada barra, asi ninguna pagina declara nada.
+
+   El boton hereda el color de la barra (que se repinta segun la seccion de
+   atras), menos cuando el panel esta abierto: ahi el fondo es negro fijo. */
+
+.nea-burger{display:none}
+
+@media (max-width:999px){
+  /* La tira horizontal con scroll era lo que se veia mal en telefono */
+  #nav nav{display:none}
+  #nav .cta{display:none}
+  #nea-navlinks{display:none!important}
+  .nea-navactions{display:none!important}
+
+  .nea-burger{
+    display:flex;flex-direction:column;justify-content:center;gap:5px;
+    width:44px;height:44px;flex:none;
+    padding:0;border:0;background:none;color:inherit;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .nea-burger span{
+    display:block;width:22px;height:1.5px;border-radius:2px;background:currentColor;
+    transition:transform .38s cubic-bezier(.22,1,.36,1),opacity .18s linear;
+  }
+  .nea-burger:focus-visible{outline:2px solid #C7FF4A;outline-offset:3px;border-radius:8px}
+
+  /* Abierto: las dos barras se cruzan en una X y el boton sube sobre el panel */
+  .nea-burger.is-open{position:fixed;top:22px;right:var(--pad,20px);z-index:97;color:#F5F4F0}
+  .nea-burger.is-open span:first-child{transform:translateY(3.25px) rotate(45deg)}
+  .nea-burger.is-open span:last-child{transform:translateY(-3.25px) rotate(-45deg)}
+
+  .nea-menu{
+    position:fixed;inset:0;z-index:96;
+    background:#0A0A0A;color:#F5F4F0;
+    padding:calc(88px + env(safe-area-inset-top)) 24px calc(28px + env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;
+    overflow-y:auto;overscroll-behavior:contain;
+    opacity:0;transform:translateY(-10px);
+    transition:opacity .3s ease,transform .42s cubic-bezier(.22,1,.36,1);
+  }
+  .nea-menu.is-open{opacity:1;transform:none}
+  /* display:flex le gana a la regla del user agent para [hidden] */
+  .nea-menu[hidden]{display:none}
+
+  .nea-menu nav{display:flex;flex-direction:column;margin-bottom:26px}
+  .nea-menu nav a{
+    display:flex;align-items:center;min-height:56px;
+    padding:6px 0;border-bottom:1px solid rgba(255,255,255,.12);
+    font-size:20px;font-weight:500;letter-spacing:-.01em;color:#F5F4F0;
+    /* cada link entra un toque despues que el anterior: el stagger lo escribe
+       menu.js en --i, aca solo se traduce a delay */
+    opacity:0;transform:translateY(10px);
+    transition:opacity .34s ease,transform .44s cubic-bezier(.22,1,.36,1);
+    transition-delay:calc(var(--i) * 38ms + 60ms);
+  }
+  .nea-menu nav a:first-child{border-top:1px solid rgba(255,255,255,.12)}
+  .nea-menu nav a[aria-current]{color:#C7FF4A}
+  .nea-menu.is-open nav a{opacity:1;transform:none}
+
+  .nea-menu-cta{
+    margin-top:auto;
+    display:flex;align-items:center;justify-content:center;
+    height:54px;border-radius:999px;background:#C7FF4A;color:#0A0A0A;
+    font-size:16px;font-weight:600;
+    opacity:0;transform:translateY(10px);
+    transition:opacity .34s ease,transform .44s cubic-bezier(.22,1,.36,1);
+    transition-delay:calc(var(--i) * 38ms + 60ms);
+  }
+  .nea-menu.is-open .nea-menu-cta{opacity:1;transform:none}
+
+  /* El fondo no puede seguir scrolleando detras del panel */
+  html.nea-menulock,html.nea-menulock body{overflow:hidden}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .nea-menu,.nea-menu nav a,.nea-menu-cta,.nea-burger span{transition-duration:.001ms;transition-delay:0s}
+}

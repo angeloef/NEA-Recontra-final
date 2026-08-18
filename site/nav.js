@@ -60,3 +60,110 @@
   addEventListener('resize', pedir, { passive: true });
   pintar();
 })();
+
+/* ============================================================ Menu mobile
+   Abajo de 1000px la tira de links no entra: se reemplaza por una hamburguesa
+   y un panel a pantalla completa. El panel se arma clonando los links que la
+   barra ya tiene, asi las diez paginas comparten el mismo menu sin declarar
+   nada propio. Estilos en menu.css. */
+(() => {
+  'use strict';
+
+  // Home y subpaginas tienen barras distintas; lo unico que hace falta es la
+  // fila donde meter el boton y de donde salen los links.
+  const barra = document.getElementById('nea-navbg') || document.querySelector('#nav .in');
+  if (!barra) return;
+
+  const fuente = document.getElementById('nea-navlinks') || barra.querySelector('nav');
+  const links = fuente ? Array.from(fuente.querySelectorAll('a')) : [];
+  if (!links.length) return;
+
+  // El CTA de la barra (lima en la home, boton en las subpaginas) baja al pie
+  // del panel: en telefono es la accion, no un adorno de la barra.
+  const ctaOrig = document.getElementById('nea-navcta') || barra.querySelector('.cta');
+  const contacto = barra.querySelector('a[href="#contacto"]');
+
+  const burger = document.createElement('button');
+  burger.type = 'button';
+  burger.className = 'nea-burger';
+  burger.id = 'nea-burger';
+  burger.setAttribute('aria-expanded', 'false');
+  burger.setAttribute('aria-controls', 'nea-menu');
+  burger.setAttribute('aria-label', 'Abrir menú');
+  burger.innerHTML = '<span></span><span></span>';
+
+  const panel = document.createElement('div');
+  panel.className = 'nea-menu';
+  panel.id = 'nea-menu';
+  panel.hidden = true;
+
+  const lista = document.createElement('nav');
+  lista.setAttribute('aria-label', 'Menú');
+  const items = links.slice();
+  if (contacto) items.push(contacto);
+  items.forEach((a, i) => {
+    const copia = document.createElement('a');
+    copia.href = a.getAttribute('href');
+    copia.textContent = a.textContent.trim();
+    if (a.hasAttribute('aria-current')) copia.setAttribute('aria-current', a.getAttribute('aria-current'));
+    copia.style.setProperty('--i', String(i));
+    lista.appendChild(copia);
+  });
+  panel.appendChild(lista);
+
+  if (ctaOrig) {
+    const cta = document.createElement('a');
+    cta.href = ctaOrig.getAttribute('href');
+    cta.className = 'nea-menu-cta';
+    cta.textContent = ctaOrig.textContent.trim();
+    cta.style.setProperty('--i', String(items.length));
+    panel.appendChild(cta);
+  }
+
+  // En la home el CTA y "Contacto" viven en un contenedor propio dentro de la
+  // barra: en telefono se apagan enteros y su lugar lo toma el panel.
+  if (ctaOrig && ctaOrig.parentElement !== barra) ctaOrig.parentElement.classList.add('nea-navactions');
+
+  barra.appendChild(burger);
+  document.body.appendChild(panel);
+
+  let abierto = false;
+
+  function abrir() {
+    if (abierto) return;
+    abierto = true;
+    panel.hidden = false;
+    // forzar el reflow entre mostrar y animar: sin esto el navegador colapsa
+    // los dos estados y el panel aparece de golpe. Es sincronico a proposito,
+    // un requestAnimationFrame no corre si la pestaña no esta pintando.
+    void panel.offsetHeight;
+    panel.classList.add('is-open');
+    burger.classList.add('is-open');
+    burger.setAttribute('aria-expanded', 'true');
+    burger.setAttribute('aria-label', 'Cerrar menú');
+    document.documentElement.classList.add('nea-menulock');
+    // el foco entra al panel: con teclado o lector, si no queda atras del sheet
+    const primero = panel.querySelector('a');
+    if (primero) primero.focus({ preventScroll: true });
+  }
+
+  function cerrar() {
+    if (!abierto) return;
+    abierto = false;
+    panel.classList.remove('is-open');
+    burger.classList.remove('is-open');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Abrir menú');
+    document.documentElement.classList.remove('nea-menulock');
+    // el hidden espera a que termine el fundido; si mientras tanto se vuelve a
+    // abrir, el guard de arriba deja todo como estaba
+    setTimeout(() => { if (!abierto) panel.hidden = true; }, 320);
+  }
+
+  burger.addEventListener('click', () => { if (abierto) { cerrar(); burger.focus(); } else abrir(); });
+  panel.addEventListener('click', e => { if (e.target.closest('a')) cerrar(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && abierto) { cerrar(); burger.focus(); } });
+  // Al pasar a escritorio el panel deja de existir visualmente: hay que soltar
+  // el scroll o la pagina queda trabada.
+  addEventListener('resize', () => { if (abierto && innerWidth >= 1000) cerrar(); });
+})();

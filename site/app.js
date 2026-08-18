@@ -761,7 +761,11 @@
       // tiene 9. Por eso en pantallas chicas SUBEN las columnas y baja el cuerpo, en
       // vez de lo contrario. Antes había 56 columnas (5,6 por letra) y salía ruido.
       const cols = vw >= 1440 ? 150 : vw >= 1120 ? 124 : vw >= 860 ? 104 : vw >= 700 ? 96 : 92;
-      const ancho = vw >= 1120 ? vw * .56 : vw * .94;   // en angosto usa casi todo el ancho
+      /* En angosto el arte se mide contra la caja que lo contiene, no contra la ventana:
+         el panel tiene padding y con vw * .94 el dibujo salia ~26px mas ancho que el
+         stack, que recorta con overflow:hidden y se comia el final de la palabra. */
+      const caja = pre.parentElement ? pre.parentElement.clientWidth : 0;
+      const ancho = vw >= 1120 ? vw * .56 : (caja > 40 ? caja - 4 : vw * .94);
       return { cols: cols, ancho: ancho };
     }
 

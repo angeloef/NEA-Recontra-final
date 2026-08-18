@@ -9,6 +9,13 @@
    su texto y dejaba el resaltado azul pegado. Los parrafos siguen siendo
    seleccionables, que es lo que la gente si quiere copiar. */
 html{-webkit-tap-highlight-color:transparent}
+
+/* Pull-to-refresh: Chrome en Android recarga la pagina si el dedo baja cuando
+   ya no queda scroll, y eso se comia los gestos de cerrar hojas del estimador.
+   Con contain el sobre-scroll no sale del documento; el scroll normal y el
+   rebote de iOS siguen igual. Va en html y body porque el propagado al
+   viewport sale del primero de los dos que lo declare. */
+html,body{overscroll-behavior-y:contain}
 @media (hover:none){
   button,summary,[role="button"],.nea-pick,.nea-add,.nea-planopt{-webkit-user-select:none;user-select:none}
 }

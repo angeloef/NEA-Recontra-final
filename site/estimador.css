@@ -192,10 +192,13 @@
      tapado por la barra y sin forma de llegar. El padding despeja esa barra. */
   .nea-panelbody{overflow:visible;padding-bottom:132px}
   .nea-sum{position:static}
-  /* ...y la estimacion se reduce a una barra fija con los dos numeros */
+  /* ...y la estimacion se reduce a una barra fija con los dos numeros.
+     Sin backdrop-filter: el fondo ya estaba al 94% de opacidad, pero el blur
+     obligaba al telefono a recomponer la capa de atras en cada frame de las
+     animaciones de la card. Se ve igual y sale gratis. */
   /* top:auto es obligatorio: sin el, hereda el top:88px del sticky y la
      barra se estira de arriba a abajo tapando la pantalla entera. */
-  .nea-est.is-open .nea-sum{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:101;border-radius:0;border:0;border-top:1px solid rgba(255,255,255,.16);background:rgba(14,14,14,.94);backdrop-filter:blur(10px);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+  .nea-est.is-open .nea-sum{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:101;border-radius:0;border:0;border-top:1px solid rgba(255,255,255,.16);background:#0E0E0E;padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
   /* El detalle no aparece de golpe: se despliega desde la barra. Va con
      max-height y no con display porque un display:none no se puede animar, y
      con visibility para que plegado no reciba foco ni lectores.
@@ -214,7 +217,9 @@
   .nea-est.is-open .nea-sum.is-detail .nea-sumbar .nea-sumchev{transform:rotate(180deg)}
   /* Objetivos tactiles: la cruz de cerrar y el "ver mas opciones" quedaban en
      34 y 40 px. En pantalla tactil el minimo es 44. */
-  .nea-panelclose{width:44px;height:44px}
+  /* Mismo motivo que la barra: el blur de esta pastilla se recompone en cada
+     frame mientras la card entra o sale. Opaca cumple igual sobre el video. */
+  .nea-panelclose{width:44px;height:44px;backdrop-filter:none;background:rgba(10,10,10,.72)}
   .nea-more>summary{padding:14px 15px}
 }
 .nea-sumbar{display:none}

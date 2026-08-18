@@ -1200,6 +1200,41 @@
     }
 
     // El morph: el nombre de transicion viaja de la card reducida al panel.
+    /* En telefono la card ocupa la pantalla entera y la View Transition tiene
+       que fotografiar todo el documento para el morph: ahi se va a menos de 30
+       fps. La hoja se anima con transform y opacidad, que van al compositor y
+       no tocan layout. El morph queda para escritorio, donde la card es chica
+       y el efecto se entiende. */
+    const SHEET_EASE = 'cubic-bezier(.22,1,.36,1)';
+
+    // Cortar lo que este corriendo antes de encadenar otra: abrir y cerrar
+    // rapido dejaba dos animaciones peleando por el mismo transform.
+    const cortar = node => node.getAnimations().forEach(a => { a.onfinish = a.oncancel = null; a.cancel(); });
+
+    function sheetIn(node) {
+      if (!node || quiet.matches || !node.animate) return;
+      cortar(node);
+      node.animate(
+        [{ transform: 'translateY(16px)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+        { duration: 280, easing: SHEET_EASE }
+      );
+    }
+
+    function sheetOut(node, done) {
+      let hecho = false;
+      const fin = () => { if (hecho) return; hecho = true; done(); };
+      if (!node || quiet.matches || !node.animate) { fin(); return; }
+      cortar(node);
+      const a = node.animate(
+        [{ transform: 'none', opacity: 1 }, { transform: 'translateY(18px)', opacity: 0 }],
+        { duration: 210, easing: 'cubic-bezier(.4,0,1,1)' }
+      );
+      a.onfinish = a.oncancel = fin;
+      // Red de seguridad: si la pestaña deja de pintar (cambio de app, ahorro
+      // de energia) la animacion no termina nunca y la card quedaria abierta.
+      setTimeout(fin, 340);
+    }
+
     function morph(from, toGetter, mutate) {
       if (!document.startViewTransition || quiet.matches) { mutate(); render(); return; }
       if (from) from.style.viewTransitionName = MORPH;
@@ -1226,6 +1261,7 @@
       // Al cambiar de producto la hoja de detalle vuelve a cerrarse: si no,
       // abris una card nueva y lo primero que ves es la estimacion tapandola.
       cerrarDetalle();
+      if (hoja.matches) { open = id; render(); sheetIn(panelOf(id)); return; }
       morph(pickOf(id), () => panelOf(id), () => { open = id; });
     }
 
@@ -1234,6 +1270,12 @@
       cerrarDetalle();
       const from = panelOf(open);
       const back = pickOf(open);
+      if (hoja.matches) {
+        // primero la salida, despues el render: si se apaga antes, no hay nada
+        // que animar y la card desaparece de un frame al otro
+        sheetOut(from, () => { open = null; render(); if (back) back.focus({ preventScroll: true }); });
+        return;
+      }
       morph(from, () => back, () => { open = null; });
       if (back) back.focus();
     }

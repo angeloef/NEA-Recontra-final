@@ -321,7 +321,12 @@
     const GROSOR = 2;
     const AMPLITUD = 1;         // cuánto serpentea
     const FRECUENCIA = .1;      // ondas largas y suaves
-    const VELOCIDAD = 0;        // malla quieta: solo se mueve con el cursor
+    /* En escritorio la malla esta quieta y solo la mueve el cursor. En tactil no hay
+       cursor, y el empuje seguia al dedo mientras se scrollea: un ojo de pez que
+       aparecia justo cuando el usuario no lo pedia. Ahi se apaga el empuje y en su
+       lugar la malla ondula sola, lento y en loop, que es lo que "Analizar" sugiere:
+       una carta topografica leyendose. Con prefers-reduced-motion queda quieta. */
+    const VELOCIDAD = TACTIL ? .55 : 0;
     const RADIO = 200;          // alcance del cursor
     const EMPUJE = 52;          // cuánto corre cada nodo
     const FALLOFF = 1;          // caída lineal
@@ -361,11 +366,13 @@
     };
     resize();
     addEventListener('resize', resize, { passive: true });
-    addEventListener('pointermove', e => {
-      mouse.x = e.clientX; mouse.y = e.clientY; mouse.on = true;
-      if (vis > .001 && !raf) raf = requestAnimationFrame(draw);
-    }, { passive: true });
-    addEventListener('pointerleave', () => { mouse.on = false; });
+    if (!TACTIL) {
+      addEventListener('pointermove', e => {
+        mouse.x = e.clientX; mouse.y = e.clientY; mouse.on = true;
+        if (vis > .001 && !raf) raf = requestAnimationFrame(draw);
+      }, { passive: true });
+      addEventListener('pointerleave', () => { mouse.on = false; });
+    }
 
     // Traza una polilínea suavizada pasando por los puntos medios.
     function curva(c, pts) {
@@ -530,8 +537,10 @@
       ctx.clearRect(0, 0, w, h);
       if (vis <= .001) {
         // fuera de "Analizar" el círculo no debe quedar colgado
-        ctxL.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctxL.clearRect(0, 0, w, h);
+        if (ctxL) {
+          ctxL.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctxL.clearRect(0, 0, w, h);
+        }
         return;
       }
 

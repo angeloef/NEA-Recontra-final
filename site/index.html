@@ -161,10 +161,17 @@ a:hover{color:var(--lima)}
    el texto y la foto se ve en una banda propia arriba. */
 .nea-noscard{position:relative;aspect-ratio:890/495;border-radius:14px;overflow:hidden}
 .nea-noscard-pie{position:absolute;inset:auto 0 0 0;padding:30px}
+.nea-noscard-pie p{margin:14px 0 20px}
 @media (max-width:600px){
   .nea-noscard{aspect-ratio:auto}
   .nea-noscard-pie{position:static;padding:24px 20px 22px}
   .nea-noscard--foto{padding-top:min(46vw,220px)}
+  /* La flecha se comia una linea entera al final y empujaba el texto lejos del
+     borde. Va a la esquina inferior, sobre la parte opaca del degradado: arriba
+     se montaba sobre el titulo en la card sin foto. El parrafo le deja el hueco
+     para que ninguna linea le pase por debajo. */
+  .nea-noscard-pie p{margin:12px 0 0;padding-right:52px}
+  .nea-noscard-pie a{position:absolute;right:18px;bottom:18px;z-index:1}
 }
 .nea-solitem{position:relative;display:grid}
 /* El boton "+" no puede vivir dentro del <a> (interactivo dentro de interactivo),
@@ -671,7 +678,7 @@ a:hover{color:var(--lima)}
       <div class="nea-noscard nea-noscard--foto" style="background:#e9edf3 url('uploads/nosotros-diagnostico.webp') center/cover no-repeat">
         <div class="nea-noscard-pie" style="background:linear-gradient(rgba(248,249,251,0),rgba(248,249,251,.8) 34%,rgba(248,249,251,.97) 58%)">
           <div style="font-size:clamp(24px,2.6vw,34px);line-height:1.16;font-weight:700;letter-spacing:-.02em;color:#111">Un diagnóstico antes de cualquier compromiso.</div>
-          <p style="margin:14px 0 20px;font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:#2a2a2a;max-width:640px">Analizamos tu negocio y tu competencia para detectar oportunidades y definir qué vale la pena construir. Recibís el diagnóstico, los entregables y sus precios en menos de 24 horas.</p>
+          <p style="font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:#2a2a2a;max-width:640px">Analizamos tu negocio y tu competencia para detectar oportunidades y definir qué vale la pena construir. Recibís el diagnóstico, los entregables y sus precios en menos de 24 horas.</p>
           <a href="#proceso" aria-label="Ver cómo trabajamos" data-ink="chip" style="width:34px;height:34px;border-radius:999px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">→</a>
         </div>
       </div>
@@ -679,7 +686,7 @@ a:hover{color:var(--lima)}
       <div class="nea-noscard" style="background:var(--plum)">
         <div class="nea-noscard-pie" style="background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.62) 40%)">
           <div style="font-size:clamp(24px,2.6vw,34px);line-height:1.16;font-weight:700;letter-spacing:-.02em;color:#fff">Nuestro trabajo empieza por lo que ves.</div>
-          <p style="margin:14px 0 20px;font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:rgba(255,255,255,.92);max-width:640px">Esta web es una muestra de cómo trabajamos: diseño, desarrollo y tecnología pensados como una sola pieza. El mismo criterio que aplicamos a nuestro sitio lo llevamos al de cada cliente.</p>
+          <p style="font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:rgba(255,255,255,.92);max-width:640px">Esta web es una muestra de cómo trabajamos: diseño, desarrollo y tecnología pensados como una sola pieza. El mismo criterio que aplicamos a nuestro sitio lo llevamos al de cada cliente.</p>
           <a href="#estimacion" aria-label="Ver estimación de precios" data-ink="chip" style="width:34px;height:34px;border-radius:999px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">→</a>
         </div>
       </div>

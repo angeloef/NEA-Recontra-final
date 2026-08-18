@@ -970,11 +970,21 @@
     // este toggle. Sin el, en telefono no habia forma de contratar 2 o 3 años.
     const sumbar = document.getElementById('nea-sumbar');
     const sumbox = document.getElementById('nea-sum');
-    function cerrarDetalle() {
+    // Un solo camino para abrir y cerrar la hoja: lo usan el boton, el swipe y
+    // los cambios de producto, asi el aria y el texto del pie nunca se separan
+    // del estado real.
+    function setDetalle(on) {
       if (!sumbox) return;
-      sumbox.classList.remove('is-detail');
-      if (sumbar) sumbar.setAttribute('aria-expanded', 'false');
+      sumbox.classList.toggle('is-detail', on);
+      if (sumbar) sumbar.setAttribute('aria-expanded', String(on));
+      const hint = document.getElementById('nea-barhint');
+      if (hint && hint.textContent) {
+        hint.textContent = on
+          ? 'Deslizá o tocá para ocultar'
+          : 'Soporte y descuentos · tocá para revisar';
+      }
     }
+    const cerrarDetalle = () => setDetalle(false);
     const totalNode = document.getElementById('nea-total');
     const totalLabel = document.getElementById('nea-totallabel');
     const noteNode = document.getElementById('nea-note');
@@ -1181,7 +1191,7 @@
           : '+ ' + fmt(s.soporte);
         if (barHint) {
           barHint.textContent = sumbox && sumbox.classList.contains('is-detail')
-            ? 'Tocá para ocultar el detalle'
+            ? 'Deslizá o tocá para ocultar'
             : 'Soporte y descuentos · tocá para revisar';
         }
         nudge(true);
@@ -1253,17 +1263,34 @@
 
     if (sumbar && sumbox) {
       sumbar.addEventListener('click', () => {
-        const abierto = sumbox.classList.toggle('is-detail');
-        sumbar.setAttribute('aria-expanded', String(abierto));
+        setDetalle(!sumbox.classList.contains('is-detail'));
         // ya lo vio: el aviso no vuelve en toda la sesion
         nudgeVisto = true;
         nudge(false);
-        if (barHint) {
-          barHint.textContent = abierto
-            ? 'Tocá para ocultar el detalle'
-            : 'Soporte y descuentos · tocá para revisar';
-        }
       });
+
+      /* La hoja se cierra deslizando para abajo, como cualquier bottom sheet:
+         tocar el boton no puede ser la unica salida cuando el gesto natural es
+         el otro. Solo cuenta si el detalle ya esta arriba de todo en su propio
+         scroll, si no cerraria cada vez que el dedo baja para leer. */
+      const sumfull = document.getElementById('nea-sumfull');
+      let y0 = 0, x0 = 0, arriba = true;
+
+      sumbox.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        y0 = t.clientY; x0 = t.clientX;
+        arriba = !sumfull || sumfull.scrollTop <= 0;
+      }, { passive: true });
+
+      sumbox.addEventListener('touchend', e => {
+        const t = e.changedTouches[0];
+        const dy = t.clientY - y0;
+        // gesto claramente vertical: si el dedo se fue en diagonal es scroll
+        if (Math.abs(dy) < 56 || Math.abs(t.clientX - x0) > Math.abs(dy)) return;
+        const abierto = sumbox.classList.contains('is-detail');
+        if (abierto && dy > 0 && arriba) setDetalle(false);
+        else if (!abierto && dy < 0) { setDetalle(true); nudgeVisto = true; nudge(false); }
+      }, { passive: true });
     }
 
     addEventListener('keydown', e => {

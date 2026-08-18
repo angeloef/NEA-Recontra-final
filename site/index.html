@@ -130,8 +130,8 @@ a:hover{color:var(--lima)}
    se corre a 1/3. La version vieja lo hacia con JS cambiando col-md-8/col-md-4;
    con :has() sale en dos reglas y las fr interpolan solas. */
 .nea-solrow{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.1vw,20px);transition:grid-template-columns .6s cubic-bezier(.25,1,.5,1)}
-.nea-solrow:has(> a:first-child:hover),.nea-solrow:has(> a:first-child:focus-visible){grid-template-columns:2fr 1fr}
-.nea-solrow:has(> a:last-child:hover),.nea-solrow:has(> a:last-child:focus-visible){grid-template-columns:1fr 2fr}
+.nea-solrow:has(> :first-child a:hover),.nea-solrow:has(> :first-child a:focus-visible){grid-template-columns:2fr 1fr}
+.nea-solrow:has(> :last-child a:hover),.nea-solrow:has(> :last-child a:focus-visible){grid-template-columns:1fr 2fr}
 /* La card se mide contra el alto de ventana tambien: dos filas + titulo tienen
    que entrar en una pantalla, que es lo que la version anterior no lograba. */
 .nea-solcard{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:min(clamp(264px,27.5vw,480px),34vh);border-radius:14px;overflow:hidden;background:#2a2622;color:#fff;text-decoration:none;transition:box-shadow .4s cubic-bezier(.33,1,.68,1)}
@@ -150,9 +150,33 @@ a:hover{color:var(--lima)}
 .nea-solcard .nea-solexp p{margin:0;padding-top:12px;max-width:44ch;font-size:clamp(13px,.92vw,16px);line-height:1.5;color:rgba(255,255,255,.88)}
 .nea-solcard:hover .nea-solexp,.nea-solcard:focus-visible .nea-solexp{grid-template-rows:1fr;opacity:1}
 .nea-solcard:focus-visible{outline:2px solid #fff;outline-offset:-4px}
-/* En tactil no hay hover: la bajada va siempre visible. */
-@media (hover:none){.nea-solcard .nea-solexp{grid-template-rows:1fr;opacity:1}}
-@media (max-width:720px){.nea-solrow{grid-template-columns:1fr}}
+.nea-solitem{position:relative;display:grid}
+/* El boton "+" no puede vivir dentro del <a> (interactivo dentro de interactivo),
+   asi que es hermano de la card y se posiciona sobre ella. */
+.nea-soltoggle{display:none}
+.nea-solgo{display:none}
+/* En tactil de tablet para arriba no hay hover: la bajada va siempre visible. */
+@media (hover:none) and (min-width:721px){.nea-solcard .nea-solexp{grid-template-rows:1fr;opacity:1}}
+/* Mobile: se cae el bento. Cuatro cards apiladas, solo el titulo, y el "+"
+   despliega la bajada. El tap en la card sigue yendo a la subpagina. */
+@media (max-width:720px){
+  .nea-solrow{grid-template-columns:1fr}
+  .nea-solcard{min-height:0}
+  .nea-solcard > div{padding:18px;padding-right:72px}
+  .nea-solcard .nea-solexp{grid-template-rows:0fr;opacity:0}
+  .nea-solitem.is-open .nea-solexp{grid-template-rows:1fr;opacity:1}
+  .nea-solitem.is-open .nea-solcard::after{background:linear-gradient(to top,rgba(0,0,0,.94) 0,rgba(0,0,0,.72) 45%,rgba(0,0,0,.15) 100%)}
+  .nea-solgo{display:inline-block;margin-top:14px;font-size:13px;font-weight:600;color:#fff;text-decoration:underline;text-underline-offset:3px}
+  .nea-soltoggle{display:grid;place-items:center;position:absolute;z-index:2;right:14px;bottom:14px;width:44px;height:44px;padding:0;
+    border:1px solid rgba(255,255,255,.45);border-radius:50%;background:rgba(0,0,0,.35);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;cursor:pointer}
+  .nea-soltoggle:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  /* el glifo es CSS: dos barras, y al abrir se va la vertical -> "+" pasa a "-" */
+  .nea-solplus{position:relative;display:block;width:15px;height:15px}
+  .nea-solplus::before,.nea-solplus::after{content:"";position:absolute;left:0;top:7px;width:15px;height:1.5px;background:#fff;border-radius:2px;transition:transform .3s cubic-bezier(.25,1,.5,1)}
+  .nea-solplus::after{transform:rotate(90deg)}
+  .nea-solitem.is-open .nea-solplus::after{transform:rotate(0deg)}
+}
 /* Las cards son bloques opacos y el fondo de la pagina vira de color con el
    scroll: al salir por arriba quedaban flotando contra un fondo que ya no es
    el suyo. Se van en fade con la propia salida del viewport. Timeline nativo,
@@ -306,41 +330,53 @@ a:hover{color:var(--lima)}
 
       <div class="nea-solrow">
 
+      <div class="nea-solitem">
       <a href="diseno-web/" class="nea-solcard" style="--bg:url('uploads/feature-web-a-medida.webp');background-color:#F4E9D8">
         <div>
           <div style="font-size:11px;font-weight:500;letter-spacing:.18em;color:rgba(255,255,255,.7);margin-bottom:10px">#&nbsp;WEB</div>
           <h3 style="margin:0;font-size:clamp(19px,1.7vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.2">Una web hecha a medida.</h3>
-          <div class="nea-solexp"><div><p>No usamos plantillas ni fórmulas prearmadas. Diseñamos a mano la experiencia de tu sitio, pensada para transmitir tus ideas y los valores de tu empresa. Nos enfocamos en que cada palabra y cada elemento visual comunique algo: una imagen limpia y confiable que la mayoría de las webs, hechas rellenando plantillas, no logran dar.</p></div></div>
+          <div class="nea-solexp" id="nea-solexp-1"><div><p>No usamos plantillas ni fórmulas prearmadas. Diseñamos a mano la experiencia de tu sitio, pensada para transmitir tus ideas y los valores de tu empresa. Nos enfocamos en que cada palabra y cada elemento visual comunique algo: una imagen limpia y confiable que la mayoría de las webs, hechas rellenando plantillas, no logran dar.</p><span class="nea-solgo" aria-hidden="true">Ver diseño web →</span></div></div>
         </div>
       </a>
+        <button class="nea-soltoggle" type="button" aria-expanded="false" aria-controls="nea-solexp-1"><span class="nea-solplus" aria-hidden="true"></span><span class="nea-solo-lectores">Ver detalle</span></button>
+      </div>
 
+      <div class="nea-solitem">
       <a href="tienda-online/" class="nea-solcard" style="--bg:url('uploads/feature-tienda-online.webp');background-color:#E7E8F7">
         <div>
           <div style="font-size:11px;font-weight:500;letter-spacing:.18em;color:rgba(255,255,255,.7);margin-bottom:10px">#&nbsp;E-COMMERCE</div>
           <h3 style="margin:0;font-size:clamp(19px,1.7vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.2">Una tienda online con todo integrado.</h3>
-          <div class="nea-solexp"><div><p>Catálogo, medios de pago, envíos y pedidos viven en un solo lugar y se actualizan solos. Tu cliente compra a la hora que quiera, sin esperar a que alguien conteste un mensaje, y vos ves cada pedido, cada stock y cada cobro desde un panel que entendés sin manual.</p></div></div>
+          <div class="nea-solexp" id="nea-solexp-2"><div><p>Catálogo, medios de pago, envíos y pedidos viven en un solo lugar y se actualizan solos. Tu cliente compra a la hora que quiera, sin esperar a que alguien conteste un mensaje, y vos ves cada pedido, cada stock y cada cobro desde un panel que entendés sin manual.</p><span class="nea-solgo" aria-hidden="true">Ver tienda online →</span></div></div>
         </div>
       </a>
+        <button class="nea-soltoggle" type="button" aria-expanded="false" aria-controls="nea-solexp-2"><span class="nea-solplus" aria-hidden="true"></span><span class="nea-solo-lectores">Ver detalle</span></button>
+      </div>
 
       </div>
 
       <div class="nea-solrow">
 
+      <div class="nea-solitem">
       <a href="seo/" class="nea-solcard" style="--bg:url('uploads/feature-google-seo.webp');background-color:#F7F1E6">
         <div>
           <div style="font-size:11px;font-weight:500;letter-spacing:.18em;color:rgba(255,255,255,.7);margin-bottom:10px">#&nbsp;SEO</div>
           <h3 style="margin:0;font-size:clamp(19px,1.7vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.2">Aparecer primero en Google.</h3>
-          <div class="nea-solexp"><div><p>Trabajamos para que tu negocio aparezca cuando alguien busca lo que vendés, en tu ciudad y en tu rubro: estructura, contenido, ficha de Google y velocidad. Y cuando ya tenés una web que convierte, sumamos campañas pagas para acelerar lo que orgánicamente ya funciona.</p></div></div>
+          <div class="nea-solexp" id="nea-solexp-3"><div><p>Trabajamos para que tu negocio aparezca cuando alguien busca lo que vendés, en tu ciudad y en tu rubro: estructura, contenido, ficha de Google y velocidad. Y cuando ya tenés una web que convierte, sumamos campañas pagas para acelerar lo que orgánicamente ya funciona.</p><span class="nea-solgo" aria-hidden="true">Ver SEO →</span></div></div>
         </div>
       </a>
+        <button class="nea-soltoggle" type="button" aria-expanded="false" aria-controls="nea-solexp-3"><span class="nea-solplus" aria-hidden="true"></span><span class="nea-solo-lectores">Ver detalle</span></button>
+      </div>
 
+      <div class="nea-solitem">
       <a href="sistemas-a-medida/" class="nea-solcard" style="--bg:url('uploads/feature-4.e0d80c43.webp');background-color:#2a2622">
         <div>
           <div style="font-size:11px;font-weight:500;letter-spacing:.18em;color:rgba(255,255,255,.7);margin-bottom:10px">#&nbsp;SISTEMAS</div>
           <h3 style="margin:0;font-size:clamp(19px,1.7vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.2">Sistemas que trabajan por vos.</h3>
-          <div class="nea-solexp"><div><p>Reservas, pedidos, cobros, recordatorios y atención por WhatsApp se automatizan y quedan registrados. Dejás de estar pendiente de cada mensaje y de cada planilla: el sistema hace la parte repetitiva y vos usás ese tiempo en lo que sí necesita tu cabeza.</p></div></div>
+          <div class="nea-solexp" id="nea-solexp-4"><div><p>Reservas, pedidos, cobros, recordatorios y atención por WhatsApp se automatizan y quedan registrados. Dejás de estar pendiente de cada mensaje y de cada planilla: el sistema hace la parte repetitiva y vos usás ese tiempo en lo que sí necesita tu cabeza.</p><span class="nea-solgo" aria-hidden="true">Ver sistemas a medida →</span></div></div>
         </div>
       </a>
+        <button class="nea-soltoggle" type="button" aria-expanded="false" aria-controls="nea-solexp-4"><span class="nea-solplus" aria-hidden="true"></span><span class="nea-solo-lectores">Ver detalle</span></button>
+      </div>
 
       </div>
 
@@ -677,5 +713,21 @@ a:hover{color:var(--lima)}
 
 </div>
 
+<!-- Bento en mobile: el "+" abre y cierra la bajada de cada card. Un solo boton
+     por card (abre y cierra), delegado, sin estado propio: la clase manda. -->
+<script>
+(() => {
+  const grid = document.getElementById('nea-solgrid');
+  if (!grid) return;
+  grid.addEventListener('click', e => {
+    const btn = e.target.closest('.nea-soltoggle');
+    if (!btn) return;
+    const item = btn.closest('.nea-solitem');
+    const open = !item.classList.contains('is-open');
+    item.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  });
+})();
+</script>
 </body>
 </html>

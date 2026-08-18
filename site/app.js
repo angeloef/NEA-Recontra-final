@@ -15,8 +15,12 @@
     'navlinksA', 'designbg'
   ].forEach(k => { el[k] = document.getElementById('nea-' + k); });
 
-  const pace = Math.max(1.8, Math.min(5, SCROLL_PACE));
-  if (el.runway) el.runway.style.height = (pace * 100) + 'vh';
+  /* En mobile no hay rueda: el mismo recorrido cuesta el triple de swipes, asi que
+     la pista del hero se acorta. Se escribe dentro de update() porque al cargar
+     innerWidth todavia no refleja el viewport real del telefono. */
+  const MOBILE_PACE = 2;
+  const paceFor = vw => Math.max(1.8, Math.min(5, vw < 1000 ? MOBILE_PACE : SCROLL_PACE));
+  let pacePrev = 0;
 
   /* El video del hero es el unico movimiento que corre sin que el usuario haga nada:
      con prefers-reduced-motion queda en el primer frame (el poster ya cubre el resto).
@@ -52,6 +56,9 @@
   function update() {
     if (!el.runway || !el.video) return;
     const vw = innerWidth, vh = innerHeight;
+
+    const pace = paceFor(vw);
+    if (pace !== pacePrev) { pacePrev = pace; el.runway.style.height = (pace * 100) + 'vh'; }
 
     const total = Math.max(1, el.runway.offsetHeight - vh);
     const p = cl(-el.runway.getBoundingClientRect().top / total, 0, 1);

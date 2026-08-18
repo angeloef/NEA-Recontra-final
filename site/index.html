@@ -154,6 +154,18 @@ a:hover{color:var(--lima)}
 .nea-solcard .nea-solexp p{margin:0;padding-top:12px;max-width:44ch;font-size:clamp(13px,.92vw,16px);line-height:1.5;color:rgba(255,255,255,.88)}
 @media (min-width:721px){.nea-solcard:hover .nea-solexp,.nea-solcard:focus-visible .nea-solexp{grid-template-rows:1fr;opacity:1}}
 .nea-solcard:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+/* Las dos cards de "Nosotros". El alto salia de aspect-ratio 890/495, que en
+   angosto da ~178px mientras el bloque de texto mide ~313: anclado abajo, se
+   salia por arriba y el overflow:hidden dejaba la card como un rectangulo plano
+   (blanco o negro) con el titulo cortado. Por debajo de 600px la caja crece con
+   el texto y la foto se ve en una banda propia arriba. */
+.nea-noscard{position:relative;aspect-ratio:890/495;border-radius:14px;overflow:hidden}
+.nea-noscard-pie{position:absolute;inset:auto 0 0 0;padding:30px}
+@media (max-width:600px){
+  .nea-noscard{aspect-ratio:auto}
+  .nea-noscard-pie{position:static;padding:24px 20px 22px}
+  .nea-noscard--foto{padding-top:min(46vw,220px)}
+}
 .nea-solitem{position:relative;display:grid}
 /* El boton "+" no puede vivir dentro del <a> (interactivo dentro de interactivo),
    asi que es hermano de la card y se posiciona sobre ella. */
@@ -656,16 +668,16 @@ a:hover{color:var(--lima)}
     <p data-ink="muted" style="margin:clamp(16px,1.6vw,28px) 0 clamp(28px,2.8vw,54px);font-size:clamp(14px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:#1c1c1c">El diagnóstico es gratuito y llega con una propuesta concreta: qué recomendamos mejorar, qué podemos construir y cuánto cuesta. Nos encargamos de asesorarte para que tomes la mejor decisión.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:20px">
 
-      <div style="position:relative;aspect-ratio:890/495;border-radius:14px;overflow:hidden;background:#e9edf3 url('uploads/nosotros-diagnostico.webp') center/cover no-repeat">
-        <div style="position:absolute;inset:auto 0 0 0;padding:30px;background:linear-gradient(rgba(248,249,251,0),rgba(248,249,251,.8) 34%,rgba(248,249,251,.97) 58%)">
+      <div class="nea-noscard nea-noscard--foto" style="background:#e9edf3 url('uploads/nosotros-diagnostico.webp') center/cover no-repeat">
+        <div class="nea-noscard-pie" style="background:linear-gradient(rgba(248,249,251,0),rgba(248,249,251,.8) 34%,rgba(248,249,251,.97) 58%)">
           <div style="font-size:clamp(24px,2.6vw,34px);line-height:1.16;font-weight:700;letter-spacing:-.02em;color:#111">Un diagnóstico antes de cualquier compromiso.</div>
           <p style="margin:14px 0 20px;font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:#2a2a2a;max-width:640px">Analizamos tu negocio y tu competencia para detectar oportunidades y definir qué vale la pena construir. Recibís el diagnóstico, los entregables y sus precios en menos de 24 horas.</p>
           <a href="#proceso" aria-label="Ver cómo trabajamos" data-ink="chip" style="width:34px;height:34px;border-radius:999px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">→</a>
         </div>
       </div>
 
-      <div style="position:relative;aspect-ratio:890/495;border-radius:14px;overflow:hidden;background:var(--plum)">
-        <div style="position:absolute;inset:auto 0 0 0;padding:30px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.62) 40%)">
+      <div class="nea-noscard" style="background:var(--plum)">
+        <div class="nea-noscard-pie" style="background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.62) 40%)">
           <div style="font-size:clamp(24px,2.6vw,34px);line-height:1.16;font-weight:700;letter-spacing:-.02em;color:#fff">Nuestro trabajo empieza por lo que ves.</div>
           <p style="margin:14px 0 20px;font-size:clamp(13.5px,1.1vw,15.5px);line-height:1.5;font-weight:500;color:rgba(255,255,255,.92);max-width:640px">Esta web es una muestra de cómo trabajamos: diseño, desarrollo y tecnología pensados como una sola pieza. El mismo criterio que aplicamos a nuestro sitio lo llevamos al de cada cliente.</p>
           <a href="#estimacion" aria-label="Ver estimación de precios" data-ink="chip" style="width:34px;height:34px;border-radius:999px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">→</a>

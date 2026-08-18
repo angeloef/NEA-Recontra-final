@@ -7,3 +7,7 @@ assets-fuente/
 # secretos y entorno local
 .env
 .venv/
+
+# Material interno: no se publica con el sitio
+site/informe/
+PRECIOS.md

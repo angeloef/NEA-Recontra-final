@@ -746,7 +746,12 @@
     const pre = document.getElementById('nea-ascii');
     if (!pre) return null;
 
-    const PALABRA = 'Construir';
+    /* En angosto la palabra va en mayusculas: con ~13 filas de alto el punto de la
+       "i" minuscula cae dentro de la misma celda que el asta y la letra se lee como
+       una barra. Las mayusculas no tienen punto ni ascendentes, asi que la misma
+       resolucion alcanza. Para separar el punto harian falta ~170 columnas, que no
+       entran en 375px. */
+    const PALABRA_ANCHA = 'Construir', PALABRA_ANGOSTA = 'CONSTRUIR';
     const GROSOR = '800', RAMPA = ' 01', INTERLINEA = .86;
     const CAMBIOS = 13, UMBRAL = .16, RUIDO_FONDO = 1, DURACION = 1000;
 
@@ -760,7 +765,7 @@
       // celdas recibe cada letra: hacen falta ~9 columnas por letra, y "Construir"
       // tiene 9. Por eso en pantallas chicas SUBEN las columnas y baja el cuerpo, en
       // vez de lo contrario. Antes había 56 columnas (5,6 por letra) y salía ruido.
-      const cols = vw >= 1440 ? 150 : vw >= 1120 ? 124 : vw >= 860 ? 104 : vw >= 700 ? 96 : 92;
+      const cols = vw >= 1440 ? 150 : vw >= 1120 ? 124 : vw >= 860 ? 104 : 116;
       /* En angosto el arte se mide contra la caja que lo contiene, no contra la ventana:
          el panel tiene padding y con vw * .94 el dibujo salia ~26px mas ancho que el
          stack, que recorta con overflow:hidden y se comia el final de la palabra. */
@@ -792,6 +797,7 @@
       const fuente = GROSOR + ' ' + alto + 'px "Plus Jakarta Sans", system-ui, sans-serif';
       ctx.font = fuente;
 
+      const PALABRA = innerWidth < 860 ? PALABRA_ANGOSTA : PALABRA_ANCHA;
       const med = ctx.measureText(PALABRA);
       const aTxt = Math.max(1, Math.ceil(med.width));
       const asc = med.actualBoundingBoxAscent || alto * .75;

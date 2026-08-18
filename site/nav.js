@@ -167,3 +167,17 @@
   // el scroll o la pagina queda trabada.
   addEventListener('resize', () => { if (abierto && innerWidth >= 1000) cerrar(); });
 })();
+
+/* ====================================================== Pull-to-refresh
+   El gesto de recargar tiene que existir, pero solo donde se espera: arriba
+   de todo. Mas abajo el mismo movimiento es "cerrar esta hoja" (la card del
+   estimador, la estimacion, el menu), y ahi Chrome recargaba la pagina en vez
+   de dejar pasar el gesto. La clase la lee menu.css. */
+(() => {
+  'use strict';
+  const raiz = document.documentElement;
+  const marcar = () => raiz.classList.toggle('nea-top', scrollY <= 0);
+  addEventListener('scroll', marcar, { passive: true });
+  addEventListener('resize', marcar, { passive: true });
+  marcar();
+})();

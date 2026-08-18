@@ -11,11 +11,15 @@
 html{-webkit-tap-highlight-color:transparent}
 
 /* Pull-to-refresh: Chrome en Android recarga la pagina si el dedo baja cuando
-   ya no queda scroll, y eso se comia los gestos de cerrar hojas del estimador.
-   Con contain el sobre-scroll no sale del documento; el scroll normal y el
-   rebote de iOS siguen igual. Va en html y body porque el propagado al
+   ya no queda scroll, y mas abajo ese mismo movimiento es "cerrar esta hoja"
+   (la card del estimador, la estimacion, el menu). Por defecto se contiene, y
+   se devuelve solo arriba de todo, que es donde la gente lo busca. La clase
+   .nea-top la escribe nav.js; nunca con una hoja abierta, que son las que
+   bloquean el scroll de fondo. Va en html y body porque el propagado al
    viewport sale del primero de los dos que lo declare. */
 html,body{overscroll-behavior-y:contain}
+html.nea-top:not(.nea-locked):not(.nea-menulock),
+html.nea-top:not(.nea-locked):not(.nea-menulock) body{overscroll-behavior-y:auto}
 @media (hover:none){
   button,summary,[role="button"],.nea-pick,.nea-add,.nea-planopt{-webkit-user-select:none;user-select:none}
 }

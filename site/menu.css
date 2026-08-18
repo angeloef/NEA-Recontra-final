@@ -1,3 +1,18 @@
+/* ================================================ Base tactil (todo el sitio)
+   Vive en este archivo porque es el unico que cargan las diez paginas.
+
+   Android y iOS pintan un recuadro azul sobre cualquier cosa que se toque, y
+   en un sitio oscuro con acentos lima ese destello se lee como un error de
+   render. Se apaga en la raiz, que hereda a todo.
+
+   El user-select solo en controles: un doble tap sobre un boton seleccionaba
+   su texto y dejaba el resaltado azul pegado. Los parrafos siguen siendo
+   seleccionables, que es lo que la gente si quiere copiar. */
+html{-webkit-tap-highlight-color:transparent}
+@media (hover:none){
+  button,summary,[role="button"],.nea-pick,.nea-add,.nea-planopt{-webkit-user-select:none;user-select:none}
+}
+
 /* ============================================================ Menu mobile
    Una sola barra para las diez paginas: abajo de 1000px la tira de links se
    apaga y queda logo + hamburguesa. El panel y el boton los arma menu.js

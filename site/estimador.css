@@ -40,7 +40,8 @@
 
 /* Card reducida: sin precio. El gancho es el nombre + la linea de "para vos si" */
 .nea-pick{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.04);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s,transform .18s}
-.nea-pick:hover{border-color:rgba(199,255,74,.6);transform:translateY(-2px)}
+@media (hover:hover){.nea-pick:hover{border-color:rgba(199,255,74,.6);transform:translateY(-2px)}}
+.nea-pick:active{transform:scale(.985)}
 .nea-pick:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
 .nea-pick.is-on{border-color:#C7FF4A;background:rgba(199,255,74,.10)}
 .nea-pick .nea-dot{flex:none;width:18px;height:18px;margin-top:3px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;transition:border-color .18s}
@@ -106,8 +107,9 @@
 .nea-more [data-morecount]{color:#C7FF4A}
 
 /* Add-ons: mismo lenguaje que las opciones, pero cuadrado (multiple) y mas compacto */
-.nea-add{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:13px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s}
-.nea-add:hover{border-color:rgba(199,255,74,.5)}
+.nea-add{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:13px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s,transform .14s}
+@media (hover:hover){.nea-add:hover{border-color:rgba(199,255,74,.5)}}
+.nea-add:active{transform:scale(.99)}
 .nea-add:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
 .nea-add.is-on{border-color:#C7FF4A;background:rgba(199,255,74,.09)}
 .nea-add .nea-box{flex:none;width:18px;height:18px;border-radius:5px;border:1px solid rgba(255,255,255,.42);display:flex;align-items:center;justify-content:center;transition:border-color .18s,background .18s}
@@ -127,15 +129,18 @@
 .nea-sum{border-radius:16px;padding:clamp(22px,2vw,30px);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);position:sticky;top:var(--nea-top,88px)}
 .nea-sumline{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:13px;color:rgba(255,255,255,.6);padding:5px 0}
 .nea-sumline b{font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap}
-.nea-cta{margin-top:22px;width:100%;height:52px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:0 24px;border:0;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:opacity .18s}
-.nea-cta:hover{opacity:.88}
+.nea-cta{margin-top:22px;width:100%;height:52px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:0 24px;border:0;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:transform .14s,opacity .18s}
+@media (hover:hover){.nea-cta:hover{opacity:.88}}
+.nea-cta:active{transform:scale(.99)}
 .nea-cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
 /* Selector de años de soporte prepago */
 .nea-plan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px;padding:4px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
-.nea-planopt{padding:9px 4px;border:0;border-radius:9px;background:none;color:rgba(255,255,255,.6);font:inherit;font-size:12.5px;font-weight:600;line-height:1.25;cursor:pointer;transition:background .18s,color .18s}
+/* transform en la transicion: el :active da el acuse tactil */
+.nea-planopt{padding:9px 4px;border:0;border-radius:9px;background:none;color:rgba(255,255,255,.6);font:inherit;font-size:12.5px;font-weight:600;line-height:1.25;cursor:pointer;transition:background .18s,color .18s,transform .14s}
 .nea-planopt b{display:block;font-size:11px;font-weight:700;color:#C7FF4A;opacity:.75}
-.nea-planopt:hover{color:#fff}
+@media (hover:hover){.nea-planopt:hover{color:#fff}}
+.nea-planopt:active{transform:scale(.96)}
 .nea-planopt:focus-visible{outline:2px solid #C7FF4A;outline-offset:1px}
 .nea-planopt.is-on{background:#C7FF4A;color:#0A0A0A}
 .nea-planopt.is-on b{color:#0A0A0A;opacity:.6}
@@ -191,10 +196,20 @@
   /* top:auto es obligatorio: sin el, hereda el top:88px del sticky y la
      barra se estira de arriba a abajo tapando la pantalla entera. */
   .nea-est.is-open .nea-sum{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:101;border-radius:0;border:0;border-top:1px solid rgba(255,255,255,.16);background:rgba(14,14,14,.94);backdrop-filter:blur(10px);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
-  .nea-est.is-open .nea-sum .nea-sumfull{display:none}
-  /* Desplegado: el detalle completo entra arriba del CTA, con scroll propio
-     para que nunca empuje al boton fuera de la pantalla. */
-  .nea-est.is-open .nea-sum.is-detail .nea-sumfull{display:block;max-height:52vh;overflow-y:auto;overscroll-behavior:contain;margin-top:2px}
+  /* El detalle no aparece de golpe: se despliega desde la barra. Va con
+     max-height y no con display porque un display:none no se puede animar, y
+     con visibility para que plegado no reciba foco ni lectores.
+     52vh es el tope abierto; el contenido siempre es mas alto, asi que la
+     curva se ve pareja de punta a punta. */
+  .nea-est.is-open .nea-sum .nea-sumfull{
+    display:block;max-height:0;opacity:0;visibility:hidden;overflow:hidden;
+    transition:max-height .4s cubic-bezier(.22,1,.36,1),opacity .22s ease,visibility 0s linear .4s;
+  }
+  .nea-est.is-open .nea-sum.is-detail .nea-sumfull{
+    max-height:52vh;opacity:1;visibility:visible;margin-top:2px;
+    overflow-y:auto;overscroll-behavior:contain;
+    transition:max-height .42s cubic-bezier(.22,1,.36,1),opacity .28s ease .06s,visibility 0s;
+  }
   .nea-est.is-open .nea-sum .nea-cta{margin-top:10px;height:48px}
   .nea-est.is-open .nea-sum.is-detail .nea-sumbar .nea-sumchev{transform:rotate(180deg)}
   /* Objetivos tactiles: la cruz de cerrar y el "ver mas opciones" quedaban en
@@ -217,4 +232,43 @@
 @media (prefers-reduced-motion:no-preference){
   ::view-transition-old(neacard),::view-transition-new(neacard){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
   ::view-transition-group(neacard){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+}
+
+
+/* ==================================================== Acuses de la interfaz
+   El estimador cambia numeros sin mover nada, y en telefono eso se lee como
+   que no paso nada. Estos tres detalles son el acuse: el numero pulsa cuando
+   cambia, el tick del extra entra con un pop, y la barra de soporte se hace
+   notar la primera vez que hay algo que revisar ahi adentro. */
+
+@keyframes neaBump{0%{transform:scale(1)}38%{transform:scale(1.045)}100%{transform:scale(1)}}
+.nea-bump{animation:neaBump .34s cubic-bezier(.22,1,.36,1);transform-origin:left center}
+
+@keyframes neaPop{0%{transform:scale(.4)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.nea-add.is-on .nea-tick{animation:neaPop .26s cubic-bezier(.22,1,.36,1)}
+
+/* Una sola pasada, cuando aparece el plan de soporte: no es un loop que
+   parpadea toda la sesion. La clase la saca el JS al primer despliegue. */
+@keyframes neaNudge{
+  0%,100%{box-shadow:0 0 0 0 rgba(199,255,74,0)}
+  35%{box-shadow:0 0 0 3px rgba(199,255,74,.28)}
+}
+.nea-sum.is-nudge #nea-mesblock{border-radius:12px;animation:neaNudge 1.5s ease-in-out 2}
+
+/* La barra de mobile es el unico acceso al plan de soporte: cuando hay algo
+   que revisar, lo dice con todas las letras y late una vez. */
+.nea-sumhint{display:none}
+@media (max-width:900px){
+  .nea-est.is-open .nea-sumhint{
+    display:block;margin-top:1px;font-size:11.5px;font-weight:500;
+    color:rgba(199,255,74,.85);text-align:left;
+  }
+  .nea-est.is-open .nea-sum.is-detail .nea-sumhint{color:rgba(255,255,255,.45)}
+  .nea-est.is-open .nea-sum.is-nudge .nea-sumbar{animation:neaNudge 1.5s ease-in-out 2;border-radius:10px}
+  .nea-sumbar:active{transform:scale(.995)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .nea-bump,.nea-add.is-on .nea-tick,.nea-sum.is-nudge #nea-mesblock,
+  .nea-est.is-open .nea-sum.is-nudge .nea-sumbar{animation:none}
 }

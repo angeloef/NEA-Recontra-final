@@ -338,8 +338,11 @@
              Es un boton porque despliega el detalle completo: sin eso, en mobile
              el selector de años de soporte y los descuentos no existian. -->
         <button type="button" class="nea-sumbar" id="nea-sumbar" aria-expanded="false" aria-controls="nea-sumfull">
-          <span id="nea-barlabel" style="font-size:13px;color:rgba(255,255,255,.6)">Elegí una opción</span>
-          <span id="nea-barmes" style="font-size:12.5px;font-weight:600;color:#C7FF4A"></span>
+          <span style="display:flex;flex-direction:column;min-width:0">
+            <span id="nea-barlabel" style="font-size:14px;font-weight:600;color:#FFFFFF">Elegí una opción</span>
+            <span class="nea-sumhint" id="nea-barhint"></span>
+          </span>
+          <span id="nea-barmes" style="font-size:12.5px;font-weight:600;color:#C7FF4A;text-align:right"></span>
           <span class="nea-sumchev" aria-hidden="true">⌃</span>
         </button>
 

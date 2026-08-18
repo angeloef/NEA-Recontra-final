@@ -986,6 +986,31 @@
     const dlg = document.getElementById('nea-dlg');
     if (!picks.length || !totalNode) return;
 
+    const barHint = document.getElementById('nea-barhint');
+
+    // Escribir un numero sin mover nada se lee como que no paso nada, sobre
+    // todo en telefono donde no hay hover ni cursor. Cuando el texto cambia de
+    // verdad, el nodo pulsa una vez.
+    function setText(node, txt) {
+      if (!node || node.textContent === txt) return;
+      node.textContent = txt;
+      if (quiet.matches) return;
+      node.classList.remove('nea-bump');
+      void node.offsetWidth;   // reinicia la animacion si el cambio es seguido
+      node.classList.add('nea-bump');
+    }
+
+    // El plan de soporte es lo unico que el usuario tiene que decidir despues
+    // de elegir producto, y en mobile vive detras de la barra. La primera vez
+    // que hay algo que revisar ahi, la barra lo dice y late; despues de abrirla
+    // una vez no vuelve a insistir.
+    let nudged = false, nudgeVisto = false;
+    function nudge(on) {
+      if (!sumbox) return;
+      if (on && !nudgeVisto && !nudged) { sumbox.classList.add('is-nudge'); nudged = true; }
+      if (!on && nudged) { sumbox.classList.remove('is-nudge'); nudged = false; }
+    }
+
     const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
     const weeks = base => (base < 900 ? '2 a 3' : base < 2000 ? '3 a 5' : '5 a 8');
     const quiet = matchMedia('(prefers-reduced-motion: reduce)');
@@ -1106,6 +1131,8 @@
         ahorroNode.style.display = 'none';
         barLabel.textContent = 'Elegí una opción';
         barMes.textContent = '';
+        if (barHint) barHint.textContent = '';
+        nudge(false);
         cta.textContent = 'Enviar por WhatsApp';
         return;
       }
@@ -1117,11 +1144,13 @@
         noteNode.textContent = 'Los sistemas se presupuestan después de entender tu proceso. Contanos qué necesitás resolver y te mandamos una propuesta con alcance y precio.';
         detailNode.style.display = 'none';
         mesBlock.style.display = 'none';
-        barLabel.textContent = 'Sistemas a medida';
+        setText(barLabel, 'Sistemas a medida');
         barMes.textContent = 'A cotizar';
+        if (barHint) barHint.textContent = 'Tocá para ver el detalle';
+        nudge(false);
       } else {
         totalLabel.textContent = 'PAGO ÚNICO';
-        totalNode.textContent = 'Desde ' + fmt(s.total);
+        setText(totalNode, 'Desde ' + fmt(s.total));
         noteNode.textContent = 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' + weeks(s.base) + ' semanas.';
         detailNode.textContent = '';
         detailNode.style.display = '';
@@ -1137,15 +1166,21 @@
           ahorroNode.textContent = 'Te ahorrás ' + fmt(s.ahorro) + ' el primer año';
         } else {
           mesLabel.textContent = (s.aniosPagos === 1 ? 'Año 2' : 'Años 2 a ' + s.anios) + ', pago adelantado';
-          mesNode.textContent = fmt(s.soporte);
+          setText(mesNode, fmt(s.soporte));
           ahorroNode.style.display = '';
           ahorroNode.textContent = 'Ahorrás ' + fmt(s.ahorro) + ' · te queda en ' +
             fmt(s.soporte / (s.anios * MESES_POR_AÑO)) + ' por mes';
         }
-        barLabel.textContent = 'Desde ' + fmt(s.total);
+        setText(barLabel, 'Desde ' + fmt(s.total));
         barMes.textContent = s.aniosPagos === 0
-          ? 'Soporte 1er año incluido'
-          : '+ ' + fmt(s.soporte) + ' soporte';
+          ? '1er año incluido'
+          : '+ ' + fmt(s.soporte);
+        if (barHint) {
+          barHint.textContent = sumbox && sumbox.classList.contains('is-detail')
+            ? 'Tocá para ocultar el detalle'
+            : 'Soporte y descuentos · tocá para revisar';
+        }
+        nudge(true);
       }
       cta.textContent = s.isQuote ? 'Contarnos tu caso' : 'Enviar por WhatsApp';
     }
@@ -1216,6 +1251,14 @@
       sumbar.addEventListener('click', () => {
         const abierto = sumbox.classList.toggle('is-detail');
         sumbar.setAttribute('aria-expanded', String(abierto));
+        // ya lo vio: el aviso no vuelve en toda la sesion
+        nudgeVisto = true;
+        nudge(false);
+        if (barHint) {
+          barHint.textContent = abierto
+            ? 'Tocá para ocultar el detalle'
+            : 'Soporte y descuentos · tocá para revisar';
+        }
       });
     }
 

@@ -130,25 +130,29 @@ a:hover{color:var(--lima)}
    se corre a 1/3. La version vieja lo hacia con JS cambiando col-md-8/col-md-4;
    con :has() sale en dos reglas y las fr interpolan solas. */
 .nea-solrow{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.1vw,20px);transition:grid-template-columns .6s cubic-bezier(.25,1,.5,1)}
-.nea-solrow:has(> :first-child a:hover),.nea-solrow:has(> :first-child a:focus-visible){grid-template-columns:2fr 1fr}
-.nea-solrow:has(> :last-child a:hover),.nea-solrow:has(> :last-child a:focus-visible){grid-template-columns:1fr 2fr}
+/* Solo desktop: en tactil el hover queda pegado despues del tap y estas reglas,
+   que ganan por especificidad, rompian la pila vertical. */
+@media (min-width:721px){
+  .nea-solrow:has(> :first-child a:hover),.nea-solrow:has(> :first-child a:focus-visible){grid-template-columns:2fr 1fr}
+  .nea-solrow:has(> :last-child a:hover),.nea-solrow:has(> :last-child a:focus-visible){grid-template-columns:1fr 2fr}
+}
 /* La card se mide contra el alto de ventana tambien: dos filas + titulo tienen
    que entrar en una pantalla, que es lo que la version anterior no lograba. */
 .nea-solcard{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:min(clamp(264px,27.5vw,480px),34vh);border-radius:14px;overflow:hidden;background:#2a2622;color:#fff;text-decoration:none;transition:box-shadow .4s cubic-bezier(.33,1,.68,1)}
 .nea-solcard:hover{box-shadow:0 20px 60px rgba(0,0,0,.15);color:#fff}
 .nea-solcard::before{content:"";position:absolute;inset:0;background:var(--bg) center/cover no-repeat;transition:transform 1s cubic-bezier(.25,1,.5,1)}
-.nea-solcard:hover::before,.nea-solcard:focus-visible::before{transform:scale(1.04)}
+@media (min-width:721px){.nea-solcard:hover::before,.nea-solcard:focus-visible::before{transform:scale(1.04)}}
 /* El velo se refuerza al abrir: la bajada cae sobre zonas claras de la foto
    (el bento de Little Riot es casi blanco) y sin esto no hay contraste AA. */
 .nea-solcard::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0,rgba(0,0,0,.3) 55%,rgba(0,0,0,0) 100%);transition:background .5s cubic-bezier(.25,1,.5,1)}
-.nea-solcard:hover::after,.nea-solcard:focus-visible::after{background:linear-gradient(to top,rgba(0,0,0,.94) 0,rgba(0,0,0,.72) 45%,rgba(0,0,0,.15) 100%)}
+@media (min-width:721px){.nea-solcard:hover::after,.nea-solcard:focus-visible::after{background:linear-gradient(to top,rgba(0,0,0,.94) 0,rgba(0,0,0,.72) 45%,rgba(0,0,0,.15) 100%)}}
 .nea-solcard > div{position:relative;z-index:1;padding:clamp(18px,1.8vw,34px);padding-right:clamp(18px,6vw,120px)}
 /* grid-template-rows 0fr->1fr en vez de max-height: la altura la resuelve el
    grid, no hay que adivinar un tope ni se anima una propiedad de layout suelta. */
 .nea-solcard .nea-solexp{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .5s cubic-bezier(.25,1,.5,1),opacity .5s cubic-bezier(.25,1,.5,1) .1s}
 .nea-solcard .nea-solexp > div{overflow:hidden;min-height:0}
 .nea-solcard .nea-solexp p{margin:0;padding-top:12px;max-width:44ch;font-size:clamp(13px,.92vw,16px);line-height:1.5;color:rgba(255,255,255,.88)}
-.nea-solcard:hover .nea-solexp,.nea-solcard:focus-visible .nea-solexp{grid-template-rows:1fr;opacity:1}
+@media (min-width:721px){.nea-solcard:hover .nea-solexp,.nea-solcard:focus-visible .nea-solexp{grid-template-rows:1fr;opacity:1}}
 .nea-solcard:focus-visible{outline:2px solid #fff;outline-offset:-4px}
 .nea-solitem{position:relative;display:grid}
 /* El boton "+" no puede vivir dentro del <a> (interactivo dentro de interactivo),

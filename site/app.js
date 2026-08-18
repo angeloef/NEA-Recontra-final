@@ -1253,7 +1253,27 @@
       });
     });
 
+    /* La card a pantalla completa es una hoja mas: deslizarla hacia abajo la
+       cierra, igual que la estimacion. La X sigue estando, pero en telefono
+       nadie la busca primero. Mismo criterio que alla: solo cuenta si la card
+       ya esta arriba de todo en su scroll, si no cerraria mientras se lee. */
+    const hoja = matchMedia('(max-width:900px)');
+
     panels.forEach(p => {
+      let y0 = 0, x0 = 0, arriba = true;
+      p.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        y0 = t.clientY; x0 = t.clientX;
+        arriba = p.scrollTop <= 0;
+      }, { passive: true });
+      p.addEventListener('touchend', e => {
+        if (!hoja.matches || !arriba) return;
+        const t = e.changedTouches[0];
+        const dy = t.clientY - y0;
+        if (dy < 72 || Math.abs(t.clientX - x0) > dy) return;
+        closePanel();
+      }, { passive: true });
+
       p.querySelectorAll('[data-close]').forEach(x => x.addEventListener('click', closePanel));
       // La X no descarta nada: los extras marcados quedan en el DOM del panel.
       p.querySelectorAll('[data-add]').forEach(b => {

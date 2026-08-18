@@ -161,7 +161,31 @@
   }
 
   burger.addEventListener('click', () => { if (abierto) { cerrar(); burger.focus(); } else abrir(); });
-  panel.addEventListener('click', e => { if (e.target.closest('a')) cerrar(); });
+
+  /* Escapes naturales del panel, ademas de la X y de Escape:
+     - tocar el vacio: es una hoja, el aire alrededor de los links cierra
+     - deslizar hacia arriba: bajo desde arriba, se va por donde vino
+     El swipe solo cuenta si la lista entra entera en pantalla; si tiene scroll
+     propio, ese mismo movimiento es leer el resto del menu. */
+  panel.addEventListener('click', e => {
+    if (e.target.closest('a')) { cerrar(); return; }
+    if (e.target === panel) { cerrar(); burger.focus(); }
+  });
+
+  let y0 = 0, x0 = 0, cabeEntera = true;
+  panel.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    y0 = t.clientY; x0 = t.clientX;
+    cabeEntera = panel.scrollHeight <= panel.clientHeight + 2;
+  }, { passive: true });
+  panel.addEventListener('touchend', e => {
+    if (!abierto || !cabeEntera) return;
+    const t = e.changedTouches[0];
+    const dy = y0 - t.clientY;
+    if (dy < 56 || Math.abs(t.clientX - x0) > dy) return;
+    cerrar();
+    burger.focus();
+  }, { passive: true });
   addEventListener('keydown', e => { if (e.key === 'Escape' && abierto) { cerrar(); burger.focus(); } });
   // Al pasar a escritorio el panel deja de existir visualmente: hay que soltar
   // el scroll o la pagina queda trabada.

@@ -87,7 +87,11 @@
     el.hero.style.opacity = String(1 - cl(rawC / .34, 0, 1));
 
     // video: framed strip -> full bleed -> floating card
-    const k0 = { l: 8, r: 8, t: frameH, b: 0, rad: 24 };
+    // Arranca pegado a los bordes: los 8 px de aire a cada lado dejaban ver dos
+    // franjas del fondo claro a los costados del video, que se leian como un
+    // borde mal cortado. Full bleed desde el primer frame; el redondeo de arriba
+    // sigue porque ahi el video nace debajo de la barra blanca.
+    const k0 = { l: 0, r: 0, t: frameH, b: 0, rad: 24 };
     const k1 = { l: 0, r: 0, t: 0, b: 0, rad: 0 };
     const k2 = narrow
       ? { l: vw * .1, r: vw * .1, t: vh * .58, b: vh * .1, rad: 12 }

@@ -161,17 +161,17 @@ a:hover{color:var(--lima)}
    el texto y la foto se ve en una banda propia arriba. */
 .nea-noscard{position:relative;aspect-ratio:890/495;border-radius:14px;overflow:hidden}
 .nea-noscard-pie{position:absolute;inset:auto 0 0 0;padding:30px}
-.nea-noscard-pie p{margin:14px 0 20px}
+/* La flecha va anclada a la esquina inferior de la card, no al final del bloque
+   de texto: ahi se comia una linea entera y empujaba el parrafo lejos del borde.
+   El parrafo le reserva el hueco para que ninguna linea le pase por debajo. */
+.nea-noscard-pie p{margin:14px 0 0;padding-right:52px}
+.nea-noscard-pie a{position:absolute;right:30px;bottom:30px;z-index:1}
 @media (max-width:600px){
   .nea-noscard{aspect-ratio:auto}
   .nea-noscard-pie{position:static;padding:24px 20px 22px}
   .nea-noscard--foto{padding-top:min(46vw,220px)}
-  /* La flecha se comia una linea entera al final y empujaba el texto lejos del
-     borde. Va a la esquina inferior, sobre la parte opaca del degradado: arriba
-     se montaba sobre el titulo en la card sin foto. El parrafo le deja el hueco
-     para que ninguna linea le pase por debajo. */
-  .nea-noscard-pie p{margin:12px 0 0;padding-right:52px}
-  .nea-noscard-pie a{position:absolute;right:18px;bottom:18px;z-index:1}
+  .nea-noscard-pie p{margin:12px 0 0}
+  .nea-noscard-pie a{right:18px;bottom:18px}
 }
 .nea-solitem{position:relative;display:grid}
 /* El boton "+" no puede vivir dentro del <a> (interactivo dentro de interactivo),

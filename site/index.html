@@ -190,8 +190,16 @@ a:hover{color:var(--lima)}
    despliega la bajada. El tap en la card sigue yendo a la subpagina. */
 @media (max-width:720px){
   .nea-solrow{grid-template-columns:1fr}
-  .nea-solcard{min-height:0}
-  .nea-solcard > div{padding:18px;padding-right:72px}
+  /* La card apilada tiene que seguir siendo una imagen, no una banda con un
+     titulo encima: con min-height:0 median 82-105 px y de la foto no se leia
+     nada. 62vw las deja en ~242 px a 390, que entra tres y media en pantalla:
+     alcanza para ver que son cuatro sin que ninguna quede partida al medio.
+     El min() es para telefono acostado, donde 62vw se comeria el alto entero. */
+  .nea-solcard{min-height:min(clamp(220px,62vw,300px),46vh)}
+  .nea-solcard > div{padding:20px;padding-right:72px}
+  /* 10 px de aire entre cards de 100 px pasaban desapercibidos; a este tamaño
+     hacen falta para que se lean como cuatro piezas y no como una tira. */
+  #nea-solgrid,.nea-solrow{gap:14px}
   .nea-solcard .nea-solexp{grid-template-rows:0fr;opacity:0}
   .nea-solitem.is-open .nea-solexp{grid-template-rows:1fr;opacity:1}
   .nea-solitem.is-open .nea-solcard::after{background:linear-gradient(to top,rgba(0,0,0,.94) 0,rgba(0,0,0,.72) 45%,rgba(0,0,0,.15) 100%)}

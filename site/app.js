@@ -1306,5 +1306,27 @@
   ascii = initAscii();
   update();
   playVideo();
-  initEstimator();
+  /* El markup del estimador vive en estimador.html y lo comparten la home y
+     /precios/. Si hay punto de montaje lo traemos y recien ahi lo inicializamos;
+     si el fetch falla, el resto de la pagina sigue funcionando igual. */
+  const estMount = document.getElementById('nea-estmount');
+  if (estMount) {
+    fetch(estMount.dataset.src)
+      .then(r => r.ok ? r.text() : Promise.reject(r.status))
+      .then(html => {
+        const tpl = document.createElement('template');
+        tpl.innerHTML = html.trim();
+        const sec = tpl.content.querySelector('#estimacion');
+        if (!sec) return;
+        if (estMount.dataset.class) sec.classList.add(estMount.dataset.class);
+        estMount.replaceWith(sec);
+        initEstimator();
+        // Si entraste directo con #estimacion, el ancla existia antes que el
+        // bloque: el navegador ya no lo va a buscar solo.
+        if (location.hash === '#estimacion') sec.scrollIntoView();
+      })
+      .catch(() => {});
+  } else {
+    initEstimator();
+  }
 })();

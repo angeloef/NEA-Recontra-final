@@ -217,20 +217,6 @@ a:hover{color:var(--lima)}
 [data-ink]{transition:color .12s linear,background-color .12s linear,border-top-color .12s linear}
 @keyframes neaCaret{0%,48%{opacity:1}49%,100%{opacity:0}}
 
-/* Cabecera de "Armá tu presupuesto": título a la izquierda y CTA a la derecha.
-   Abajo de 720px se apila, si no el botón se queda con el ancho y el título
-   queda comprimido en unos pocos píxeles. */
-.nea-presu-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
-@media (max-width:720px){
-  .nea-presu-head{grid-template-columns:minmax(0,1fr);align-items:start;gap:22px}
-  /* Al apilarse, el botón es un grid item y se estiraba a todo el ancho: queda
-     desproporcionado. Se ancla a la izquierda y sólo crece si el texto lo pide. */
-  .nea-presu-cta{justify-self:start;width:auto}
-}
-@media (max-width:380px){
-  .nea-presu-cta{padding:0 20px;font-size:15px}
-}
-
 /* "Construir" se dibuja con caracteres. El texto real queda en el DOM para Google
    y los lectores de pantalla; el arte va aparte, marcado como decorativo. */
 .nea-solo-lectores{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
@@ -251,6 +237,7 @@ a:hover{color:var(--lima)}
 }
 </style>
 
+<link rel="stylesheet" href="./estimador.css">
 <script src="./app.js" defer></script>
 <script>document.documentElement.className='js'</script>
 </head>
@@ -339,7 +326,7 @@ a:hover{color:var(--lima)}
         <p style="margin:clamp(14px,1.6vh,22px) 0 0;max-width:56ch;font-size:clamp(15px,1.15vw,18px);line-height:1.55;font-weight:400;color:rgba(255,255,255,.82);text-wrap:pretty">Diseñamos páginas web, marcas y productos digitales. Construimos sistemas personalizados para hacerlos funcionar.</p>
         <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:clamp(20px,2.6vh,28px)">
           <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;background:var(--lima);color:var(--ink);font-size:16px;font-weight:600;white-space:nowrap">Pedí tu diagnóstico gratis</a>
-          <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20coordinar%20una%20llamada%20de%2015%20minutos" id="nea-cta2" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;border:1px solid rgba(255,255,255,.45);color:var(--paper);font-size:16px;font-weight:500;white-space:nowrap">Hablemos 15 minutos</a>
+          <a href="#estimacion" id="nea-cta2" style="height:52px;display:flex;align-items:center;padding:0 28px;border-radius:999px;border:1px solid rgba(255,255,255,.45);color:var(--paper);font-size:16px;font-weight:500;white-space:nowrap">Armá tu presupuesto</a>
         </div>
       </div>
 
@@ -700,22 +687,9 @@ a:hover{color:var(--lima)}
     </div>
   </section>
 
-  <!-- El estimador se mudo a /precios/: alli la intencion ya esta declarada, y
-       aterrizar en el desde otra pagina no cae en medio de los rigs de scroll
-       de la home. Aca queda la invitacion. -->
-  <!-- Fondo propio, no heredado del body que pinta app.js: de "Galeria" en adelante el
-       fondo ya es negro fijo, asi que declararlo aca no cambia nada visualmente y saca
-       a las dos ultimas secciones de la dependencia del JS. -->
-  <section id="estimacion" style="background:var(--ink);color:var(--paper-2);padding:clamp(52px,5vw,96px) clamp(20px,2.5vw,48px) clamp(56px,5.2vw,100px)">
-    <div style="border-top:1px solid rgba(255,255,255,.24);margin-bottom:clamp(26px,2.6vw,50px)"></div>
-    <div class="nea-presu-head" style="gap:clamp(24px,3vw,56px)">
-      <div>
-        <h2 style="margin:0;font-size:clamp(30px,4vw,54px);line-height:1.06;font-weight:700;letter-spacing:-.03em;color:var(--paper);text-wrap:pretty">Armá tu presupuesto</h2>
-        <p style="margin:clamp(14px,1.4vw,22px) 0 0;max-width:62ch;font-size:clamp(14px,1.1vw,16px);line-height:1.55;color:rgba(255,255,255,.66);text-wrap:pretty">Elegí lo que necesitás, sumale los extras y mirá una estimación al instante. Es orientativo: el número final lo cerramos en la reunión. <b style="font-weight:600;color:var(--lima)">El primer año de soporte va incluido en todos.</b></p>
-      </div>
-      <a class="nea-presu-cta" href="precios/#estimacion" style="height:52px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:0 26px;border-radius:999px;background:var(--lima);color:var(--ink);font-size:16px;font-weight:600;white-space:nowrap">Armá tu presupuesto<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex:none"><path d="M4 12h14M13 6.5 18.5 12 13 17.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-    </div>
-  </section>
+  <!-- El estimador es compartido con /precios/: markup en /estimador.html,
+       estilos en /estimador.css, logica en app.js. Se inyecta al cargar. -->
+  <div id="nea-estmount" data-src="./estimador.html"></div>
 
   </main>
 

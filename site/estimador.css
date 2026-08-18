@@ -1,0 +1,220 @@
+/* ============================================================== Estimador
+   Bloque compartido: lo cargan la home y /precios/ desde estimador.html.
+   El sticky se despega bajo la barra fija (88px en ambas); si alguna pagina
+   tiene otra altura, define --nea-top y listo.
+
+   Estado 0: dos columnas (lista + estimacion). Al elegir un producto la
+   lista se angosta y nace la columna del medio con la card expandida.
+   La expansion se anima con la View Transitions API: sin dependencias, y
+   donde no existe simplemente aparece sin morph. */
+
+/* La seccion trae fondo propio: en la home el negro lo pintaba el sistema de
+   tinta por scroll de app.js, y en /precios/ no existe. */
+.nea-estsec{background:#0A0A0A;color:#F5F4F0;padding:clamp(52px,5vw,96px) clamp(20px,2.5vw,48px) clamp(56px,5.2vw,100px)}
+/* En /precios/ el bloque va como card despegada del papel; en la home es a sangre. */
+.nea-estsec--card{border-radius:20px;margin:0 clamp(20px,2.9vw,56px)}
+
+/* Tope de ancho: a 1920 sin esto las cards miden 700px para una linea de texto
+   y la card expandida se vuelve tan alta que no entra en pantalla. */
+.nea-esthead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);gap:clamp(24px,3vw,56px);align-items:end;max-width:1400px}
+.nea-est{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:clamp(18px,2.2vw,40px);align-items:start;max-width:1400px}
+/* Tres columnas solo con ancho de sobra: por debajo, la del medio ahoga al
+   video vertical y al texto que va a su lado. */
+@media (min-width:1361px){
+  .nea-est.is-open{grid-template-columns:270px minmax(0,1fr) 340px}
+}
+/* Entre 901 y 1360: dos columnas, y la card expandida cae debajo de la lista */
+@media (min-width:901px) and (max-width:1360px){
+  .nea-est.is-open{grid-template-columns:minmax(0,1fr) 340px}
+  .nea-est.is-open > :first-child{grid-column:1;grid-row:1}
+  .nea-est.is-open > #nea-panels{grid-column:1;grid-row:2}
+  .nea-est.is-open > .nea-sum{grid-column:2;grid-row:1 / span 2}
+}
+
+/* En el estado 0 el contenedor de paneles esta vacio, pero si sigue en el grid
+   se come la segunda celda y tira la estimacion a la fila de abajo. */
+.nea-est:not(.is-open) > #nea-panels{display:none}
+
+.nea-picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.nea-est.is-open .nea-picks{grid-template-columns:minmax(0,1fr);gap:10px}
+
+/* Card reducida: sin precio. El gancho es el nombre + la linea de "para vos si" */
+.nea-pick{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.04);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s,transform .18s}
+.nea-pick:hover{border-color:rgba(199,255,74,.6);transform:translateY(-2px)}
+.nea-pick:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
+.nea-pick.is-on{border-color:#C7FF4A;background:rgba(199,255,74,.10)}
+.nea-pick .nea-dot{flex:none;width:18px;height:18px;margin-top:3px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;transition:border-color .18s}
+.nea-pick.is-on .nea-dot{border-color:#C7FF4A}
+.nea-pick .nea-fill{width:9px;height:9px;border-radius:999px;background:#C7FF4A;opacity:0;transition:opacity .18s}
+.nea-pick.is-on .nea-fill{opacity:1}
+.nea-pick .nea-pickname{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.nea-pick .nea-pickdesc{font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.62);text-wrap:pretty}
+.nea-est.is-open .nea-pick{padding:14px 16px}
+.nea-est.is-open .nea-pick .nea-pickdesc{display:none}
+/* Marca discreta: este producto ya lo armaste antes */
+.nea-pick .nea-mark{margin-left:auto;padding-left:10px;font-size:11px;font-weight:600;letter-spacing:.12em;color:#C7FF4A;opacity:0;transition:opacity .18s}
+.nea-pick.has-extras .nea-mark{opacity:.85}
+
+/* Card expandida: video vertical 9:16 a la izquierda, contenido a la derecha */
+/* El alto lo manda el video, no el texto. Con el media al 50% del ancho y en
+   9:16, el alto de la card es ancho x 0,889 => aspect-ratio 9/8. Sin esto, un
+   producto con muchos extras estira la card y deja un hueco al lado del video.
+   El video recorta con object-fit y el contenido scrollea.
+   Se ancla con sticky para que la card entre entera bajo el nav: sin eso, en
+   pantallas de 1080 el final queda debajo del borde inferior. */
+.nea-panel{border-radius:18px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);position:sticky;top:var(--nea-top,88px);aspect-ratio:9/8;max-height:calc(100vh - 132px)}
+.nea-panel[hidden]{display:none}
+.nea-panelmedia{position:relative;height:100%;background:#141414;overflow:hidden}
+.nea-panelmedia video,.nea-panelmedia img{width:100%;height:100%;object-fit:cover;display:block}
+/* Placeholder hasta que existan los videos de 2-5s */
+/* Centrado, no al pie: con la card alta el texto anclado abajo quedaba fuera
+   de pantalla y el video se leia como un bloque gris vacio. */
+.nea-panelimg{width:100%;height:100%;object-fit:cover;display:block}
+.nea-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:22px;background:linear-gradient(160deg,#1d1d1d,#0f0f0f 55%,#171717)}
+.nea-ph::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 20% 15%,rgba(199,255,74,.14),transparent 60%)}
+.nea-ph b{position:relative;font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(199,255,74,.8)}
+.nea-ph span{position:relative;font-size:13px;line-height:1.45;color:rgba(255,255,255,.42);text-wrap:pretty}
+.nea-panelbody{padding:clamp(20px,1.8vw,30px);overflow-y:auto;display:flex;flex-direction:column;gap:18px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent}
+.nea-panelbody::-webkit-scrollbar{width:6px}
+.nea-panelbody::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:99px}
+.nea-panelbody::-webkit-scrollbar-track{background:transparent}
+.nea-panelclose{position:absolute;top:14px;right:14px;z-index:2;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(10,10,10,.55);backdrop-filter:blur(6px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s,border-color .18s}
+.nea-panelclose:hover{background:rgba(199,255,74,.18);border-color:#C7FF4A}
+.nea-panelclose:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
+.nea-panelkicker{font-size:11px;font-weight:600;letter-spacing:.2em;color:#C7FF4A}
+.nea-paneltitle{margin:6px 0 0;font-size:clamp(21px,1.9vw,28px);line-height:1.1;font-weight:700;letter-spacing:-.025em;color:#fff}
+.nea-panelfrom{margin-top:10px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.14);font-size:15px;font-weight:600;color:rgba(255,255,255,.8)}
+.nea-panelfrom b{color:#C7FF4A}
+.nea-eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;color:rgba(255,255,255,.5);margin-bottom:12px}
+.nea-inc{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.nea-inc li{position:relative;padding-left:24px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.74);text-wrap:pretty}
+.nea-inc li::before{content:"";position:absolute;left:2px;top:7px;width:9px;height:9px;border-radius:999px;border:1.5px solid #C7FF4A}
+.nea-extras{display:grid;gap:9px}
+
+/* Mas de 8 opciones no se leen: el resto vive en un <details> nativo.
+   Cero JS para abrir y cerrar; el contador avisa si adentro quedo algo tildado. */
+/* Obligatorio: .nea-extras{display:grid} le gana a la regla del navegador que
+   oculta el contenido de un <details> cerrado, y quedaba todo siempre visible. */
+.nea-more:not([open])>.nea-extras{display:none}
+.nea-more>summary{list-style:none;cursor:pointer;padding:11px 15px;border-radius:12px;border:1px dashed rgba(255,255,255,.2);font-size:13px;font-weight:600;color:rgba(255,255,255,.58);text-align:center;transition:color .18s,border-color .18s}
+.nea-more>summary::-webkit-details-marker{display:none}
+.nea-more>summary:hover{color:#C7FF4A;border-color:rgba(199,255,74,.5)}
+.nea-more>summary:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
+.nea-more[open]>summary{margin-bottom:9px;border-style:solid}
+.nea-more[open]>summary::after{content:" ↑"}
+.nea-more:not([open])>summary::after{content:" ↓"}
+.nea-more [data-morecount]{color:#C7FF4A}
+
+/* Add-ons: mismo lenguaje que las opciones, pero cuadrado (multiple) y mas compacto */
+.nea-add{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:13px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03);color:#FFFFFF;font:inherit;cursor:pointer;transition:border-color .18s,background .18s}
+.nea-add:hover{border-color:rgba(199,255,74,.5)}
+.nea-add:focus-visible{outline:2px solid #C7FF4A;outline-offset:2px}
+.nea-add.is-on{border-color:#C7FF4A;background:rgba(199,255,74,.09)}
+.nea-add .nea-box{flex:none;width:18px;height:18px;border-radius:5px;border:1px solid rgba(255,255,255,.42);display:flex;align-items:center;justify-content:center;transition:border-color .18s,background .18s}
+.nea-add.is-on .nea-box{border-color:#C7FF4A;background:#C7FF4A}
+.nea-add .nea-tick{width:11px;height:11px;opacity:0;transition:opacity .18s}
+.nea-add.is-on .nea-tick{opacity:1}
+.nea-add .nea-addname{font-size:14px;font-weight:500;letter-spacing:-.005em;text-wrap:pretty}
+.nea-add .nea-addprice{margin-left:auto;padding-left:12px;text-align:right;font-size:13px;font-weight:600;color:rgba(255,255,255,.5);white-space:nowrap;transition:color .18s}
+.nea-add.is-on .nea-addprice{color:#C7FF4A}
+.nea-add .nea-addmes{display:block;font-size:11px;font-weight:500;color:rgba(255,255,255,.38)}
+.nea-add.is-on .nea-addmes{color:rgba(199,255,74,.7)}
+/* Sistemas a medida no cotiza: sus items se listan, no se tildan */
+.nea-scope{display:grid;gap:9px}
+.nea-scope li{list-style:none;padding:13px 15px;border-radius:12px;border:1px dashed rgba(255,255,255,.18);font-size:14px;color:rgba(255,255,255,.66)}
+
+/* Columna de estimacion */
+.nea-sum{border-radius:16px;padding:clamp(22px,2vw,30px);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);position:sticky;top:var(--nea-top,88px)}
+.nea-sumline{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:13px;color:rgba(255,255,255,.6);padding:5px 0}
+.nea-sumline b{font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap}
+.nea-cta{margin-top:22px;width:100%;height:52px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:0 24px;border:0;border-radius:999px;background:#C7FF4A;color:#0A0A0A;font:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:opacity .18s}
+.nea-cta:hover{opacity:.88}
+.nea-cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+/* Selector de años de soporte prepago */
+.nea-plan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px;padding:4px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.nea-planopt{padding:9px 4px;border:0;border-radius:9px;background:none;color:rgba(255,255,255,.6);font:inherit;font-size:12.5px;font-weight:600;line-height:1.25;cursor:pointer;transition:background .18s,color .18s}
+.nea-planopt b{display:block;font-size:11px;font-weight:700;color:#C7FF4A;opacity:.75}
+.nea-planopt:hover{color:#fff}
+.nea-planopt:focus-visible{outline:2px solid #C7FF4A;outline-offset:1px}
+.nea-planopt.is-on{background:#C7FF4A;color:#0A0A0A}
+.nea-planopt.is-on b{color:#0A0A0A;opacity:.6}
+
+/* Plantilla previa a WhatsApp */
+.nea-dlg{width:min(560px,92vw);max-height:88vh;padding:0;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:#111;color:#F5F4F0;overflow:auto}
+.nea-dlg::backdrop{background:rgba(10,10,10,.72);backdrop-filter:blur(6px)}
+.nea-dlgin{padding:clamp(22px,2.4vw,32px);display:flex;flex-direction:column;gap:18px}
+.nea-field{display:flex;flex-direction:column;gap:7px}
+.nea-field label{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.7)}
+.nea-field input,.nea-field select{height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:14.5px}
+.nea-field input:focus,.nea-field select:focus{outline:2px solid #C7FF4A;outline-offset:1px}
+.nea-field select option{background:#111}
+
+/* Con la card debajo de la lista hay lugar de sobra: la lista vuelve a dos
+   columnas y recupera su linea de "esto es para vos si". */
+@media (min-width:901px) and (max-width:1360px){
+  .nea-est.is-open .nea-picks{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .nea-est.is-open .nea-pick .nea-pickdesc{display:block}
+}
+@media (max-width:900px){
+  .nea-esthead,.nea-est,.nea-est.is-open{grid-template-columns:minmax(0,1fr)}
+  .nea-picks,.nea-est.is-open .nea-picks{grid-template-columns:minmax(0,1fr)}
+  /* Sin la linea de "esto es para vos si": en telefono ocupaba dos tercios de
+     cada card y hacia falta scrollear para saber que la lista tenia seis
+     opciones. El nombre alcanza para elegir; el detalle esta al abrir. */
+  .nea-pick .nea-pickdesc{display:none}
+  .nea-pick{padding:15px 18px;align-items:center}
+  .nea-pick .nea-dot{margin-top:0}
+  /* Mobile: la card expandida toma la pantalla completa.
+     Los tres resets de abajo son obligatorios, no cosmeticos: sin ellos el
+     aspect-ratio y el max-height de escritorio le ganan a inset:0 y la card
+     quedaba de 333 px de alto flotando sobre la lista, con el cuerpo
+     recortado y sin scroll. */
+  /* z-index 100 y no 60: a pantalla completa la card es un modal y tiene que
+     tapar la barra de navegacion del sitio, que esta en 90. Con 60 la barra
+     quedaba encima y se comia el boton de cerrar. */
+  .nea-panel{position:fixed;inset:0;z-index:100;border-radius:0;border:0;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;overflow-y:auto;overscroll-behavior:contain;background:#0A0A0A;aspect-ratio:auto;max-height:none;top:0;padding-top:env(safe-area-inset-top)}
+  /* La muestra es un mockup vertical: a pantalla completa se lleva media
+     pantalla y empuja el precio fuera de vista. 34vh la deja presente y
+     todavia deja ver el titulo y el "desde" sin scrollear. */
+  .nea-panelmedia{aspect-ratio:auto;height:34vh;min-height:200px}
+  /* Las muestras son mockups verticales y lo que vende esta arriba: la grilla
+     de productos, el calendario, el tablero. Recortadas al centro se veia el
+     fondo. */
+  .nea-panelimg{object-position:center 40%}
+  /* La fila del cuerpo va en auto, no en 1fr: con 1fr quedaba clavada al alto
+     de la pantalla y recortaba 567 px de extras, con el "ver mas opciones"
+     tapado por la barra y sin forma de llegar. El padding despeja esa barra. */
+  .nea-panelbody{overflow:visible;padding-bottom:132px}
+  .nea-sum{position:static}
+  /* ...y la estimacion se reduce a una barra fija con los dos numeros */
+  /* top:auto es obligatorio: sin el, hereda el top:88px del sticky y la
+     barra se estira de arriba a abajo tapando la pantalla entera. */
+  .nea-est.is-open .nea-sum{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:101;border-radius:0;border:0;border-top:1px solid rgba(255,255,255,.16);background:rgba(14,14,14,.94);backdrop-filter:blur(10px);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+  .nea-est.is-open .nea-sum .nea-sumfull{display:none}
+  /* Desplegado: el detalle completo entra arriba del CTA, con scroll propio
+     para que nunca empuje al boton fuera de la pantalla. */
+  .nea-est.is-open .nea-sum.is-detail .nea-sumfull{display:block;max-height:52vh;overflow-y:auto;overscroll-behavior:contain;margin-top:2px}
+  .nea-est.is-open .nea-sum .nea-cta{margin-top:10px;height:48px}
+  .nea-est.is-open .nea-sum.is-detail .nea-sumbar .nea-sumchev{transform:rotate(180deg)}
+  /* Objetivos tactiles: la cruz de cerrar y el "ver mas opciones" quedaban en
+     34 y 40 px. En pantalla tactil el minimo es 44. */
+  .nea-panelclose{width:44px;height:44px}
+  .nea-more>summary{padding:14px 15px}
+}
+.nea-sumbar{display:none}
+.nea-sumchev{margin-left:2px;font-size:15px;line-height:1;color:rgba(255,255,255,.5);transition:transform .22s cubic-bezier(.22,1,.36,1)}
+@media (max-width:900px){
+  .nea-est.is-open .nea-sumbar{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:44px;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+  .nea-est.is-open .nea-sumbar:focus-visible{outline:2px solid #C7FF4A;outline-offset:3px;border-radius:8px}
+  .nea-est.is-open .nea-sumbar #nea-barmes{margin-left:auto}
+  /* Con la card a pantalla completa, el fondo no puede seguir scrolleando
+     detras: al cerrar volvias a otro punto de la pagina. */
+  html.nea-locked,html.nea-locked body{overflow:hidden}
+}
+
+/* El morph de la card. Sin View Transitions, el panel simplemente aparece. */
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-old(neacard),::view-transition-new(neacard){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+  ::view-transition-group(neacard){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+}

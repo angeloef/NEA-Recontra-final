@@ -293,6 +293,10 @@ a:hover{color:var(--lima)}
 
   <main id="contenido">
 
+  <style>
+    /* ponytail: las esquinas cuadradas detras del radio del video quedaban blancas */
+    #nea-stage::after{content:"";position:absolute;left:var(--vid-l,0);right:var(--vid-r,0);top:var(--vid-t,0);height:var(--vid-rad,0);background:#0a0a0a;z-index:19;pointer-events:none;opacity:var(--vid-fill,0)}
+  </style>
   <div id="nea-runway" style="position:relative;height:300vh">
     <div id="nea-stage" style="position:sticky;top:0;height:100vh;overflow:hidden;background:transparent">
 

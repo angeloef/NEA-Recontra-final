@@ -103,6 +103,12 @@
     const v = el.video.style;
     v.left = st.l + 'px'; v.right = st.r + 'px'; v.top = st.t + 'px'; v.bottom = st.b + 'px';
     v.borderRadius = st.rad + 'px ' + st.rad + 'px ' + lp(0, st.rad, ec) + 'px ' + lp(0, st.rad, ec) + 'px';
+    // ponytail: banda negra detras del radio superior, si no las esquinas
+    // dejaban ver el fondo claro. Se apaga cuando el video pasa a card flotante.
+    const sv = el.stage.style;
+    sv.setProperty('--vid-l', st.l + 'px'); sv.setProperty('--vid-r', st.r + 'px');
+    sv.setProperty('--vid-t', st.t + 'px'); sv.setProperty('--vid-rad', st.rad + 'px');
+    sv.setProperty('--vid-fill', String(1 - ec));
     v.boxShadow = ec > .02 ? '0 ' + (30 * ec) + 'px ' + (70 * ec) + 'px rgba(0,0,0,' + (.45 * ec) + ')' : 'none';
 
     // section two

@@ -234,9 +234,27 @@ function endEdit(){
 }
 document.getElementById('edit').addEventListener('click', startEdit);
 document.getElementById('cancel').addEventListener('click', endEdit);
-document.getElementById('save').addEventListener('click', () => {
-  store[cur] = ta.value;
+/* Servido por HTTP (nea-leads) el guardado va al .md real. Abierto como archivo
+   suelto no hay servidor, y cae a localStorage: se edita igual y se exporta. */
+document.getElementById('save').addEventListener('click', async e => {
+  const texto = ta.value, btn = e.target;
+  btn.textContent = 'Guardando…';
+  let enServidor = false;
+  if(location.protocol.startsWith('http')){
+    try{
+      const r = await fetch('api/plan', {method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({file: cur, body: texto})});
+      enServidor = r.ok;
+    }catch(_){ enServidor = false; }
+  }
+  if(enServidor){
+    doc(cur).body = texto;
+    delete store[cur];
+  }else{
+    store[cur] = texto;
+  }
   localStorage.setItem(KEY, JSON.stringify(store));
+  btn.textContent = 'Guardar';
   show(cur);
 });
 document.getElementById('revert').addEventListener('click', () => {

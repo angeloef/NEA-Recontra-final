@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEA Sistemas — Captura de datos del lead</title>
+<style>
+:root{
+  --ink:#0A0A0A; --ink-2:#141414; --ink-3:#1e1e1e;
+  --paper:#FFFFFF; --mute:#9a9a9a; --soft:#cfcfcf;
+  --line:rgba(255,255,255,.12); --lima:#C7FF4A; --azul:#3157FF; --plum:#1b0406;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--paper);
+  font-family:"Plus Jakarta Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:clamp(28px,5vw,72px) clamp(18px,4vw,48px) 96px}
+h1{font-size:clamp(30px,4.4vw,54px);line-height:1.03;letter-spacing:-.025em;font-weight:600;margin:0 0 18px;text-wrap:balance}
+h2{font-size:clamp(21px,2.4vw,30px);line-height:1.12;letter-spacing:-.02em;font-weight:600;margin:0 0 10px}
+h3{font-size:15px;font-weight:600;margin:0 0 6px}
+p{margin:0 0 14px;color:var(--soft);text-wrap:pretty}
+.kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--lima);margin:0 0 12px;font-weight:600}
+section{margin-top:clamp(48px,7vw,92px)}
+.lead{font-size:clamp(16px,1.5vw,19px);max-width:70ch}
+.rule{height:1px;background:var(--line);margin:22px 0 0}
+
+/* ── mapa de etapas ── */
+.rail{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-top:26px}
+.step{position:relative;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:18px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.step::before{content:attr(data-n);position:absolute;top:-11px;left:16px;width:24px;height:24px;border-radius:999px;
+  background:var(--lima);color:var(--ink);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step .ch{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.step h3{font-size:16px;margin:0}
+.step ul{margin:0;padding-left:16px;font-size:13px;color:var(--soft)}
+.step li{margin-bottom:4px}
+.out{margin-top:auto;font-size:12px;color:var(--lima);border-top:1px dashed var(--line);padding-top:9px}
+.bar{height:5px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--lima)}
+.pct{font-size:11px;color:var(--mute)}
+
+/* ── flujo con ramas ── */
+.flow{margin-top:26px;background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,28px);overflow-x:auto}
+.flow svg{display:block;min-width:820px;width:100%;height:auto}
+
+/* ── tabla de datos ── */
+.tbl{width:100%;border-collapse:collapse;margin-top:20px;font-size:13.5px}
+.tbl th{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:600;padding:0 12px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top;color:var(--soft)}
+.tbl td:first-child{color:var(--paper);font-weight:600;width:23%}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:rgba(199,255,74,.14);color:var(--lima);white-space:nowrap}
+.tag.b{background:rgba(49,87,255,.2);color:#9fb0ff}
+.tag.g{background:rgba(255,255,255,.09);color:var(--soft)}
+.crit{color:var(--lima)}
+
+/* ── reglas / plantillas ── */
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));margin-top:22px}
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:18px}
+.card p{font-size:13.5px;margin:0}
+.chat{background:var(--plum);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;font-size:13.5px;color:#f1e9ea}
+.chat b{color:var(--lima);display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.msg{background:rgba(255,255,255,.07);border-radius:10px 10px 10px 2px;padding:11px 13px;margin-bottom:8px;white-space:pre-line}
+@media (max-width:640px){.tbl td:first-child{width:auto}.tbl,.tbl tbody,.tbl tr,.tbl td{display:block}.tbl thead{display:none}
+  .tbl tr{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;padding:6px 4px}
+  .tbl td{border:0;padding:8px 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="kicker">NEA Sistemas · Operación comercial</p>
+<h1>Qué le pedimos al lead, cuándo y en qué canal.</h1>
+<p class="lead">Después del “sí, contame” el riesgo deja de ser que no conteste: es pedirle veinte cosas
+de golpe y que se enfríe. El plan es una <b>ficha única que se llena por etapas</b>: cada tramo pide
+sólo lo que necesita el entregable siguiente, y cada pedido viene con una devolución a cambio.</p>
+
+<div class="rule"></div>
+
+<!-- ══════════ ETAPAS ══════════ -->
+<section>
+  <p class="kicker">El recorrido</p>
+  <h2>Cinco tramos. Nunca se pregunta dos veces lo mismo.</h2>
+  <p class="lead">El porcentaje es cuánto de la ficha del cliente queda completa al cerrar cada tramo.</p>
+
+  <div class="rail">
+    <div class="step" data-n="1">
+      <span class="ch">WhatsApp · 2 min</span>
+      <h3>Enganche</h3>
+      <ul>
+        <li>Rubro y ciudad</li>
+        <li>Qué quiere resolver, en sus palabras</li>
+        <li>Si ya tiene web o sistema</li>
+        <li>Cuándo puede hablar 45 min</li>
+      </ul>
+      <div class="out">Salida: charla agendada + link al micro-form</div>
+      <div class="bar"><i style="width:15%"></i></div><span class="pct">15% de la ficha</span>
+    </div>
+
+    <div class="step" data-n="2">
+      <span class="ch">Formulario · 90 seg</span>
+      <h3>Pre-charla</h3>
+      <ul>
+        <li>Sitio y redes actuales</li>
+        <li>3 competidores</li>
+        <li>Rango de presupuesto</li>
+        <li>Fecha atada a algo</li>
+        <li>Quién decide</li>
+      </ul>
+      <div class="out">Salida: llegamos a la reunión con la tarea hecha</div>
+      <div class="bar"><i style="width:35%"></i></div><span class="pct">35%</span>
+    </div>
+
+    <div class="step" data-n="3">
+      <span class="ch">Videollamada · 45–60 min</span>
+      <h3>Descubrimiento</h3>
+      <ul>
+        <li>Cómo entra un cliente hoy</li>
+        <li>Dónde se cae</li>
+        <li>Qué le preguntan siempre</li>
+        <li>Números: consultas, ticket, cierre</li>
+        <li>Métrica de éxito a 6 meses</li>
+      </ul>
+      <div class="out">Salida: diagnóstico escrito en &lt;24 h, con precios</div>
+      <div class="bar"><i style="width:70%"></i></div><span class="pct">70%</span>
+    </div>
+
+    <div class="step" data-n="4">
+      <span class="ch">Checklist · asincrónico</span>
+      <h3>Accesos y materiales</h3>
+      <ul>
+        <li>Dominio, hosting, analítica</li>
+        <li>Google Business y redes</li>
+        <li>Logo vectorial y fotos</li>
+        <li>Catálogo / listas de precio</li>
+        <li>Datos de facturación</li>
+      </ul>
+      <div class="out">Salida: mockup navegable con SU contenido</div>
+      <div class="bar"><i style="width:90%"></i></div><span class="pct">90%</span>
+    </div>
+
+    <div class="step" data-n="5">
+      <span class="ch">Reunión de mockup</span>
+      <h3>Validación</h3>
+      <ul>
+        <li>Correcciones de texto y foto</li>
+        <li>Alcance final y extras</li>
+        <li>Quién aprueba cada entrega</li>
+        <li>Canal y ritmo de avance</li>
+      </ul>
+      <div class="out">Salida: presupuesto firmado, arranca desarrollo</div>
+      <div class="bar"><i style="width:100%"></i></div><span class="pct">100%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FLUJO ══════════ -->
+<section>
+  <p class="kicker">Diagrama</p>
+  <h2>El recorrido con sus salidas laterales.</h2>
+  <p class="lead">Las ramas grises no son fracasos: son leads que se van a un lugar donde cuestan menos
+  (o se guardan para dentro de tres meses) en vez de comerse cuatro reuniones.</p>
+
+  <div class="flow">
+  <svg viewBox="0 0 900 430" role="img" aria-label="Flujo de captura de datos del lead, desde el contacto positivo hasta el presupuesto firmado, con ramas de descarte y seguimiento">
+    <defs>
+      <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L10 5 L0 10 z" fill="#C7FF4A"/>
+      </marker>
+      <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L10 5 L0 10 z" fill="#6e6e6e"/>
+      </marker>
+      <style>
+        .bx{fill:#1e1e1e;stroke:rgba(255,255,255,.16)}
+        .bx.hot{stroke:#C7FF4A}
+        .bx.off{fill:#141414;stroke:rgba(255,255,255,.1);stroke-dasharray:4 3}
+        .t{fill:#fff;font:600 13px "Plus Jakarta Sans",Helvetica,Arial,sans-serif}
+        .s{fill:#9a9a9a;font:400 11px "Plus Jakarta Sans",Helvetica,Arial,sans-serif}
+        .lb{fill:#C7FF4A;font:600 10.5px "Plus Jakarta Sans",Helvetica,Arial,sans-serif}
+        .lbg{fill:#6e6e6e;font:600 10.5px "Plus Jakarta Sans",Helvetica,Arial,sans-serif}
+        .ln{stroke:#C7FF4A;stroke-width:1.6;fill:none;marker-end:url(#ar)}
+        .lng{stroke:#6e6e6e;stroke-width:1.3;fill:none;stroke-dasharray:4 4;marker-end:url(#arg)}
+      </style>
+    </defs>
+
+    <!-- fila principal -->
+    <rect class="bx hot" x="14" y="40" width="150" height="56" rx="12"/>
+    <text class="t" x="30" y="65">Contacto positivo</text><text class="s" x="30" y="82">WhatsApp entrante</text>
+
+    <rect class="bx" x="204" y="40" width="150" height="56" rx="12"/>
+    <text class="t" x="220" y="65">4 preguntas</text><text class="s" x="220" y="82">rubro · qué · cuándo · web</text>
+
+    <rect class="bx" x="394" y="40" width="150" height="56" rx="12"/>
+    <text class="t" x="410" y="65">Micro-form</text><text class="s" x="410" y="82">5 campos · 90 seg</text>
+
+    <rect class="bx" x="584" y="40" width="150" height="56" rx="12"/>
+    <text class="t" x="600" y="65">Charla 45'</text><text class="s" x="600" y="82">guion de 6 bloques</text>
+
+    <line class="ln" x1="164" y1="68" x2="198" y2="68"/>
+    <line class="ln" x1="354" y1="68" x2="388" y2="68"/>
+    <line class="ln" x1="544" y1="68" x2="578" y2="68"/>
+
+    <!-- bajada al diagnóstico -->
+    <path class="ln" d="M659 96 L659 130 L100 130 L100 158"/>
+    <text class="lb" x="672" y="120">&lt;24 h</text>
+
+    <rect class="bx hot" x="14" y="158" width="172" height="56" rx="12"/>
+    <text class="t" x="30" y="183">Diagnóstico escrito</text><text class="s" x="30" y="200">problema + orden + precios</text>
+
+    <rect class="bx" x="230" y="158" width="172" height="56" rx="12"/>
+    <text class="t" x="246" y="183">Checklist de accesos</text><text class="s" x="246" y="200">dominio · marca · contenido</text>
+
+    <rect class="bx" x="446" y="158" width="172" height="56" rx="12"/>
+    <text class="t" x="462" y="183">Mockup navegable</text><text class="s" x="462" y="200">con sus textos y su marca</text>
+
+    <rect class="bx hot" x="662" y="158" width="172" height="56" rx="12"/>
+    <text class="t" x="678" y="183">Presupuesto firmado</text><text class="s" x="678" y="200">arranca el desarrollo</text>
+
+    <line class="ln" x1="186" y1="186" x2="224" y2="186"/>
+    <line class="ln" x1="402" y1="186" x2="440" y2="186"/>
+    <line class="ln" x1="618" y1="186" x2="656" y2="186"/>
+
+    <!-- ramas -->
+    <path class="lng" d="M279 96 L279 250"/>
+    <rect class="bx off" x="180" y="256" width="200" height="52" rx="11"/>
+    <text class="t" x="196" y="279">No encaja</text><text class="s" x="196" y="296">se dice en la 1ra respuesta</text>
+    <text class="lbg" x="286" y="180">precio / plazo / rubro</text>
+
+    <path class="lng" d="M469 96 L469 250"/>
+    <rect class="bx off" x="400" y="256" width="200" height="52" rx="11"/>
+    <text class="t" x="416" y="279">No completa el form</text><text class="s" x="416" y="296">1 recordatorio a las 48 h</text>
+
+    <path class="lng" d="M316 214 L316 350 L470 350"/>
+    <rect class="bx off" x="476" y="324" width="240" height="52" rx="11"/>
+    <text class="t" x="492" y="347">Frena después del diagnóstico</text><text class="s" x="492" y="364">queda el documento · seguimiento 90 d</text>
+
+    <text class="lb" x="14" y="410">tramo activo</text>
+    <text class="lbg" x="130" y="410">salida lateral, sin insistir</text>
+  </svg>
+  </div>
+</section>
+
+<!-- ══════════ QUÉ DATOS ══════════ -->
+<section>
+  <p class="kicker">La ficha</p>
+  <h2>Qué hay que sacarle al cliente para hacer un trabajo excelente.</h2>
+  <p class="lead">Diez bloques. Lo marcado en <span class="crit">lima</span> es lo que, si falta, hace
+  que el trabajo salga genérico o se rehaga después.</p>
+
+  <table class="tbl">
+    <thead><tr><th>Bloque</th><th>Qué se pregunta</th><th>Por qué lo necesitamos</th><th>Tramo</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="crit">A · Decisión</td>
+        <td>Razón social, quién decide, quién aprueba el diseño, canal preferido, fecha atada a algo.</td>
+        <td>Un proyecto sin un aprobador claro se estira el doble. Es el filtro de “encajamos / vamos a chocar”.</td>
+        <td><span class="tag">1–2</span></td>
+      </tr>
+      <tr>
+        <td class="crit">B · Cómo entra un cliente hoy</td>
+        <td>Recorrido real desde que alguien lo descubre hasta que paga. Dónde se cae. Consultas por mes y por qué canal.</td>
+        <td>Es la pregunta madre: define arquitectura, textos y qué automatizar. Sin esto, se diseña a ciegas.</td>
+        <td><span class="tag">3</span></td>
+      </tr>
+      <tr>
+        <td class="crit">C · Cliente final</td>
+        <td>Quién compra, qué pregunta <em>siempre</em> antes de comprar, qué objeción frena la venta, en qué dispositivo llega.</td>
+        <td>Las preguntas repetidas son, literalmente, las secciones del sitio. Las objeciones son la copy.</td>
+        <td><span class="tag">3</span></td>
+      </tr>
+      <tr>
+        <td>D · Oferta y números</td>
+        <td>Qué vende, ticket promedio, margen grueso, servicio más rentable, estacionalidad, zona de cobertura.</td>
+        <td>Define qué se pone adelante y cuánto puede invertir con sentido en pauta.</td>
+        <td><span class="tag">3</span></td>
+      </tr>
+      <tr>
+        <td class="crit">E · Métrica de éxito</td>
+        <td>Qué número tiene que moverse en 6 meses y cuál es hoy (línea base).</td>
+        <td>Sin línea base no hay caso publicable ni forma de defender la renovación.</td>
+        <td><span class="tag">3</span></td>
+      </tr>
+      <tr>
+        <td>F · Competencia</td>
+        <td>Tres competidores con los que lo comparan, cuál le gana y por qué cree que le gana.</td>
+        <td>Alimenta el diagnóstico y evita parecerse justo a quien ya está posicionado.</td>
+        <td><span class="tag">2</span></td>
+      </tr>
+      <tr>
+        <td class="crit">G · Activos digitales</td>
+        <td>Dominio y <b>a nombre de quién está</b>, hosting, panel actual, correos corporativos, Analytics/Search Console, Google Business, redes, píxeles.</td>
+        <td>Determina si hay migración, si se conserva el SEO y cuánto tarda la publicación. Sorpresa cara si aparece tarde.</td>
+        <td><span class="tag">2–4</span></td>
+      </tr>
+      <tr>
+        <td>H · Marca y contenido</td>
+        <td>Logo vectorial, manual o colores, fotos propias y su calidad, videos, textos existentes, catálogo o lista de precios.</td>
+        <td>La falta de fotos es la causa nº 1 de demora. Se detecta antes de prometer una fecha.</td>
+        <td><span class="tag">4</span></td>
+      </tr>
+      <tr>
+        <td>I · Operación <span class="tag g">solo sistemas</span></td>
+        <td>Proceso paso a paso, qué se anota dónde, quién carga qué, excepciones, volumen diario, integraciones (AFIP, Mercado Pago, ERP, planillas).</td>
+        <td>Es el relevamiento: sin esto cualquier precio de sistema es inventado.</td>
+        <td><span class="tag b">3 + visita</span></td>
+      </tr>
+      <tr>
+        <td>J · Administrativo</td>
+        <td>CUIT y datos de facturación, responsable de pagos, forma y momento de pago, alcance y extras elegidos.</td>
+        <td>Cierra el presupuesto sin ida y vuelta. Se pide recién cuando ya hay un sí.</td>
+        <td><span class="tag">5</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════ REGLAS UX ══════════ -->
+<section>
+  <p class="kicker">Reglas de la interacción</p>
+  <h2>Cómo se pide, para que no se sienta un interrogatorio.</h2>
+  <div class="grid">
+    <div class="card"><h3>Cada pedido paga con algo</h3><p>Nunca se pide información “para evaluar”. Se pide para devolver: el form devuelve el diagnóstico, el checklist devuelve el mockup. El cliente siempre sabe qué recibe a cambio.</p></div>
+    <div class="card"><h3>Una sola ficha viva</h3><p>Todo lo que contesta se guarda en un único documento por cliente. Volver a preguntar algo que ya dijo es la señal más rápida de que no lo estamos escuchando.</p></div>
+    <div class="card"><h3>El canal que ya usa</h3><p>WhatsApp para todo lo corto. Formulario sólo para lo que se copia y pega (links, accesos). Videollamada sólo una vez, y grabada con su permiso para no tomar notas a mano.</p></div>
+    <div class="card"><h3>Máximo 5 campos por pedido</h3><p>El micro-form es de 90 segundos. Si necesita más, se parte en dos momentos distintos del recorrido.</p></div>
+    <div class="card"><h3>Preguntas de negocio, no de tecnología</h3><p>“¿Qué te preguntan siempre antes de comprar?” en lugar de “¿querés WordPress?”. Nadie tiene que saber vocabulario técnico para contestarnos bien.</p></div>
+    <div class="card"><h3>Accesos con lista y casillas</h3><p>El checklist va como lista tildable, con un ejemplo de dónde encontrar cada cosa. Nada de “mandame los accesos”, que garantiza tres días de ida y vuelta.</p></div>
+    <div class="card"><h3>Un solo recordatorio</h3><p>Si no contesta: un recordatorio a las 48 h y nada más. Después queda en seguimiento a 90 días. No se persigue a nadie.</p></div>
+    <div class="card"><h3>Se devuelve entendido, no repetido</h3><p>El diagnóstico abre reformulando su problema con sus palabras. Ahí se valida que los datos estén bien antes de construir sobre ellos.</p></div>
+  </div>
+</section>
+
+<!-- ══════════ PLANTILLAS ══════════ -->
+<section>
+  <p class="kicker">Mensajes tipo</p>
+  <h2>Lo que se manda en cada tramo.</h2>
+  <div class="grid">
+    <div class="chat"><b>Tramo 1 · apenas dice que sí</b>
+      <div class="msg">Buenísimo. Para no hacerte perder tiempo, tres cosas cortas:
+1) ¿Qué rubro y en qué ciudad estás?
+2) ¿Qué es lo que hoy te está frenando?
+3) ¿Ya tenés web o sistema andando?
+
+Con eso miro tu caso y tus competidores antes de hablar. ¿Te queda cómodo un rato de 45 min esta semana?</div></div>
+
+    <div class="chat"><b>Tramo 2 · antes de la charla</b>
+      <div class="msg">Te paso el link del formulario, son 5 campos y 90 segundos.
+Es para llegar a la charla con la tarea hecha: cuando nos juntemos ya vas a tener el análisis de tus competidores arriba de la mesa.</div></div>
+
+    <div class="chat"><b>Tramo 3 · cierre de la charla</b>
+      <div class="msg">Listo, con esto me alcanza. Antes de mañana a esta hora te mando el diagnóstico por escrito: qué te está frenando, qué conviene resolver primero y cuánto sale cada cosa.
+Si después de leerlo decidís que no, no me debés nada y el documento te queda igual.</div></div>
+
+    <div class="chat"><b>Tramo 4 · pedido de accesos</b>
+      <div class="msg">Para armar el diseño con tu contenido real necesito esta lista. Marcá lo que tengas y lo que no aparezca lo resolvemos nosotros:
+☐ Dominio (y a nombre de quién está)
+☐ Accesos al hosting o panel actual
+☐ Logo en vector (.ai/.svg) o el archivo de mayor calidad
+☐ Fotos propias
+☐ Catálogo o lista de precios
+☐ Google Business, si lo tenés</div></div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

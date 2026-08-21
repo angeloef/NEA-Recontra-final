@@ -10,22 +10,29 @@
 
 /* La seccion trae fondo propio: en la home el negro lo pintaba el sistema de
    tinta por scroll de app.js, y en /precios/ no existe. */
-.nea-estsec{background:#0A0A0A;color:#F5F4F0;padding:clamp(52px,5vw,96px) clamp(20px,2.5vw,48px) clamp(56px,5.2vw,100px)}
+.nea-estsec{--nea-sumw:clamp(340px,24vw,440px);background:#0A0A0A;color:#F5F4F0;padding:clamp(52px,5vw,96px) clamp(20px,2.5vw,48px) clamp(56px,5.2vw,100px)}
 /* En /precios/ el bloque va como card despegada del papel; en la home es a sangre. */
 .nea-estsec--card{border-radius:20px;margin:0 clamp(20px,2.9vw,56px)}
 
-/* Tope de ancho: a 1920 sin esto las cards miden 700px para una linea de texto
-   y la card expandida se vuelve tan alta que no entra en pantalla. */
-.nea-esthead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);gap:clamp(24px,3vw,56px);align-items:end;max-width:1400px}
-.nea-est{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:clamp(18px,2.2vw,40px);align-items:start;max-width:1400px}
+/* El bloque usa todo el ancho, como el resto de la home. Lo que antes evitaba
+   el tope de 1400 se resuelve donde estaba el problema y no achicando la caja:
+   las cards no se estiran porque .nea-picks suma una tercera columna, y la card
+   expandida lleva su propio tope (su alto sale del ancho, ver .nea-panel). */
+/* La estimacion crece con la pantalla: fija en 360 se veia perdida al costado
+   de una lista de 1400. El clamp la deja igual que antes en pantallas medias. */
+.nea-esthead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,var(--nea-sumw));gap:clamp(24px,3vw,56px);align-items:end}
+.nea-est{display:grid;grid-template-columns:minmax(0,1fr) var(--nea-sumw);gap:clamp(18px,2.2vw,40px);align-items:start}
 /* Tres columnas solo con ancho de sobra: por debajo, la del medio ahoga al
    video vertical y al texto que va a su lado. */
 @media (min-width:1361px){
-  .nea-est.is-open{grid-template-columns:270px minmax(0,1fr) 340px}
+  /* La del medio se queda con el sobrante para que no haya huecos sueltos entre
+     los tres bloques; el tope de la card lo pone .nea-panel, y cuando la celda
+     lo supera la card se centra en su lugar en vez de dejar el aire de un lado. */
+  .nea-est.is-open{grid-template-columns:290px minmax(0,1fr) var(--nea-sumw)}
 }
 /* Entre 901 y 1360: dos columnas, y la card expandida cae debajo de la lista */
 @media (min-width:901px) and (max-width:1360px){
-  .nea-est.is-open{grid-template-columns:minmax(0,1fr) 340px}
+  .nea-est.is-open{grid-template-columns:minmax(0,1fr) var(--nea-sumw)}
   .nea-est.is-open > :first-child{grid-column:1;grid-row:1}
   .nea-est.is-open > #nea-panels{grid-column:1;grid-row:2}
   .nea-est.is-open > .nea-sum{grid-column:2;grid-row:1 / span 2}
@@ -36,6 +43,11 @@
 .nea-est:not(.is-open) > #nea-panels{display:none}
 
 .nea-picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+/* Con ancho de sobra, tres columnas: son seis productos, asi que cierran en dos
+   renglones llenos y ninguna card queda de 700px para una linea de texto. */
+@media (min-width:1500px){
+  .nea-est:not(.is-open) .nea-picks{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 .nea-est.is-open .nea-picks{grid-template-columns:minmax(0,1fr);gap:10px}
 
 /* Card reducida: sin precio. El gancho es el nombre + la linea de "para vos si" */
@@ -62,8 +74,12 @@
    producto con muchos extras estira la card y deja un hueco al lado del video.
    El video recorta con object-fit y el contenido scrollea.
    Se ancla con sticky para que la card entre entera bajo el nav: sin eso, en
-   pantallas de 1080 el final queda debajo del borde inferior. */
-.nea-panel{border-radius:18px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);position:sticky;top:var(--nea-top,88px);aspect-ratio:9/8;max-height:calc(100vh - 132px)}
+   pantallas de 1080 el final queda debajo del borde inferior.
+   El max-width es lo que antes daba el tope de 1400 del contenedor: como el alto
+   sale del ancho, sin el la card se estira a lo ancho en un monitor grande y el
+   video vertical termina recortado a una franja. Recien pasados los ~2100 de
+   ventana la celda supera ese tope, y ahi el justify-self la centra. */
+.nea-panel{border-radius:18px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);position:sticky;top:var(--nea-top,88px);aspect-ratio:9/8;max-height:calc(100vh - 132px);max-width:1100px;justify-self:center}
 .nea-panel[hidden]{display:none}
 .nea-panelmedia{position:relative;height:100%;background:#141414;overflow:hidden}
 .nea-panelmedia video,.nea-panelmedia img{width:100%;height:100%;object-fit:cover;display:block}

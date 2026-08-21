@@ -952,8 +952,8 @@
      prefers-reduced-motion) el panel simplemente aparece. */
 
   // Numero de WhatsApp en formato internacional, sin + ni espacios.
-  // TODO: completar con el numero real antes de publicar.
-  const WA_NUMERO = '5493755289339';
+  // El mismo numero esta literal en los href de las CTAs: si cambia, van los dos.
+  const WA_NUMERO = '5493755446606';
 
   const MORPH = 'neacard';
 

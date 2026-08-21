@@ -7,7 +7,7 @@
 
 Estudio chico de diseño web, posicionamiento, campañas y sistemas de gestión a medida,
 con base en **Oberá, Misiones, Argentina**. Trabajamos en remoto con negocios de todo el país.
-Sitio: neasistemas.com.ar · WhatsApp: +54 9 3755 28-9339 · Idioma: español (es-AR).
+Sitio: neasistemas.com.ar · WhatsApp: +54 3755 446606 · Idioma: español (es-AR).
 
 Somos nuevos: hoy los proyectos llegan por referidos y todavía no hay casos publicados con
 nombre de cliente. La postura frente a eso es explícita en el sitio — no inventamos logos,

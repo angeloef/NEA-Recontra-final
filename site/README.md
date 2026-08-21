@@ -19,12 +19,12 @@ Render → New → **Static Site** → conectá este repo.
 
 ## WhatsApp
 El número vive **literal en los `href`** de las 15 CTAs (así el link funciona sin JS y Google
-lo lee). Hoy es `5493755289339` (+54 9 3755 28-9339).
+lo lee). Es `5493755446606`, o sea +54 3755 446606.
 
 Para cambiarlo, un solo comando desde `site/`:
 
 ```sh
-grep -rl 'wa.me/5493755289339' . | xargs sed -i 's/wa\.me\/5493755289339/wa.me\/TU_NUMERO/g'
+grep -rl 'wa.me/5493755446606' . | xargs sed -i 's/wa\.me\/5493755446606/wa.me\/TU_NUMERO/g'
 ```
 
 Formato internacional sin `+` ni espacios. Verificar después con

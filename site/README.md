@@ -19,12 +19,12 @@ Render → New → **Static Site** → conectá este repo.
 
 ## WhatsApp
 El número vive **literal en los `href`** de las 15 CTAs (así el link funciona sin JS y Google
-lo lee). Hoy es un placeholder: `5493764000000`.
+lo lee). Hoy es `5493755289339` (+54 9 3755 28-9339).
 
 Para cambiarlo, un solo comando desde `site/`:
 
 ```sh
-grep -rl 'wa.me/5493764000000' . | xargs sed -i 's/wa\.me\/5493764000000/wa.me\/TU_NUMERO/g'
+grep -rl 'wa.me/5493755289339' . | xargs sed -i 's/wa\.me\/5493755289339/wa.me\/TU_NUMERO/g'
 ```
 
 Formato internacional sin `+` ni espacios. Verificar después con
@@ -33,7 +33,7 @@ Formato internacional sin `+` ni espacios. Verificar después con
 ## Notas
 - Los precios del estimador viven en la constante `PRICING` de `app.js`. Los nombres y
   descripciones de cada opción están en el HTML, para que Google los lea.
-- Los anchors `#mockup`, `#llamada`, `#servicios` y `#precios` todavía no tienen destino:
+- Los anchors `#llamada`, `#servicios` y `#precios` todavía no tienen destino:
   quedan a la espera de definir el canal de contacto.
 
 ### Fuentes
@@ -61,35 +61,3 @@ Pedí esa URL con un User-Agent de Chrome, bajá el `.woff2` que devuelve y reem
 - Los originales pesados de esas muestras viven en `assets-fuente/`, fuera de
   `site/`, y están ignorados por git. El sitio solo sirve los WebP.
 
-## Publicar el primer caso real (`casos/`)
-
-La plantilla y el checklist vivian como comentario dentro de `casos/index.html`;
-se servian a todo el mundo en cada visita. Quedan aca:
-
-```html
-==================================================================
-ACÁ ENTRAN LOS CASOS REALES.
-Cuando exista el primero, borrar el bloque .slot de abajo y en su
-lugar poner los casos. Estructura sugerida por caso (reusa las
-primitivas que ya estan en este mismo <style>, no hace falta CSS
-nuevo):
-
-  <article class="scen">
-    <p class="eyebrow">CASO 01 — {RUBRO}, {CIUDAD}</p>
-    <h3 class="h3">{Nombre real de la empresa}</h3>
-    <div class="scen-grid">
-      <div><h4>ANTES</h4><p>{numero + fecha + fuente}</p></div>
-      <div><h4>QUÉ SE HIZO</h4><p>{decisiones, no entregables}</p></div>
-      <div><h4>DESPUÉS</h4><p>{mismo numero + meses transcurridos}</p></div>
-    </div>
-    <p class="p"><b>Lo que no funcionó:</b> {…}</p>
-    <a class="scen-link" href="{sitio del cliente}" rel="noopener">Ver el sitio →</a>
-  </article>
-
-Ademas, al publicar el primer caso real:
- 1. Cambiar el <h1> del hero y el primer parrafo del lead.
- 2. Revisar la seccion #donde-estamos (deja de ser cierta tal cual).
- 3. Recien ahi tiene sentido sumar Review/CreativeWork al JSON-LD,
-    y solo con el texto textual que el cliente autorizo.
-==================================================================
-```

@@ -1,3 +1,43 @@
+/* ------------------------------------------------------------------ medicion
+   Va aca y no en app.js porque nav.js es el unico script que cargan las once
+   paginas. Mientras los IDs sigan en PONER-*, no se pide nada a la red: el sitio
+   se publica sin analitica rota y arranca sola el dia que pegues los IDs.
+   Los IDs de medicion son publicos por diseno (viajan en el HTML de cualquier
+   sitio que los use); no son secretos y no hay nada que ocultar aca. */
+(() => {
+  const GA4 = 'PONER-GA4';         // G-XXXXXXXXXX  (Google Analytics 4)
+  const CLARITY = 'PONER-CLARITY'; // xxxxxxxxxx    (Microsoft Clarity)
+
+  // Se valida la forma del ID, no que deje de ser el placeholder: asi un ID
+  // vacio o a medio pegar tampoco dispara una request rota.
+  if (/^G-[A-Z0-9]{6,}$/.test(GA4)) {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', GA4, { anonymize_ip: true });
+  }
+
+  if (/^[a-z0-9]{8,}$/.test(CLARITY)) {
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', CLARITY);
+  }
+
+  /* Conversiones: todo click a WhatsApp cuenta como lead. Delegado en document,
+     asi cubre tambien el estimador que app.js inyecta despues. */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href*="wa.me"]');
+    if (!a || typeof gtag !== 'function') return;
+    gtag('event', 'generate_lead', { method: 'whatsapp', link_url: a.href });
+  }, true);
+})();
+
 /* Barra de las subpáginas: toma el color de la sección que tiene detrás, igual que
    la de la home. Ahí esa lógica vive en app.js y depende de las secciones propias
    del home; acá se resuelve leyendo el fondo real de lo que hay debajo, así sirve
@@ -59,6 +99,17 @@
   addEventListener('scroll', pedir, { passive: true });
   addEventListener('resize', pedir, { passive: true });
   pintar();
+})();
+
+/* ================================================ Desplegable "Servicios"
+   El <details> ya abre y cierra solo, con mouse y con teclado. Lo unico que
+   el navegador no hace es cerrarlo al tocar fuera o al apretar Escape. */
+(() => {
+  'use strict';
+  const abiertos = () => document.querySelectorAll('#nav details[open],.nea-links details[open]');
+  const cerrar = e => abiertos().forEach(d => { if (!e || !d.contains(e.target)) d.open = false; });
+  document.addEventListener('click', cerrar);
+  addEventListener('keydown', e => { if (e.key === 'Escape') cerrar(null); });
 })();
 
 /* ============================================================ Menu mobile
@@ -137,6 +188,10 @@
     // los dos estados y el panel aparece de golpe. Es sincronico a proposito,
     // un requestAnimationFrame no corre si la pestaña no esta pintando.
     void panel.offsetHeight;
+    // La X sale de la barra y pasa al body mientras el panel esta abierto: la
+    // barra es un stacking context propio (z-index 90) y ahi adentro el 97 del
+    // boton no le gana al 96 del panel, asi que la X no se podia tocar.
+    document.body.appendChild(burger);
     panel.classList.add('is-open');
     burger.classList.add('is-open');
     burger.setAttribute('aria-expanded', 'true');
@@ -154,6 +209,7 @@
     burger.classList.remove('is-open');
     burger.setAttribute('aria-expanded', 'false');
     burger.setAttribute('aria-label', 'Abrir menú');
+    barra.appendChild(burger);
     document.documentElement.classList.remove('nea-menulock');
     // el hidden espera a que termine el fundido; si mientras tanto se vuelve a
     // abrir, el guard de arriba deja todo como estaba

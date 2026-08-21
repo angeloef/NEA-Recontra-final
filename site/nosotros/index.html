@@ -144,15 +144,6 @@ p,li{text-wrap:pretty}
 .dark .eyebrow{color:rgba(255,255,255,.5)}
 
 /* ---------------------------------------------------------------- nav */
-#nav{position:sticky;top:0;z-index:90;background:#0A0A0A;color:#F5F4F0;transition:background-color .18s linear,color .18s linear}
-#nav .in{display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,2vw,24px);height:88px;padding:0 var(--pad);max-width:var(--max);margin:0 auto}
-#nav .in > a:first-child{flex:none}
-#nav nav{display:flex;align-items:center;gap:clamp(7px,.92vw,24px);font-size:clamp(11.5px,.72vw,15px);font-weight:500;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
-#nav nav::-webkit-scrollbar{display:none}
-#nav nav a{opacity:.72;transition:opacity .18s;display:inline-flex;align-items:center;min-height:44px}
-#nav nav a:hover,#nav nav a[aria-current]{opacity:1}
-#nav .cta{height:44px;padding:0 24px;font-size:15px}
-@media (max-width:900px){#nav .cta{display:none}}
 
 /* ---------------------------------------------------------------- hero */
 .hero{position:relative;background:#0A0A0A;color:#fff;overflow:hidden}
@@ -240,13 +231,6 @@ p,li{text-wrap:pretty}
 .close-cta{border-radius:20px;background:var(--paper-2);padding:clamp(32px,3.6vw,64px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(22px,2.4vw,44px);align-items:center}
 @media (max-width:820px){.close-cta{grid-template-columns:minmax(0,1fr)}}
 
-footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad) 26px;max-width:var(--max);margin:0 auto}
-.foot-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px}
-.foot-top nav{display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,36px);font-size:15px;font-weight:500}
-.foot-top nav a{display:inline-flex;align-items:center;min-height:44px}
-.foot-top nav a:hover{color:#C7FF4A}
-.foot-bot{margin-top:clamp(30px,3vw,52px);padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--ink-mute)}
-
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *{animation-duration:.001ms!important;transition-duration:.001ms!important}
@@ -258,6 +242,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 .figwide img{width:100%;height:auto;aspect-ratio:1400/779;object-fit:cover;border-radius:14px;display:block;background:#f0efec;border:1px solid var(--line)}
 .figwide figcaption{margin-top:12px;font-size:13.5px;line-height:1.5;color:var(--ink-mute)}
 </style>
+<link rel="stylesheet" href="../chrome.css">
 <link rel="stylesheet" href="../menu.css">
 </head>
 <body>
@@ -266,14 +251,22 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 <header id="nav">
   <div class="in">
     <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="185" height="40" style="height:clamp(30px,2.1vw,40px);width:auto;display:block"></a>
-    <nav aria-label="Secciones de esta página">
-      <a href="#postura">Cómo trabajamos</a>
-      <a href="#para-quien">Para quién sí y para quién no</a>
-      <a href="#etapas">Las cuatro etapas</a>
-      <a href="#reglas">Nuestras reglas</a>
-      <a href="#preguntas">Preguntas</a>
+    <nav aria-label="Principal">
+      <details>
+        <summary>Servicios</summary>
+        <div class="panel">
+          <a href="../diseno-web/">Diseño web</a>
+          <a href="../tienda-online/">Tienda online</a>
+          <a href="../sistemas-a-medida/">Sistemas a medida</a>
+          <a href="../marketing-digital/">Marketing digital</a>
+          <a href="../seo/">SEO</a>
+          <a href="../google-ads/">Google Ads</a>
+        </div>
+      </details>
+      <a href="../precios/">Precios</a>
+      <a href="../nosotros/" aria-current="page">Nosotros</a>
     </nav>
-    <a href="../precios/#estimacion" class="btn cta">Armá tu presupuesto</a>
+    <a href="https://wa.me/5493755289339?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" class="btn cta">Pedí tu diagnóstico gratis</a>
   </div>
 </header>
 
@@ -294,7 +287,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
       </div>
 
       <div class="facts">
-        <div><b>Mostramos primero</b><span>Ves el diagnóstico y el diseño de tu sitio antes de que exista un contrato.</span></div>
+        <div><b>Mostramos primero</b><span>Ves el diagnóstico y el diseño navegable de tu sitio antes de que se programe.</span></div>
         <div><b>Etapas sueltas</b><span>Cada etapa se cotiza aparte. Podés frenar al final de cualquiera.</span></div>
         <div><b>Todo a tu nombre</b><span>Dominio, cuentas y código de tu empresa. Nunca nuestros.</span></div>
         <div><b>Oberá, Misiones</b><span>Trabajamos con negocios de toda la Argentina, de forma remota.</span></div>
@@ -314,7 +307,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
         <ul class="steps">
           <li><div><h3 class="h3">Mostramos el trabajo antes de cobrarlo</h3><p class="p">Prometer es gratis y todos prometen lo mismo. Nos pareció más honesto invertir nosotros las primeras horas: mirar tu negocio, mirar a tus competidores y traerte algo concreto. Si lo que ves no te convence, no perdiste nada más que un rato de charla. El riesgo del arranque lo ponemos nosotros, no vos.</p></div></li>
           <li><div><h3 class="h3">El diagnóstico es gratis y viene con precios adentro</h3><p class="p">Un diagnóstico sin números no sirve para decidir; sirve para que tengas que volver a preguntar. El nuestro llega en menos de 24 horas y dice qué te está frenando, qué conviene resolver primero y cuánto sale cada cosa. Es un documento con el que podés ir a pedir otra cotización y comparar. Sabemos que puede pasar y está bien.</p></div></li>
-          <li><div><h3 class="h3">El diseño existe antes que el contrato</h3><p class="p">Firmar por un sitio que todavía no viste es firmar por una descripción. Por eso armamos las pantallas principales navegables de verdad, con tus textos y tu identidad, y te pasamos un enlace para que las abras en tu celular. Recién ahí decidís. Cambiar algo en esa instancia cuesta una tarde; cambiarlo con el sitio programado cuesta plata.</p></div></li>
+          <li><div><h3 class="h3">El diseño existe antes que el desarrollo</h3><p class="p">Aprobar un sitio que todavía no viste es aprobar una descripción. Por eso armamos las pantallas principales navegables de verdad, con tus textos y tu identidad, y te pasamos un enlace para que las abras en tu celular. Recién cuando lo aprobás se programa. Cambiar algo en esa instancia cuesta una tarde; cambiarlo con el sitio programado cuesta plata.</p></div></li>
           <li><div><h3 class="h3">Analizamos el negocio antes de tocar tecnología</h3><p class="p">La pregunta no es qué tecnología usar: es cómo entra hoy un cliente a tu negocio, dónde se cae y qué te preguntan siempre antes de comprar. Esa charla define todo lo demás. Elegir herramientas antes de entender eso es empezar por el final y es la razón por la que muchos proyectos terminan siendo lindos y no sirven.</p></div></li>
         </ul>
       </div>
@@ -394,7 +387,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
     <p class="lead">Ninguno de estos es un favor. Son las condiciones bajo las que nos gusta trabajar, y las escribimos acá para que puedas reclamarlas si alguna vez no las cumplimos.</p>
 
     <ul class="inc" style="margin-top:clamp(30px,3vw,52px)">
-      <li><b>El mockup existe antes del contrato</b><span>Ves tu sitio navegable, en tu celular, con tus textos, antes de firmar nada. No una imagen: un enlace que se toca.</span></li>
+      <li><b>El diseño existe antes del desarrollo</b><span>Ves tu sitio navegable, en tu celular, con tus textos, antes de que se programe. No una imagen: un enlace que se toca.</span></li>
       <li><b>El diagnóstico es gratis y trae precios</b><span>En menos de 24 horas, por escrito, con qué te frena, qué hace tu competencia y cuánto sale cada cosa. Si decís que no, te queda igual.</span></li>
       <li><b>Todo queda a tu nombre</b><span>Dominio registrado a nombre de tu empresa, hosting en una cuenta tuya, código entregado. Si mañana trabajás con otro, se lleva todo y funciona.</span></li>
       <li><b>KPIs acordados por fase</b><span>Antes de arrancar definimos qué número tiene que moverse y en cuánto tiempo. Sin eso, cualquier resultado se puede contar como éxito.</span></li>
@@ -509,7 +502,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
         <p class="p" style="max-width:60ch">Contanos a qué se dedica tu negocio y en menos de 24 horas te llega el diagnóstico: qué te está frenando, qué hace tu competencia, qué conviene hacer primero y cuánto sale cada cosa. Sin costo. Si no te cierra, ahí termina.</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <a href="https://wa.me/5493764000000?text=Hola%2C%20le%C3%AD%20la%20p%C3%A1gina%20de%20nosotros%20y%20quiero%20el%20diagn%C3%B3stico%20gratis" class="btn" rel="noopener">Pedir el diagnóstico gratis</a>
+        <a href="https://wa.me/5493755289339?text=Hola%2C%20le%C3%AD%20la%20p%C3%A1gina%20de%20nosotros%20y%20quiero%20el%20diagn%C3%B3stico%20gratis" class="btn" rel="noopener">Pedir el diagnóstico gratis</a>
         <a href="../precios/#estimacion" class="btn btn--ghost">Armar un presupuesto</a>
       </div>
     </div>
@@ -517,26 +510,44 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 
 </main>
 
-<footer>
-  <div class="foot-top">
-    <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_negro.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(34px,2.6vw,44px);width:auto;display:block"></a>
-    <nav aria-label="Pie">
-      <a href="../">Inicio</a>
-      <a href="../diseno-web/">Diseño web</a>
-      <a href="../tienda-online/">Tienda online</a>
-      <a href="../sistemas-a-medida/">Sistemas a medida</a>
-      <a href="../marketing-digital/">Marketing digital</a>
-      <a href="../seo/">SEO</a>
-      <a href="../google-ads/">Google Ads</a>
-      <a href="../precios/">Precios</a>
-      <a href="../casos/">Casos</a>
-      <a href="../nosotros/">Nosotros</a>
-    </nav>
-    <a href="#diagnostico" class="btn">Pedí tu diagnóstico gratis</a>
-  </div>
-  <div class="foot-bot">
-    <span>© 2026 NEA Sistemas</span>
-    <span>Oberá, Misiones — trabajamos con todo el país</span>
+<footer id="contacto">
+  <div class="foot-in">
+    <div class="foot-top">
+      <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(34px,2.6vw,44px);width:auto;display:block"></a>
+      <div class="foot-cols">
+        <div>
+          <h2>Servicios</h2>
+          <nav aria-label="Servicios">
+        <a href="../diseno-web/">Diseño web</a>
+        <a href="../tienda-online/">Tienda online</a>
+        <a href="../sistemas-a-medida/">Sistemas a medida</a>
+        <a href="../marketing-digital/">Marketing digital</a>
+        <a href="../seo/">SEO</a>
+        <a href="../google-ads/">Google Ads</a>
+          </nav>
+        </div>
+        <div>
+          <h2>Empresa</h2>
+          <nav aria-label="Empresa">
+            <a href="../">Inicio</a>
+            <a href="../precios/">Precios</a>
+            <a href="../nosotros/" aria-current="page">Nosotros</a>
+          </nav>
+        </div>
+        <div>
+          <h2>Legal</h2>
+          <nav aria-label="Legal">
+            <a href="../privacidad/">Privacidad</a>
+            <a href="../terminos/">Términos</a>
+          </nav>
+        </div>
+      </div>
+      <a href="https://wa.me/5493755289339?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" class="foot-cta">Pedí tu diagnóstico gratis</a>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 NEA Sistemas</span>
+      <span>Oberá, Misiones — trabajamos con todo el país</span>
+    </div>
   </div>
 </footer>
 

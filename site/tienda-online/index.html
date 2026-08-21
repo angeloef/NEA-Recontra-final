@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tienda online a medida — NEA Sistemas | Misiones, Argentina</title>
-<meta name="description" content="Tienda online propia, sin comisión por venta: catálogo, carrito, cobro con Mercado Pago y envíos. Ves el diseño navegable antes de firmar nada.">
+<meta name="description" content="Tienda online propia, sin comisión por venta: catálogo, carrito, cobro con Mercado Pago y envíos. Ves y aprobás el diseño navegable antes de que se programe nada.">
 <link rel="canonical" href="https://neasistemas.com.ar/tienda-online/">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#0A0A0A">
@@ -154,15 +154,6 @@ p,li{text-wrap:pretty}
 .dark .eyebrow{color:rgba(255,255,255,.5)}
 
 /* ---------------------------------------------------------------- nav */
-#nav{position:sticky;top:0;z-index:90;background:#0A0A0A;color:#F5F4F0;transition:background-color .18s linear,color .18s linear}
-#nav .in{display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,2vw,24px);height:88px;padding:0 var(--pad);max-width:var(--max);margin:0 auto}
-#nav .in > a:first-child{flex:none}
-#nav nav{display:flex;align-items:center;gap:clamp(7px,.92vw,24px);font-size:clamp(11.5px,.72vw,15px);font-weight:500;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
-#nav nav::-webkit-scrollbar{display:none}
-#nav nav a{opacity:.72;transition:opacity .18s;display:inline-flex;align-items:center;min-height:44px}
-#nav nav a:hover,#nav nav a[aria-current]{opacity:1}
-#nav .cta{height:44px;padding:0 24px;font-size:15px}
-@media (max-width:900px){#nav .cta{display:none}}
 
 /* ---------------------------------------------------------------- hero */
 .hero{position:relative;background:#0A0A0A;color:#fff;overflow:hidden}
@@ -270,18 +261,12 @@ p,li{text-wrap:pretty}
 .pay em{font-style:normal;font-weight:600;color:var(--ink);font-size:13.5px}
 .pay span{display:block;margin-top:6px;font-size:13.8px;line-height:1.55;color:var(--ink-mute)}
 
-footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad) 26px;max-width:var(--max);margin:0 auto}
-.foot-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px}
-.foot-top nav{display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,36px);font-size:15px;font-weight:500}
-.foot-top nav a{display:inline-flex;align-items:center;min-height:44px}
-.foot-top nav a:hover{color:#C7FF4A}
-.foot-bot{margin-top:clamp(30px,3vw,52px);padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--ink-mute)}
-
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *{animation-duration:.001ms!important;transition-duration:.001ms!important}
 }
 </style>
+<link rel="stylesheet" href="../chrome.css">
 <link rel="stylesheet" href="../menu.css">
 </head>
 <body>
@@ -290,16 +275,22 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 <header id="nav">
   <div class="in">
     <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="185" height="40" style="height:clamp(30px,2.1vw,40px);width:auto;display:block"></a>
-    <nav aria-label="Secciones de esta página">
-      <a href="#por-que">Por qué no venden</a>
-      <a href="#que-incluye">Qué incluye</a>
-      <a href="#proceso">Cómo trabajamos</a>
-      <a href="#plataformas">Plataforma o propia</a>
-      <a href="#cobros">Cobros y envíos</a>
-      <a href="#precios">Precios</a>
-      <a href="#preguntas">Preguntas</a>
+    <nav aria-label="Principal">
+      <details>
+        <summary>Servicios</summary>
+        <div class="panel">
+          <a href="../diseno-web/">Diseño web</a>
+          <a href="../tienda-online/" aria-current="page">Tienda online</a>
+          <a href="../sistemas-a-medida/">Sistemas a medida</a>
+          <a href="../marketing-digital/">Marketing digital</a>
+          <a href="../seo/">SEO</a>
+          <a href="../google-ads/">Google Ads</a>
+        </div>
+      </details>
+      <a href="../precios/">Precios</a>
+      <a href="../nosotros/">Nosotros</a>
     </nav>
-    <a href="../precios/#estimacion" class="btn cta">Armá tu presupuesto</a>
+    <a href="https://wa.me/5493755289339?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" class="btn cta">Pedí tu diagnóstico gratis</a>
   </div>
 </header>
 
@@ -321,7 +312,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 
       <div class="facts">
         <div><b>0% de comisión</b><span>No participamos de tus ventas. Solo pagás lo que cobre tu medio de pago.</span></div>
-        <div><b>Mockup antes de firmar</b><span>Recorrés tu tienda en el celular antes de que exista un contrato.</span></div>
+        <div><b>Diseño navegable</b><span>Recorrés y aprobás tu tienda en el celular antes de que se programe.</span></div>
         <div><b>100% tuya</b><span>Dominio, cuentas de cobro y código a nombre de tu empresa.</span></div>
         <div><b>1er año incluido</b><span>Hosting, dominio, certificado, copias diarias y actualizaciones.</span></div>
       </div>
@@ -385,9 +376,9 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
               <p class="p"><b style="color:#fff;font-weight:600">Te llevás:</b> el diagnóstico escrito con precios, en menos de 24 horas. Si ahí decidís que no, no debés nada.</p>
             </div></li>
             <li><div>
-              <h3 class="h3">Diseñar — y lo ves antes de firmar</h3>
+              <h3 class="h3">Diseñar — y lo ves antes de que se programe</h3>
               <p class="p">Armamos la portada, el listado, la ficha de producto y el checkout navegables de verdad, con productos tuyos adentro. Podés abrirlo en el celular, agregar algo al carrito y llegar hasta el pago. Es donde se descubre que faltaba un filtro o que el envío tiene que verse antes.</p>
-              <p class="p"><b style="color:#fff;font-weight:600">Te llevás:</b> la certeza de cómo va a funcionar tu tienda, sin haber firmado nada. Acá los cambios salen baratos.</p>
+              <p class="p"><b style="color:#fff;font-weight:600">Te llevás:</b> la certeza de cómo va a funcionar tu tienda. Cuando lo aprobás, recién ahí se programa: acá los cambios salen baratos.</p>
             </div></li>
             <li><div>
               <h3 class="h3">Construir — y queda a tu nombre</h3>
@@ -542,7 +533,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
             <li>Pago único, sin comisión por venta</li>
             <li>Primer año de soporte incluido</li>
             <li>Dominio y código a tu nombre</li>
-            <li>Mockup navegable antes de firmar</li>
+            <li>Diseño navegable que aprobás antes de que se programe</li>
           </ul>
         </article>
         <article class="tier">
@@ -663,7 +654,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
         <p class="p" style="max-width:60ch">Contanos qué vendés, cuántos productos son y cómo vendés hoy. En menos de 24 horas te llega el informe: si te conviene una tienda propia o una plataforma armada, qué extras necesitás de verdad y cuánto sale cada cosa. Si la respuesta es "todavía no", te la damos igual.</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20tienda%20online" class="btn" rel="noopener">Pedir el diagnóstico gratis</a>
+        <a href="https://wa.me/5493755289339?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20tienda%20online" class="btn" rel="noopener">Pedir el diagnóstico gratis</a>
         <a href="../precios/#estimacion" class="btn btn--ghost">Armar un presupuesto</a>
       </div>
     </div>
@@ -671,26 +662,44 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 
 </main>
 
-<footer>
-  <div class="foot-top">
-    <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_negro.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(34px,2.6vw,44px);width:auto;display:block"></a>
-    <nav aria-label="Pie">
-      <a href="../">Inicio</a>
-      <a href="../diseno-web/">Diseño web</a>
-      <a href="../tienda-online/">Tienda online</a>
-      <a href="../sistemas-a-medida/">Sistemas a medida</a>
-      <a href="../marketing-digital/">Marketing digital</a>
-      <a href="../seo/">SEO</a>
-      <a href="../google-ads/">Google Ads</a>
-      <a href="../precios/">Precios</a>
-      <a href="../casos/">Casos</a>
-      <a href="../nosotros/">Nosotros</a>
-    </nav>
-    <a href="#diagnostico" class="btn">Pedí tu diagnóstico gratis</a>
-  </div>
-  <div class="foot-bot">
-    <span>© 2026 NEA Sistemas</span>
-    <span>Oberá, Misiones — trabajamos con todo el país</span>
+<footer id="contacto">
+  <div class="foot-in">
+    <div class="foot-top">
+      <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(34px,2.6vw,44px);width:auto;display:block"></a>
+      <div class="foot-cols">
+        <div>
+          <h2>Servicios</h2>
+          <nav aria-label="Servicios">
+        <a href="../diseno-web/">Diseño web</a>
+        <a href="../tienda-online/" aria-current="page">Tienda online</a>
+        <a href="../sistemas-a-medida/">Sistemas a medida</a>
+        <a href="../marketing-digital/">Marketing digital</a>
+        <a href="../seo/">SEO</a>
+        <a href="../google-ads/">Google Ads</a>
+          </nav>
+        </div>
+        <div>
+          <h2>Empresa</h2>
+          <nav aria-label="Empresa">
+            <a href="../">Inicio</a>
+            <a href="../precios/">Precios</a>
+            <a href="../nosotros/">Nosotros</a>
+          </nav>
+        </div>
+        <div>
+          <h2>Legal</h2>
+          <nav aria-label="Legal">
+            <a href="../privacidad/">Privacidad</a>
+            <a href="../terminos/">Términos</a>
+          </nav>
+        </div>
+      </div>
+      <a href="https://wa.me/5493755289339?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" class="foot-cta">Pedí tu diagnóstico gratis</a>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 NEA Sistemas</span>
+      <span>Oberá, Misiones — trabajamos con todo el país</span>
+    </div>
   </div>
 </footer>
 

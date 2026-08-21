@@ -148,15 +148,6 @@ p,li{text-wrap:pretty}
 .dark .eyebrow{color:rgba(255,255,255,.5)}
 
 /* ---------------------------------------------------------------- nav */
-#nav{position:sticky;top:0;z-index:90;background:#0A0A0A;color:#F5F4F0;transition:background-color .18s linear,color .18s linear}
-#nav .in{display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,2vw,24px);height:88px;padding:0 var(--pad);max-width:var(--max);margin:0 auto}
-#nav .in > a:first-child{flex:none}
-#nav nav{display:flex;align-items:center;gap:clamp(7px,.92vw,24px);font-size:clamp(11.5px,.72vw,15px);font-weight:500;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
-#nav nav::-webkit-scrollbar{display:none}
-#nav nav a{opacity:.72;transition:opacity .18s;display:inline-flex;align-items:center;min-height:44px}
-#nav nav a:hover,#nav nav a[aria-current]{opacity:1}
-#nav .cta{height:44px;padding:0 24px;font-size:15px}
-@media (max-width:900px){#nav .cta{display:none}}
 
 /* ---------------------------------------------------------------- hero */
 .hero{position:relative;background:#0A0A0A;color:#fff;overflow:hidden}
@@ -291,18 +282,12 @@ figure.pic{margin:clamp(30px,3vw,52px) 0 0}
 figure.pic img{width:100%;height:auto;border-radius:16px;display:block;background:#f0efec}
 figure.pic figcaption{margin-top:12px;font-size:13.5px;line-height:1.5;color:var(--ink-mute);max-width:70ch}
 
-footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad) 26px;max-width:var(--max);margin:0 auto}
-.foot-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px}
-.foot-top nav{display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,36px);font-size:15px;font-weight:500}
-.foot-top nav a{display:inline-flex;align-items:center;min-height:44px}
-.foot-top nav a:hover{color:#C7FF4A}
-.foot-bot{margin-top:clamp(30px,3vw,52px);padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--ink-mute)}
-
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *{animation-duration:.001ms!important;transition-duration:.001ms!important}
 }
 </style>
+<link rel="stylesheet" href="../chrome.css">
 <link rel="stylesheet" href="../menu.css">
 </head>
 <body>
@@ -311,15 +296,22 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 <header id="nav">
   <div class="in">
     <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="185" height="40" style="height:clamp(30px,2.1vw,40px);width:auto;display:block"></a>
-    <nav aria-label="Secciones de esta página">
-      <a href="#costo">Cuánto sale</a>
-      <a href="#conviene">Cuándo conviene</a>
-      <a href="#tipos">Tipos de campaña</a>
-      <a href="#gestion">Qué hacemos</a>
-      <a href="#precios">Precios</a>
-      <a href="#preguntas">Preguntas</a>
+    <nav aria-label="Principal">
+      <details>
+        <summary>Servicios</summary>
+        <div class="panel">
+          <a href="../diseno-web/">Diseño web</a>
+          <a href="../tienda-online/">Tienda online</a>
+          <a href="../sistemas-a-medida/">Sistemas a medida</a>
+          <a href="../marketing-digital/">Marketing digital</a>
+          <a href="../seo/">SEO</a>
+          <a href="../google-ads/" aria-current="page">Google Ads</a>
+        </div>
+      </details>
+      <a href="../precios/">Precios</a>
+      <a href="../nosotros/">Nosotros</a>
     </nav>
-    <a href="../precios/#estimacion" class="btn cta">Armá tu presupuesto</a>
+    <a href="https://wa.me/5493755289339?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" class="btn cta">Pedí tu diagnóstico gratis</a>
   </div>
 </header>
 
@@ -641,7 +633,7 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
         <p class="p" style="max-width:60ch">Nos contás a qué se dedica tu negocio y en menos de 24 horas te llega el informe: cuánta gente busca lo que vendés en tu zona, qué están haciendo tus competidores, cuánto habría que invertir y —si es el caso— por qué te conviene esperar. Si ya tenés campañas andando, las revisamos y te decimos qué está perdiendo plata. Gratis y sin compromiso.</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <a href="https://wa.me/5493764000000?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20campa%C3%B1as%20de%20Google%20Ads" class="btn" rel="noopener">Pedir el diagnóstico gratis</a>
+        <a href="https://wa.me/5493755289339?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20campa%C3%B1as%20de%20Google%20Ads" class="btn" rel="noopener">Pedir el diagnóstico gratis</a>
         <a href="../precios/#estimacion" class="btn btn--ghost">Armar un presupuesto</a>
       </div>
     </div>
@@ -649,26 +641,44 @@ footer{border-top:1px solid var(--line);padding:clamp(38px,3.6vw,64px) var(--pad
 
 </main>
 
-<footer>
-  <div class="foot-top">
-    <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_negro.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(34px,2.6vw,44px);width:auto;display:block"></a>
-    <nav aria-label="Pie">
-      <a href="../">Inicio</a>
-      <a href="../diseno-web/">Diseño web</a>
-      <a href="../tienda-online/">Tienda online</a>
-      <a href="../sistemas-a-medida/">Sistemas a medida</a>
-      <a href="../marketing-digital/">Marketing digital</a>
-      <a href="../seo/">SEO</a>
-      <a href="../google-ads/">Google Ads</a>
-      <a href="../precios/">Precios</a>
-      <a href="../casos/">Casos</a>
-      <a href="../nosotros/">Nosotros</a>
-    </nav>
-    <a href="#diagnostico" class="btn">Pedí tu diagnóstico gratis</a>
-  </div>
-  <div class="foot-bot">
-    <span>© 2026 NEA Sistemas</span>
-    <span>Oberá, Misiones — trabajamos con todo el país</span>
+<footer id="contacto">
+  <div class="foot-in">
+    <div class="foot-top">
+      <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(34px,2.6vw,44px);width:auto;display:block"></a>
+      <div class="foot-cols">
+        <div>
+          <h2>Servicios</h2>
+          <nav aria-label="Servicios">
+        <a href="../diseno-web/">Diseño web</a>
+        <a href="../tienda-online/">Tienda online</a>
+        <a href="../sistemas-a-medida/">Sistemas a medida</a>
+        <a href="../marketing-digital/">Marketing digital</a>
+        <a href="../seo/">SEO</a>
+        <a href="../google-ads/" aria-current="page">Google Ads</a>
+          </nav>
+        </div>
+        <div>
+          <h2>Empresa</h2>
+          <nav aria-label="Empresa">
+            <a href="../">Inicio</a>
+            <a href="../precios/">Precios</a>
+            <a href="../nosotros/">Nosotros</a>
+          </nav>
+        </div>
+        <div>
+          <h2>Legal</h2>
+          <nav aria-label="Legal">
+            <a href="../privacidad/">Privacidad</a>
+            <a href="../terminos/">Términos</a>
+          </nav>
+        </div>
+      </div>
+      <a href="https://wa.me/5493755289339?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" class="foot-cta">Pedí tu diagnóstico gratis</a>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 NEA Sistemas</span>
+      <span>Oberá, Misiones — trabajamos con todo el país</span>
+    </div>
   </div>
 </footer>
 

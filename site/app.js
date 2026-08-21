@@ -953,7 +953,7 @@
 
   // Numero de WhatsApp en formato internacional, sin + ni espacios.
   // TODO: completar con el numero real antes de publicar.
-  const WA_NUMERO = '5493764000000';
+  const WA_NUMERO = '5493755289339';
 
   const MORPH = 'neacard';
 

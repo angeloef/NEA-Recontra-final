@@ -1,0 +1,76 @@
+/* ------------------------------------------------------------------ chrome
+   Barra superior y pie: mismo markup y mismos estilos en las once paginas.
+   Antes cada pagina traia su bloque inline copiado; cualquier cambio habia
+   que hacerlo once veces. Aca no hay nada especifico de ninguna pagina.
+
+   La barra la repinta nav.js segun el fondo que tiene detras (subpaginas) o
+   app.js segun la seccion (home): por eso background y color se declaran una
+   vez y despues los pisa el script. */
+
+:root{
+  --nav-h:88px;
+  --nav-ink:#0A0A0A;
+  --nav-paper:#F5F4F0;
+  --nav-lima:#C7FF4A;
+}
+
+/* =============================================================== barra */
+
+#nav{position:sticky;top:0;z-index:90;background:var(--nav-ink);color:var(--nav-paper);transition:background-color .18s linear,color .18s linear}
+#nav .in{display:flex;align-items:center;gap:clamp(16px,2vw,28px);height:var(--nav-h);padding:0 var(--pad,clamp(20px,2.5vw,48px));max-width:var(--max,none);margin:0 auto}
+#nav .in > a:first-child{flex:none}
+
+/* El nav ocupa el centro y empuja el CTA al borde: una sola regla en vez de
+   justify-content:space-between + wrappers. */
+#nav nav,.nea-links{flex:1;display:flex;align-items:center;gap:clamp(10px,1.4vw,28px);font-size:15px;font-weight:500;white-space:nowrap;margin-left:clamp(12px,2.4vw,44px)}
+#nav nav > a,.nea-links > a,#nav summary,.nea-links summary{opacity:.72;transition:opacity .18s;display:inline-flex;align-items:center;min-height:44px;cursor:pointer}
+#nav nav > a:hover,.nea-links > a:hover,#nav nav > a[aria-current],#nav summary:hover,.nea-links summary:hover,#nav details[open] summary,.nea-links details[open] summary{opacity:1}
+#nav .cta{flex:none;height:44px;display:inline-flex;align-items:center;padding:0 24px;border-radius:999px;background:var(--nav-lima);color:var(--nav-ink);font-size:15px;font-weight:600;white-space:nowrap}
+
+/* ------------------------------------------------ desplegable de servicios
+   <details> en vez de un menu propio: abre con click y con teclado sin JS.
+   nav.js solo lo cierra cuando se toca fuera. */
+#nav details,.nea-links details{position:relative}
+#nav summary,.nea-links summary{list-style:none;gap:6px}
+#nav summary::-webkit-details-marker,.nea-links summary::-webkit-details-marker{display:none}
+#nav summary::after,.nea-links summary::after{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .18s}
+#nav details[open] summary::after,.nea-links details[open] summary::after{transform:translateY(1px) rotate(225deg)}
+/* El panel no sigue el color de la barra a proposito: la barra cambia de tinta
+   al scrollear y un panel que cambia con ella parpadea. Siempre oscuro. */
+#nav details .panel,.nea-links .panel{position:absolute;top:calc(50% + 26px);left:-14px;min-width:240px;display:flex;flex-direction:column;padding:10px;border-radius:16px;background:var(--nav-ink);color:var(--nav-paper);box-shadow:0 18px 44px rgba(0,0,0,.34);border:1px solid rgba(255,255,255,.12)}
+#nav details .panel a,.nea-links .panel a{display:flex;align-items:center;min-height:44px;padding:0 14px;border-radius:10px;font-size:15px;opacity:.78;transition:background-color .15s,opacity .15s}
+#nav details .panel a:hover,#nav details .panel a[aria-current],.nea-links .panel a:hover{opacity:1;background:rgba(255,255,255,.09)}
+
+/* Abajo de 1000px manda el panel a pantalla completa que arma nav.js: la tira
+   de links y el CTA de la barra se apagan (menu.css pinta la hamburguesa). */
+@media (max-width:999px){
+  #nav nav,#nav .cta{display:none}
+  #nav .in{justify-content:space-between}
+}
+
+/* ================================================================== pie
+   Mismo pie en todo el sitio, y en la home es ademas la seccion #contacto:
+   por eso es oscuro en las once paginas. */
+
+footer{background:var(--nav-ink);color:var(--nav-paper);padding:clamp(48px,4.4vw,84px) var(--pad,clamp(20px,2.5vw,48px)) clamp(26px,2.2vw,40px)}
+footer .foot-in{max-width:var(--max,none);margin:0 auto}
+.foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:clamp(30px,3.4vw,64px)}
+.foot-top > a{flex:none;align-self:flex-start}
+.foot-cols{flex:1;display:grid;grid-template-columns:repeat(3,minmax(140px,1fr));gap:clamp(20px,2.6vw,48px);min-width:min(100%,440px)}
+.foot-cols h2{margin:0 0 6px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.foot-cols nav{display:flex;flex-direction:column;font-size:15px;font-weight:500}
+.foot-cols a{display:inline-flex;align-items:center;min-height:40px;color:var(--nav-paper);opacity:.78;transition:opacity .18s,color .18s}
+.foot-cols a:hover{opacity:1;color:var(--nav-lima)}
+.foot-cta{flex:none;height:52px;display:inline-flex;align-items:center;align-self:flex-start;padding:0 28px;border-radius:999px;background:var(--nav-lima);color:var(--nav-ink);font-size:16px;font-weight:600;white-space:nowrap}
+.foot-bot{margin-top:clamp(34px,3.2vw,60px);padding-top:20px;border-top:1px solid rgba(255,255,255,.18);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13.5px;color:rgba(255,255,255,.62)}
+
+@media (max-width:640px){
+  .foot-cols{grid-template-columns:1fr 1fr}
+  .foot-cta{width:100%;justify-content:center}
+}
+
+
+/* Fila de la barra dibujada dentro del frame del hero (solo home). El CTA se
+   va al borde derecho por su cuenta: con la tira de links oculta en pantallas
+   chicas, un space-between lo dejaba pegado a la izquierda. */
+.nea-framebar > div:last-child{margin-left:auto}

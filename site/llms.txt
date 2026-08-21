@@ -17,7 +17,6 @@ Sitio en español (es-AR). Contenido estático, sin paywall ni login.
 
 - [Inicio](https://neasistemas.com.ar/): resumen de servicios, proceso de trabajo y contacto.
 - [Precios](https://neasistemas.com.ar/precios/): lista completa de precios 2026, con planes y qué incluye cada uno.
-- [Trabajos y proceso](https://neasistemas.com.ar/casos/): trabajos realizados y cómo se lleva adelante un proyecto.
 - [Nosotros](https://neasistemas.com.ar/nosotros/): quiénes somos, cómo trabajamos y con qué tipo de negocios.
 
 ## Opcional

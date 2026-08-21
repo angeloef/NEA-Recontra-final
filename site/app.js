@@ -184,6 +184,12 @@
     bg.background = covered ? 'transparent' : (bgColor || '#FFFFFF');
     const fg = covered || (bgLum !== undefined && bgLum < .21) ? 255 : 10;
     el.navbg.style.color = 'rgb(' + fg + ',' + fg + ',' + fg + ')';
+    // El desplegable de "Servicios" no puede heredar una barra transparente ni
+    // quedarse negro cuando la barra ya es clara: se le pasa el color solido
+    // del momento. Sobre el video (barra transparente) va oscuro, que es lo que
+    // hay detras.
+    bg.setProperty('--nav-panel-bg', covered ? '#0A0A0A' : (bgColor || '#FFFFFF'));
+    bg.setProperty('--nav-panel-fg', fg > 128 ? '#F5F4F0' : '#0A0A0A');
     const navLogoImg = document.getElementById('nea-navlogoimg');
     if (navLogoImg) {
       const src = 'uploads/Nea_logo_' + (fg > 128 ? 'blanco' : 'negro') + '.png';

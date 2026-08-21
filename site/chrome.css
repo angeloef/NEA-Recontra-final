@@ -33,13 +33,16 @@
 #nav details,.nea-links details{position:relative}
 #nav summary,.nea-links summary{list-style:none;gap:6px}
 #nav summary::-webkit-details-marker,.nea-links summary::-webkit-details-marker{display:none}
-#nav summary::after,.nea-links summary::after{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .18s}
-#nav details[open] summary::after,.nea-links details[open] summary::after{transform:translateY(1px) rotate(225deg)}
-/* El panel no sigue el color de la barra a proposito: la barra cambia de tinta
-   al scrollear y un panel que cambia con ella parpadea. Siempre oscuro. */
-#nav details .panel,.nea-links .panel{position:absolute;top:calc(50% + 26px);left:-14px;min-width:240px;display:flex;flex-direction:column;padding:10px;border-radius:16px;background:var(--nav-ink);color:var(--nav-paper);box-shadow:0 18px 44px rgba(0,0,0,.34);border:1px solid rgba(255,255,255,.12)}
+#nav summary::after,.nea-links summary::after{content:"";flex:none;width:7px;height:7px;margin-top:-3px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform .18s}
+#nav details[open] summary::after,.nea-links details[open] summary::after{margin-top:3px;transform:rotate(225deg)}
+/* El panel toma el color de la barra que lo contiene. En la home la barra
+   cambia de tinta con el scroll y el panel quedaba negro sobre barra blanca:
+   --nav-panel-* las escribe app.js con el color solido del momento (nunca
+   transparente, o el desplegable no se leeria). Las subpaginas no las definen
+   y cae el fallback, que es el mismo color fijo de siempre. */
+#nav details .panel,.nea-links .panel{position:absolute;top:calc(50% + 26px);left:-14px;min-width:240px;display:flex;flex-direction:column;padding:10px;border-radius:16px;background:var(--nav-panel-bg,var(--nav-ink));color:var(--nav-panel-fg,var(--nav-paper));box-shadow:0 18px 44px rgba(0,0,0,.34);border:1px solid rgba(255,255,255,.12)}
 #nav details .panel a,.nea-links .panel a{display:flex;align-items:center;min-height:44px;padding:0 14px;border-radius:10px;font-size:15px;opacity:.78;transition:background-color .15s,opacity .15s}
-#nav details .panel a:hover,#nav details .panel a[aria-current],.nea-links .panel a:hover{opacity:1;background:rgba(255,255,255,.09)}
+#nav details .panel a:hover,#nav details .panel a[aria-current],.nea-links .panel a:hover{opacity:1;background:color-mix(in srgb,currentColor 12%,transparent)}
 
 /* Abajo de 1000px manda el panel a pantalla completa que arma nav.js: la tira
    de links y el CTA de la barra se apagan (menu.css pinta la hamburguesa). */
@@ -55,20 +58,59 @@
 footer{background:var(--nav-ink);color:var(--nav-paper);padding:clamp(48px,4.4vw,84px) var(--pad,clamp(20px,2.5vw,48px)) clamp(26px,2.2vw,40px)}
 footer .foot-in{max-width:var(--max,none);margin:0 auto}
 .foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:clamp(30px,3.4vw,64px)}
-.foot-top > a{flex:none;align-self:flex-start}
+.foot-top > a:not(.foot-cta){flex:none;align-self:flex-start}
 .foot-cols{flex:1;display:grid;grid-template-columns:repeat(3,minmax(140px,1fr));gap:clamp(20px,2.6vw,48px);min-width:min(100%,440px)}
 .foot-cols h2{margin:0 0 6px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5)}
 .foot-cols nav{display:flex;flex-direction:column;font-size:15px;font-weight:500}
 .foot-cols a{display:inline-flex;align-items:center;min-height:40px;color:var(--nav-paper);opacity:.78;transition:opacity .18s,color .18s}
 .foot-cols a:hover{opacity:1;color:var(--nav-lima)}
-.foot-cta{flex:none;height:52px;display:inline-flex;align-items:center;align-self:flex-start;padding:0 28px;border-radius:999px;background:var(--nav-lima);color:var(--nav-ink);font-size:16px;font-weight:600;white-space:nowrap}
+.foot-cta{flex:none;height:52px;display:inline-flex;align-items:center;align-self:flex-start;padding:0 28px;border-radius:999px;background:var(--nav-lima);color:var(--nav-ink);font-size:16px;font-weight:600;white-space:nowrap;transition:filter .18s}
+/* El color va fijado a proposito: la home tiene un a:hover{color:var(--lima)}
+   global que le ganaba, y como el fondo del boton ES lima quedaba texto lima
+   sobre lima, ilegible. El acuse de hover lo da el brillo, no el color. */
+.foot-cta:hover,.foot-cta:focus-visible{color:var(--nav-ink);filter:brightness(.92)}
+.foot-cta:focus-visible{outline:2px solid var(--nav-paper);outline-offset:3px}
 .foot-bot{margin-top:clamp(34px,3.2vw,60px);padding-top:20px;border-top:1px solid rgba(255,255,255,.18);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13.5px;color:rgba(255,255,255,.62)}
 
-@media (max-width:640px){
-  .foot-cols{grid-template-columns:1fr 1fr}
-  .foot-cta{width:100%;justify-content:center}
+/* Desktop: logo grande a la izquierda, las tres columnas juntas contra el borde
+   derecho y el CTA debajo de ellas, en la esquina. En flex las columnas tiraban
+   a ocupar el sobrante y el CTA quedaba de tercero en la misma fila. */
+@media (min-width:1024px){
+  /* Una sola fila: logo, las tres columnas juntas contra la derecha, y el CTA
+     al final a la altura del logo. Las columnas van a max-content y no a 1fr:
+     con 1fr se repartian todo el ancho y quedaban desparramadas. */
+  .foot-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;column-gap:clamp(28px,3vw,64px)}
+  .foot-top > a:not(.foot-cta){grid-column:1;grid-row:1}
+  .foot-cols{grid-column:2;grid-row:1;flex:none;min-width:0;grid-template-columns:repeat(3,max-content);justify-content:center;gap:clamp(30px,3.4vw,64px)}
+  .foot-cta{grid-column:3;grid-row:1;justify-self:end;align-self:start}
 }
 
+/* Abajo de 1024 se apila como cualquier pie de celular: logo, Servicios,
+   Empresa, Legal y el boton al final. En dos columnas los bloques cortos
+   (Empresa tiene tres links, Legal dos) dejaban huecos y no habia orden de
+   lectura claro. */
+@media (max-width:1023px){
+  .foot-top{display:flex;flex-direction:column;align-items:stretch;gap:clamp(26px,4vw,38px)}
+  .foot-cols{display:flex;flex-direction:column;gap:clamp(24px,3.6vw,34px);width:100%;min-width:0}
+  /* a todo el ancho en el telefono, pero con tope: a 1000px un boton de
+     960px de ancho se ve deforme */
+  .foot-cta{width:100%;max-width:460px;justify-content:center;align-self:flex-start}
+}
+
+
+
+/* La barra dibujada dentro del frame del hero vive en un contexto de apilado
+   con z-index 30, y el logo grande del hero esta en 40: el desplegable quedaba
+   POR DEBAJO del logo. Un z-index en el panel no alcanza, porque no puede
+   salirse del contexto de su ancestro: hay que elevar el frame entero, y solo
+   mientras el desplegable esta abierto.
+   El !important es contra el z-index:30 que #nea-frame trae inline en la home:
+   sin el, la hoja externa pierde por especificidad. */
+#nea-frame:has(.nea-framebar details[open]){z-index:50!important}
+/* Y dentro del frame hay un segundo tapado: #nea-logo es otro absolute hermano
+   de la barra y va despues en el DOM, asi que sin z-index se pintaba encima del
+   desplegable. Alcanza con elevar el details, que ya es position:relative. */
+.nea-framebar details[open]{z-index:5}
 
 /* Fila de la barra dibujada dentro del frame del hero (solo home). El CTA se
    va al borde derecho por su cuenta: con la tira de links oculta en pantallas

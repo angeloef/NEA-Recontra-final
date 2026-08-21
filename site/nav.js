@@ -86,6 +86,10 @@
     // mismo umbral que usa la home para decidir tinta clara u oscura
     const claro = luz(c) >= .21;
     nav.style.color = claro ? 'rgb(' + NEGRO.join(',') + ')' : 'rgb(' + BLANCO.join(',') + ')';
+    // El desplegable de "Servicios" acompaña a la barra: sin esto quedaba
+    // oscuro sobre una barra clara, como en las paginas legales.
+    nav.style.setProperty('--nav-panel-bg', css);
+    nav.style.setProperty('--nav-panel-fg', claro ? 'rgb(' + NEGRO.join(',') + ')' : 'rgb(' + BLANCO.join(',') + ')');
 
     const logo = nav.querySelector('img');
     if (logo) {

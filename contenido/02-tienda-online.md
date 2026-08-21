@@ -9,7 +9,7 @@
 | Campo | Contenido |
 |---|---|
 | `<title>` | Tienda online a medida — NEA Sistemas \| Misiones, Argentina |
-| `description` | Tienda online propia, sin comisión por venta: catálogo, carrito, cobro con Mercado Pago y envíos. Ves el diseño navegable antes de firmar nada. |
+| `description` | Tienda online propia, sin comisión por venta: catálogo, carrito, cobro con Mercado Pago y envíos. Ves y aprobás el diseño navegable antes de que se programe. |
 | `canonical` | https://neasistemas.com.ar/tienda-online/ |
 | `og:title` / `twitter:title` | Tienda online a medida — NEA Sistemas |
 | `og:description` / `twitter:description` | Catálogo, carrito, cobro online y envíos. Sin comisión por venta y con la tienda 100% a tu nombre. |
@@ -48,7 +48,7 @@ Abrir la tienda es la parte fácil. Lo difícil es que alguien llegue, entienda 
 | Dato | Detalle |
 |---|---|
 | 0% de comisión | No participamos de tus ventas. Solo pagás lo que cobre tu medio de pago. |
-| Mockup antes de firmar | Recorrés tu tienda en el celular antes de que exista un contrato. |
+| Diseño navegable | Recorrés y aprobás tu tienda en el celular antes de que se programe. |
 | 100% tuya | Dominio, cuentas de cobro y código a nombre de tu empresa. |
 | 1er año incluido | Hosting, dominio, certificado, copias diarias y actualizaciones. |
 
@@ -109,10 +109,10 @@ Miramos tu catálogo, tu margen y cómo vendés hoy. Cuántos productos son, cu�
 
 **Te llevás:** el diagnóstico escrito con precios, en menos de 24 horas. Si ahí decidís que no, no debés nada.
 
-### 02 · Diseñar — y lo ves antes de firmar
+### 02 · Diseñar — y lo ves antes de que se programe
 Armamos la portada, el listado, la ficha de producto y el checkout navegables de verdad, con productos tuyos adentro. Podés abrirlo en el celular, agregar algo al carrito y llegar hasta el pago. Es donde se descubre que faltaba un filtro o que el envío tiene que verse antes.
 
-**Te llevás:** la certeza de cómo va a funcionar tu tienda, sin haber firmado nada. Acá los cambios salen baratos.
+**Te llevás:** la certeza de cómo va a funcionar tu tienda. Cuando lo aprobás, recién ahí se programa: acá los cambios salen baratos.
 
 ### 03 · Construir — y queda a tu nombre
 Programamos la tienda completa, conectamos el medio de pago y los envíos con tus cuentas, cargamos el catálogo y publicamos con la medición andando. Registramos el dominio a nombre de tu empresa y te entregamos los accesos.
@@ -222,7 +222,7 @@ La base completa: diseño propio, catálogo con variantes, carrito, panel de adm
 - Pago único, sin comisión por venta
 - Primer año de soporte incluido
 - Dominio y código a tu nombre
-- Mockup navegable antes de firmar
+- Diseño navegable que aprobás antes de que se programe
 
 ### Soporte del año 2 en adelante — 3 años −30% / 5 años −50%
 Hosting, dominio, certificado, copias diarias, actualizaciones y cambios menores. Se factura por adelantado.

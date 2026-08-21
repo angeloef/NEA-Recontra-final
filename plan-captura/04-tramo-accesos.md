@@ -1,11 +1,13 @@
 # Tramo 4 — Accesos y materiales
 
 **Canal:** checklist asincrónico (WhatsApp o mail) · **Duración:** días, no minutos · **Ficha al cerrar:** 90%
-**Devolución que ofrecemos:** el mockup navegable con su contenido real, no con texto de relleno.
+**Devolución que ofrecemos:** un presupuesto exacto, sin sorpresas de último momento, y un
+proyecto que arranca sin frenarse.
 
 ## Objetivo
 
-Juntar lo que hace falta para que el diseño se arme con **su marca, sus fotos y sus textos**.
+Saber con qué se cuenta realmente antes de cotizar, y juntar lo que hace falta para que el
+diseño se arme con **su marca, sus fotos y sus textos** apenas arranque el proyecto.
 Es el tramo donde más proyectos se frenan, y casi siempre por lo mismo: fotos que no existen
 y accesos que nadie sabe dónde están.
 
@@ -75,7 +77,8 @@ y eso se dice explícito para que nadie se trabe por vergüenza.
 
 ## Diagnóstico de fotos: la demora número uno
 
-Se resuelve en este tramo, no cuando el diseño ya está armado. Tres escenarios:
+Se resuelve en este tramo, no cuando el diseño ya está armado — y acá porque cambia el precio.
+Tres escenarios:
 
 | Escenario | Salida |
 |---|---|
@@ -91,7 +94,7 @@ que **está incluida en el precio del sitio**.
 - Se manda el checklist una vez, completo.
 - Recordatorio a las 48 h **sólo de lo que falta**, no de la lista entera.
 - Si a la semana falta algo bloqueante, se avisa qué se está frenando y qué fecha se corre.
-- Lo no bloqueante no detiene el mockup: se arma con lo que hay y se marca como pendiente.
+- Lo no bloqueante no detiene nada: se marca como pendiente y se resuelve dentro de Diseñar.
 
 ## Salidas laterales
 

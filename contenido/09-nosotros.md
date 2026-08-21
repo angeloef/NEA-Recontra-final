@@ -46,7 +46,7 @@ NEA Sistemas es un estudio chico de Oberá, Misiones, que hace webs, posicionami
 
 | Dato | Detalle |
 |---|---|
-| Mostramos primero | Ves el diagnóstico y el diseño de tu sitio antes de que exista un contrato. |
+| Mostramos primero | Ves el diagnóstico y el diseño navegable de tu sitio antes de que se programe. |
 | Etapas sueltas | Cada etapa se cotiza aparte. Podés frenar al final de cualquiera. |
 | Todo a tu nombre | Dominio, cuentas y código de tu empresa. Nunca nuestros. |
 | Oberá, Misiones | Trabajamos con negocios de toda la Argentina, de forma remota. |
@@ -66,7 +66,7 @@ Prometer es gratis y todos prometen lo mismo. Nos pareció más honesto invertir
 Un diagnóstico sin números no sirve para decidir; sirve para que tengas que volver a preguntar. El nuestro llega en menos de 24 horas y dice qué te está frenando, qué conviene resolver primero y cuánto sale cada cosa. Es un documento con el que podés ir a pedir otra cotización y comparar. Sabemos que puede pasar y está bien.
 
 ### 03 · El diseño existe antes que el contrato
-Firmar por un sitio que todavía no viste es firmar por una descripción. Por eso armamos las pantallas principales navegables de verdad, con tus textos y tu identidad, y te pasamos un enlace para que las abras en tu celular. Recién ahí decidís. Cambiar algo en esa instancia cuesta una tarde; cambiarlo con el sitio programado cuesta plata.
+Aprobar un sitio que todavía no viste es aprobar una descripción. Por eso armamos las pantallas principales navegables de verdad, con tus textos y tu identidad, y te pasamos un enlace para que las abras en tu celular. Recién ahí decidís. Cambiar algo en esa instancia cuesta una tarde; cambiarlo con el sitio programado cuesta plata.
 
 ### 04 · Analizamos el negocio antes de tocar tecnología
 La pregunta no es qué tecnología usar: es cómo entra hoy un cliente a tu negocio, dónde se cae y qué te preguntan siempre antes de comprar. Esa charla define todo lo demás. Elegir herramientas antes de entender eso es empezar por el final y es la razón por la que muchos proyectos terminan siendo lindos y no sirven.
@@ -136,7 +136,7 @@ Ninguno de estos es un favor. Son las condiciones bajo las que nos gusta trabaja
 
 | Compromiso | Detalle |
 |---|---|
-| **El mockup existe antes del contrato** | Ves tu sitio navegable, en tu celular, con tus textos, antes de firmar nada. No una imagen: un enlace que se toca. |
+| **El diseño existe antes del desarrollo** | Ves tu sitio navegable, en tu celular, con tus textos, antes de que se programe. No una imagen: un enlace que se toca. |
 | **El diagnóstico es gratis y trae precios** | En menos de 24 horas, por escrito, con qué te frena, qué hace tu competencia y cuánto sale cada cosa. Si decís que no, te queda igual. |
 | **Todo queda a tu nombre** | Dominio registrado a nombre de tu empresa, hosting en una cuenta tuya, código entregado. Si mañana trabajás con otro, se lleva todo y funciona. |
 | **KPIs acordados por fase** | Antes de arrancar definimos qué número tiene que moverse y en cuánto tiempo. Sin eso, cualquier resultado se puede contar como éxito. |

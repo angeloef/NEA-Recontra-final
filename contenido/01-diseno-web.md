@@ -9,15 +9,15 @@
 | Campo | Contenido |
 |---|---|
 | `<title>` | Diseño web para empresas — NEA Sistemas \| Misiones, Argentina |
-| `description` | Diseño y desarrollo web a medida para empresas donde la confianza define la venta. Mockup navegable antes de firmar, código propio y el sitio 100% a tu nombre. |
+| `description` | Diseño y desarrollo web a medida para empresas donde la confianza define la venta. Diseño navegable que aprobás antes de que se programe, código propio y el sitio 100% a tu nombre. |
 | `canonical` | https://neasistemas.com.ar/diseno-web/ |
 | `og:title` / `twitter:title` | Diseño web para empresas — NEA Sistemas |
-| `og:description` / `twitter:description` | Sitios hechos a medida, no plantillas. Ves el diseño navegable antes de firmar nada. |
+| `og:description` / `twitter:description` | Sitios hechos a medida, no plantillas. Ves y aprobás el diseño navegable antes de que se programe. |
 
 ### Datos estructurados
 
 **Service:** Diseño y desarrollo web a medida
-*Diseño y desarrollo de sitios web a medida para empresas: landing pages, sitios institucionales y rediseños. Incluye diagnóstico, mockup navegable, desarrollo, medición y el primer año de soporte.*
+*Diseño y desarrollo de sitios web a medida para empresas: landing pages, sitios institucionales y rediseños. Incluye diagnóstico, diseño navegable, desarrollo, medición y el primer año de soporte.*
 
 | Oferta | Precio (ARS) | Descripción |
 |---|---|---|
@@ -52,7 +52,7 @@ Antes de escribirte, tu cliente ya te buscó, te abrió en el celular y decidió
 | Dato | Detalle |
 |---|---|
 | Sin plantillas | Cada sitio se diseña y se programa para un negocio puntual. No hay dos iguales. |
-| Mockup antes de firmar | Ves tu web navegable en el celular antes de que exista un contrato. |
+| Diseño navegable | Ves y aprobás tu web en el celular antes de que se programe. |
 | 100% tuyo | Dominio, cuentas y código a nombre de tu empresa. Sin candados. |
 | 1er año incluido | Hosting, dominio, copias de seguridad y actualizaciones, sin cargo. |
 
@@ -111,10 +111,10 @@ Miramos tu negocio y los tres o cuatro competidores con los que realmente te com
 
 **Te llevás:** el diagnóstico escrito con precios, en menos de 24 horas. Si ahí decidís que no, no debés nada.
 
-### 02 · Diseñar — y lo ves antes de firmar
+### 02 · Diseñar — y lo ves antes de que se programe
 Armamos las páginas principales navegables de verdad: podés abrirlas en tu celular, tocar los botones y recorrerlas. Con la identidad ya definida —colores, tipografías, imágenes y las animaciones que le dan vida— y con tus textos adentro, no con relleno.
 
-**Te llevás:** la certeza de cómo va a verse tu sitio, sin haber firmado nada todavía. Acá es donde se corrigen las cosas, cuando cambiar sale barato.
+**Te llevás:** la certeza de cómo va a verse tu sitio. Cuando lo aprobás, recién ahí se programa: acá es donde se corrigen las cosas, cuando cambiar sale barato.
 
 ### 03 · Construir — y queda a tu nombre
 Programamos el sitio completo, lo conectamos con lo que ya usás (WhatsApp, tu correo, tu facturación, tus redes) y lo publicamos con la medición andando. Registramos el dominio a nombre de tu empresa y te entregamos los accesos.

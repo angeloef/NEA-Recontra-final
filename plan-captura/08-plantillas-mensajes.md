@@ -74,7 +74,7 @@ en voseo, sin superlativos y con la devolución siempre explícita.
 
 ## Tramo 4 · Pedido de accesos
 
-> Para armar el diseño con tu contenido real necesito esta lista. Marcá lo que tengas y lo que
+> Para cerrarte el presupuesto exacto y que el proyecto arranque sin frenarse necesito esta lista. Marcá lo que tengas y lo que
 > no aparezca lo resolvemos nosotros, no te trabes por eso:
 >
 > ☐ Dominio (y a nombre de quién está)
@@ -84,7 +84,7 @@ en voseo, sin superlativos y con la devolución siempre explícita.
 > ☐ Catálogo o lista de precios
 > ☐ Google Business, si lo tenés
 >
-> Con eso arranco el mockup. Lo vas a poder abrir en el celular antes de que exista un contrato.
+> Con eso te cierro el presupuesto sin sorpresas de último momento.
 
 ## Tramo 4 · Recordatorio de lo que falta
 
@@ -92,7 +92,7 @@ en voseo, sin superlativos y con la devolución siempre explícita.
 > ☐ [pendiente 1]
 > ☐ [pendiente 2]
 >
-> Con eso te mando el mockup el [día].
+> Con eso te cierro el presupuesto el [día].
 
 ## Tramo 4 · Aviso de demora
 
@@ -101,14 +101,23 @@ en voseo, sin superlativos y con la devolución siempre explícita.
 
 ---
 
-## Tramo 5 · Envío del mockup
+## Tramo 5 · Envío del diagnóstico, antes de la reunión
+
+> Ahí va el diagnóstico completo: [link]
+>
+> Leelo tranquilo y anotá lo que no te cierre, por chiquito que sea. El [día] lo repasamos
+> juntos y cerramos qué entra y qué queda para más adelante.
+>
+> Llevo también algunas referencias visuales para que definamos hacia dónde va el diseño.
+
+## Proyecto · Envío del diseño navegable (etapa Diseñar, ya firmado)
 
 > Ahí está el diseño: [link]
 >
 > Abrilo en el celular y tocá todo, está navegable de verdad. Anotá lo que te chirríe, por
 > chiquito que sea: cambiarlo ahora es una tarde, cambiarlo con el sitio programado es plata.
 >
-> El [día] lo repasamos juntos.
+> Cuando lo apruebes, arranco a programar.
 
 ## Tramo 5 · Envío del presupuesto
 

@@ -7,7 +7,7 @@
 
 Estudio chico de diseño web, posicionamiento, campañas y sistemas de gestión a medida,
 con base en **Oberá, Misiones, Argentina**. Trabajamos en remoto con negocios de todo el país.
-Sitio: neasistemas.com.ar · WhatsApp: +54 9 3764 000000 · Idioma: español (es-AR).
+Sitio: neasistemas.com.ar · WhatsApp: +54 9 3755 28-9339 · Idioma: español (es-AR).
 
 Somos nuevos: hoy los proyectos llegan por referidos y todavía no hay casos publicados con
 nombre de cliente. La postura frente a eso es explícita en el sitio — no inventamos logos,
@@ -33,7 +33,7 @@ blog, cobro online, cálculo de envíos, facturación AFIP, CRM, área privada, 
 
 ## Siempre incluido (en todos los productos)
 
-Diagnóstico inicial gratis · mockup navegable antes de firmar · primer año de soporte completo
+Diagnóstico inicial gratis · diseño navegable aprobado antes de programar · primer año de soporte completo
 (hosting, dominio, certificado, backups diarios, actualizaciones) · **dominio, cuentas y código
 a nombre del cliente** · redacción de textos · base técnica de SEO · entrega del código ·
 sesión de capacitación.
@@ -41,7 +41,7 @@ sesión de capacitación.
 ## Cómo nos diferenciamos
 
 1. **Mostramos antes de cobrar.** Diagnóstico escrito en menos de 24 h, con precios adentro, y
-   diseño navegable en el celular antes de que exista contrato. El riesgo del arranque es nuestro.
+   diseño navegable en el celular antes de que se programe. El riesgo del arranque es nuestro.
 2. **Precios publicados.** Lista completa online + estimador que arma el número al instante.
    Nadie tiene que pedir una reunión para saber el orden de magnitud.
 3. **Todo queda a nombre del cliente.** Dominio, hosting, cuentas y código. Si se va, se lleva todo
@@ -53,8 +53,10 @@ sesión de capacitación.
    siempre; recién después las herramientas.
 7. **Nada de plantillas.** El sitio propio es la muestra: escrito a mano, rápido, imposible de falsear.
 
-Proceso en 4 etapas: **Analizar** (informe de negocio + competencia) → **Diseñar** (mockup navegable
-aprobado) → **Desarrollar** (integrado a las herramientas que ya usa) → **Entregar/sostener**.
+Proceso en 3 etapas: **Analizar** (informe de negocio + competencia, aprobado antes de seguir) →
+**Diseñar** (diseño navegable de las páginas principales, aprobado antes de programar) →
+**Construir** (desarrollo integrado a las herramientas que ya usa). Al cierre se entregan código
+y accesos, con capacitación.
 Plazos típicos: 2–6 semanas según alcance; tienda online 6–8 semanas.
 
 ## Cliente ideal

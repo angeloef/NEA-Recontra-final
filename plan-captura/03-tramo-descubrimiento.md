@@ -96,7 +96,7 @@ Detalle completo en [06-ficha-de-datos.md](06-ficha-de-datos.md), bloque I.
 
 | Situación | Qué se hace |
 |---|---|
-| Aparece un decisor oculto | Se pide sumarlo antes del mockup, no después |
+| Aparece un decisor oculto | Se pide sumarlo a la reunión de validación, no después |
 | El presupuesto real no da | Se ofrece el alcance que sí entra, o se sugiere empezar por una etapa |
 | No hay diferencia competitiva clara | Se dice, y el primer trabajo pasa a ser de posicionamiento |
 | Se cae la reunión | Se reagenda una vez. A la segunda caída, seguimiento a 90 días |

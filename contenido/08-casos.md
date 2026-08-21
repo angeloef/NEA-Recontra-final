@@ -70,7 +70,7 @@ Un caso publicable no es un sitio entregado: es un sitio entregado, medido duran
 Lo que podés evaluar hoy es concreto: las piezas que diseñamos, las decisiones que hay detrás de cada una y cómo pensamos un problema. Es menos vistoso que un testimonio, pero es verificable, y un testimonio no lo es nunca.
 
 ### 04 · Y el riesgo, mientras tanto, lo ponemos nosotros
-Como no podemos mostrarte casos, el proceso está armado para que no tengas que confiar de arriba: el diagnóstico es gratis, el diseño lo ves navegable antes de firmar, y podés frenar al final de cualquier etapa. Si no te convence lo que ves, no seguís.
+Como no podemos mostrarte casos, el proceso está armado para que no tengas que confiar de arriba: el diagnóstico es gratis, el diseño lo ves navegable antes de que se programe, y podés frenar al final de cualquier etapa. Si no te convence lo que ves, no seguís.
 
 ---
 

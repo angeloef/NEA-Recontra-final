@@ -25,3 +25,9 @@ services:
       - path: /*
         name: Permissions-Policy
         value: camera=(), microphone=(), geolocation=(), interest-cohort=()
+      # /estimador.html es un fragmento que app.js inyecta en la home y en /precios/.
+      # Servido solo, es HTML sin <head>: no puede llevar meta robots. Lo saca del
+      # indice el header, que es el unico lugar donde el fragmento no manda.
+      - path: /estimador.html
+        name: X-Robots-Tag
+        value: noindex

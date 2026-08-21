@@ -241,7 +241,7 @@ Va en todos los productos, del más chico al más grande, y no está sujeto a ne
 | Ítem | Detalle |
 |---|---|
 | **El diagnóstico inicial** | Miramos tu negocio y los competidores con los que te comparan, y te devolvemos por escrito qué te está frenando y qué conviene hacer primero. Llega en menos de 24 horas y no debés nada si decidís que no. |
-| **El mockup antes de firmar** | Ves las páginas principales navegables en tu celular, con tus textos y tu identidad, antes de que exista un contrato. Ahí es donde se corrigen las cosas, cuando cambiar sale barato. |
+| **El diseño navegable** | Ves las páginas principales navegables en tu celular, con tus textos y tu identidad, antes de que se programe. Ahí es donde se corrigen las cosas, cuando cambiar sale barato. |
 | **El primer año completo de soporte** | Hosting, dominio, certificado de seguridad, copias de seguridad diarias, actualizaciones y los cambios menores de contenido que vayas necesitando. Doce meses, sin cargo, en todos los productos. |
 | **El dominio y las cuentas a tu nombre** | El dominio se registra a nombre de tu empresa y el hosting queda en una cuenta tuya. Si mañana querés trabajar con otro, te llevás todo y sigue funcionando. Es más común de lo que parece que quede a nombre del proveedor: preguntalo siempre. |
 | **Los textos escritos con vos** | No te mandamos un documento en blanco para que lo llenes. Los redactamos a partir de una charla y vos corregís, que es muchísimo más rápido. La redacción está adentro del precio del sitio. |
@@ -292,7 +292,7 @@ Son orientativos y se cierran en la reunión inicial. El precio publicado es el 
 Lo que lo mueve está listado más arriba: la cantidad de páginas, si hay que redactar los textos, si hay que crear la identidad visual, las integraciones con sistemas que ya usás, la cantidad de productos a cargar y los idiomas. Ninguna de esas variables aparece a mitad del proyecto: se define antes y queda escrita.
 
 ### ¿Qué está siempre incluido y no se cobra aparte?
-El diagnóstico inicial, el mockup navegable previo a firmar, el primer año completo de soporte —hosting, dominio, certificado, copias diarias y actualizaciones— y el registro del dominio y las cuentas a nombre de tu empresa.
+El diagnóstico inicial, el diseño navegable previo al desarrollo, el primer año completo de soporte —hosting, dominio, certificado, copias diarias y actualizaciones— y el registro del dominio y las cuentas a nombre de tu empresa.
 
 También la redacción de los textos y la base técnica de SEO. Nada de eso figura como línea extra en la factura.
 

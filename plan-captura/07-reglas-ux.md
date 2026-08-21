@@ -14,8 +14,9 @@ Nunca se pide información "para evaluar tu caso". Se pide para devolver algo co
 | 4 preguntas por WhatsApp | Que miremos su caso y su competencia antes de hablar |
 | Micro-formulario | El análisis de competidores arriba de la mesa en la reunión |
 | 45 minutos de charla | El diagnóstico escrito con precios, en menos de 24 h |
-| Accesos y materiales | El mockup navegable con su contenido real |
+| Accesos y materiales | Un presupuesto exacto, sin sorpresas de último momento |
 | Datos de facturación | El presupuesto cerrado, sin números que aparecen después |
+| 30 min de reunión de validación | La dirección visual acordada y el alcance cerrado por escrito |
 
 Si un pedido nuevo no tiene su contraprestación, sobra o está en el tramo equivocado.
 
@@ -33,7 +34,7 @@ Antes de escribirle, se abre la ficha.
 
 ## 3. El canal que ya usa
 
-- **WhatsApp** para todo lo corto: preguntas, recordatorios, avances, link del mockup.
+- **WhatsApp** para todo lo corto: preguntas, recordatorios, avances, link del diseño.
 - **Formulario** sólo para lo que se copia y pega: links, accesos, opciones cerradas.
 - **Videollamada** una sola vez en todo el recorrido, grabada con permiso.
 - **Mail** para lo que necesita quedar formal: diagnóstico, presupuesto, factura.
@@ -96,8 +97,9 @@ Se miden para ajustar el proceso, no para reportarle a nadie:
 | Contactos positivos que agendan charla | Las cuatro preguntas están mal formuladas o son muchas |
 | Charlas agendadas que completan el formulario | El formulario es largo o no se explicó qué gana |
 | Charlas que llegan a diagnóstico | Estamos aceptando charlas que había que filtrar antes |
-| Diagnósticos que llegan a mockup | El diagnóstico no está convenciendo, o el precio sorprende |
-| Mockups que se firman | El descubrimiento no captó bien lo que el cliente necesitaba |
+| Diagnósticos que llegan a reunión de validación | El diagnóstico no está convenciendo, o el precio sorprende |
+| Reuniones de validación que se firman | El descubrimiento no captó bien lo que el cliente necesitaba |
+| Diseños aprobados sin segunda vuelta | La dirección visual no quedó bien acordada en el tramo 5 |
 | Días desde contacto hasta firma | Dónde se traba el proceso, casi siempre en el tramo 4 |
 
 Si un tramo pierde más de la mitad de la gente, el problema está en ese tramo, no en el lead.

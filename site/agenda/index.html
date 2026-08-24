@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agendá tu reunión — NEA Sistemas</title>
+<meta name="description" content="Elegí el día y la hora de la videollamada de 45 minutos con NEA Sistemas.">
+<!-- Pagina personal: se entra con un link unico. No va al sitemap ni al indice. -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" type="image/png" sizes="32x32" href="../uploads/favicon-32.png">
+<link rel="apple-touch-icon" href="../uploads/apple-touch-icon.png">
+<link rel="stylesheet" href="../chrome.css">
+<link rel="stylesheet" href="../legal.css">
+<link rel="stylesheet" href="../menu.css">
+<link rel="stylesheet" href="../agenda.css">
+</head>
+<body>
+<a class="nea-skip" href="#contenido">Saltar al contenido</a>
+
+<header id="nav">
+  <div class="in">
+    <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="185" height="40" style="height:clamp(30px,2.1vw,40px);width:auto;display:block"></a>
+    <nav aria-label="Principal">
+      <details>
+        <summary>Servicios</summary>
+        <div class="panel">
+          <a href="../diseno-web/">Diseño web</a>
+          <a href="../tienda-online/">Tienda online</a>
+          <a href="../sistemas-a-medida/">Sistemas a medida</a>
+          <a href="../marketing-digital/">Marketing digital</a>
+          <a href="../seo/">SEO</a>
+          <a href="../google-ads/">Google Ads</a>
+        </div>
+      </details>
+      <a href="../precios/">Precios</a>
+      <a href="../nosotros/">Nosotros</a>
+    </nav>
+    <a href="https://wa.me/5493755446606" class="btn cta">Escribinos por WhatsApp</a>
+  </div>
+</header>
+
+<main id="contenido">
+  <h1>Agendemos los 45 minutos</h1>
+  <p class="lead" id="lead">Elegí el día y la hora que te queden cómodos. Es una videollamada, sin costo y sin compromiso.</p>
+
+  <!-- Todo lo de abajo lo enciende agenda.js segun lo que conteste el server:
+       sin JS o sin link valido queda a la vista solo este mensaje. -->
+  <div class="estado" id="estado">Buscando los horarios libres…</div>
+
+  <section class="ficha" id="confirmada" hidden aria-live="polite">
+    <p class="rot">Reunión confirmada</p>
+    <p class="cuando" id="cuando"></p>
+    <p>45 minutos por videollamada. Te mandamos el link por WhatsApp el día anterior.</p>
+    <div class="acciones">
+      <a class="btn" id="ics" href="#">Agregar a mi calendario</a>
+      <button class="btn sec" type="button" id="reprogramar">Elegir otro horario</button>
+      <button class="btn link" type="button" id="cancelar">Cancelar la reunión</button>
+    </div>
+  </section>
+
+  <section id="elegir" hidden>
+    <ol class="pasos">
+      <li><span>1</span>Nos contás cómo entra hoy un cliente y dónde se te cae.</li>
+      <li><span>2</span>Traducimos eso a números con tus datos, no con promedios.</li>
+      <li><span>3</span>Salís con un alcance, un precio y una fecha. O con un no claro.</li>
+    </ol>
+
+    <h2 class="paso-t">Elegí el día</h2>
+    <div class="dias" id="dias" role="group" aria-label="Días disponibles"></div>
+
+    <h2 class="paso-t" id="rotHoras">Elegí la hora <span style="text-transform:none;letter-spacing:0;font-weight:500">(hora de Argentina)</span></h2>
+    <div class="horas" id="horas" role="group" aria-label="Horarios disponibles"></div>
+
+    <form class="datos" id="datos" hidden>
+      <label><span>Tu nombre</span><input id="nombre" autocomplete="name" required></label>
+      <label><span>WhatsApp donde te mandamos el link</span><input id="whatsapp" type="tel" inputmode="tel" autocomplete="tel" required></label>
+      <label><span>Algo puntual que quieras que veamos (opcional)</span><textarea id="tema" rows="3"></textarea></label>
+      <button class="btn" id="confirmar">Confirmar</button>
+      <p class="aviso" id="aviso">Nada queda agendado hasta que aprietes el botón.</p>
+    </form>
+  </section>
+</main>
+
+<footer id="contacto">
+  <div class="foot-in">
+    <div class="foot-top">
+      <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(34px,2.6vw,44px);width:auto;display:block"></a>
+      <div class="foot-cols">
+        <div>
+          <h2>Servicios</h2>
+          <nav aria-label="Servicios">
+            <a href="../diseno-web/">Diseño web</a>
+            <a href="../tienda-online/">Tienda online</a>
+            <a href="../sistemas-a-medida/">Sistemas a medida</a>
+            <a href="../marketing-digital/">Marketing digital</a>
+            <a href="../seo/">SEO</a>
+            <a href="../google-ads/">Google Ads</a>
+          </nav>
+        </div>
+        <div>
+          <h2>Empresa</h2>
+          <nav aria-label="Empresa">
+            <a href="../">Inicio</a>
+            <a href="../precios/">Precios</a>
+            <a href="../nosotros/">Nosotros</a>
+          </nav>
+        </div>
+        <div>
+          <h2>Legal</h2>
+          <nav aria-label="Legal">
+            <a href="../privacidad/">Privacidad</a>
+            <a href="../terminos/">Términos</a>
+          </nav>
+        </div>
+      </div>
+      <a href="https://wa.me/5493755446606" class="foot-cta">Escribinos por WhatsApp</a>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 NEA Sistemas</span>
+      <span>Oberá, Misiones — trabajamos con todo el país</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../nav.js" defer></script>
+<script src="../agenda.js" defer></script>
+</body>
+</html>

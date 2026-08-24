@@ -1,0 +1,57 @@
+/* ------------------------------------------------------------------ agenda
+   La pantalla donde el cliente elige el horario de la videollamada de 45
+   minutos. Va sobre legal.css: de ahi salen las fuentes, los tokens, el .btn
+   y la tipografia de main. Aca esta solo lo que legal.css no tiene, que es el
+   selector de dia y hora.
+
+   Los datos no estan en esta pagina: los trae por JSON el server de nea-leads
+   con el token del link. El HTML se sirve estatico como todo el resto. */
+
+.estado{margin:clamp(24px,2.4vw,38px) 0 0;padding:18px 20px;border:1px solid var(--line);border-radius:14px;font-size:15px;line-height:1.6;color:var(--ink-soft)}
+.estado b{color:var(--ink)}
+.estado a{text-decoration:underline;text-underline-offset:3px}
+.estado.mal{border-color:#9b1c1c;color:#9b1c1c}
+.estado.mal b{color:#9b1c1c}
+
+/* la reunion ya confirmada */
+.ficha{margin:clamp(24px,2.4vw,38px) 0 0;padding:clamp(22px,2.2vw,30px);border:1.5px solid var(--ink);border-radius:16px;background:#FAFAF7}
+.ficha .rot{font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-mute);margin:0}
+.ficha .cuando{margin:8px 0 0;font-size:clamp(23px,2.5vw,34px);line-height:1.14;font-weight:700;letter-spacing:-.025em;text-wrap:balance}
+.ficha p{margin:12px 0 0}
+.acciones{display:flex;gap:12px;flex-wrap:wrap;margin-top:clamp(18px,1.8vw,26px)}
+.btn.sec{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.btn.sec:hover{border-color:var(--ink);box-shadow:none;transform:translateY(-2px)}
+.btn.link{height:auto;padding:0;background:none;font-size:14.5px;font-weight:500;color:var(--ink-mute);text-decoration:underline;text-underline-offset:3px}
+.btn.link:hover{color:var(--ink);transform:none;box-shadow:none}
+
+/* pasos de la reunion */
+.pasos{margin:clamp(26px,2.6vw,40px) 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.pasos li{margin:0;padding:14px 0 0;border-bottom:1px solid var(--line);padding-bottom:14px;display:flex;gap:14px;align-items:baseline;font-size:clamp(14.5px,1.05vw,16px);line-height:1.6;color:var(--ink-soft)}
+.pasos li span{flex:none;width:22px;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+
+/* selector */
+.paso-t{margin:clamp(26px,2.6vw,40px) 0 12px;font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-mute)}
+.dias{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 12px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.dia{flex:none;scroll-snap-align:start;min-width:78px;padding:12px 10px 11px;text-align:center;line-height:1.2;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;cursor:pointer;font-family:inherit;color:inherit;transition:border-color .16s,background-color .16s,transform .16s cubic-bezier(.22,1,.36,1)}
+.dia:hover{border-color:var(--ink);transform:translateY(-2px)}
+.dia .dow,.dia .mes{display:block;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-mute)}
+.dia .num{display:block;font-size:22px;font-weight:700;letter-spacing:-.02em;margin:1px 0}
+.dia[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.dia[aria-pressed="true"] .dow,.dia[aria-pressed="true"] .mes{color:rgba(255,255,255,.68)}
+
+.horas{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.hora{padding:14px 6px;text-align:center;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;cursor:pointer;font-family:inherit;font-size:16px;font-weight:600;color:inherit;font-variant-numeric:tabular-nums;transition:border-color .16s,background-color .16s,transform .16s cubic-bezier(.22,1,.36,1)}
+.hora:hover{border-color:var(--ink);transform:translateY(-2px)}
+.hora[aria-pressed="true"]{background:var(--lima);border-color:var(--ink)}
+
+/* confirmacion */
+.datos{margin-top:clamp(24px,2.4vw,36px);padding-top:clamp(22px,2.2vw,32px);border-top:1px solid var(--line)}
+.datos label{display:block;margin:0 0 16px}
+.datos label span{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.datos input,.datos textarea{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);font:inherit;font-size:16px;color:var(--ink)}
+.datos textarea{min-height:88px;resize:vertical;line-height:1.55}
+.datos input:focus,.datos textarea:focus{outline:none;border-color:var(--ink)}
+.datos .btn{width:100%;justify-content:center}
+.aviso{margin:12px 0 0;font-size:13.5px;color:var(--ink-mute)}
+.aviso.mal{color:#9b1c1c;font-weight:500}
+[hidden]{display:none!important}

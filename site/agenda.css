@@ -1,57 +1,343 @@
 /* ------------------------------------------------------------------ agenda
-   La pantalla donde el cliente elige el horario de la videollamada de 45
-   minutos. Va sobre legal.css: de ahi salen las fuentes, los tokens, el .btn
-   y la tipografia de main. Aca esta solo lo que legal.css no tiene, que es el
-   selector de dia y hora.
+   La pantalla donde el cliente elige el horario de la videollamada.
+
+   Va sobre legal.css: de ahi salen las tipografias, los tokens y el cascaron.
+   Lo unico que se le pisa es el ancho de main, porque esta pagina no es una
+   columna de texto sino dos paneles.
+
+   El movimiento lo hace GSAP desde agenda.js. Aca solo estan los estados
+   (hover, foco, seleccionado) y las transiciones cortas que no vale la pena
+   manejar por JS. Nada anima width/height: todo transform y opacity.
 
    Los datos no estan en esta pagina: los trae por JSON el server de nea-leads
    con el token del link. El HTML se sirve estatico como todo el resto. */
 
-.estado{margin:clamp(24px,2.4vw,38px) 0 0;padding:18px 20px;border:1px solid var(--line);border-radius:14px;font-size:15px;line-height:1.6;color:var(--ink-soft)}
-.estado b{color:var(--ink)}
-.estado a{text-decoration:underline;text-underline-offset:3px}
-.estado.mal{border-color:#9b1c1c;color:#9b1c1c}
-.estado.mal b{color:#9b1c1c}
+main{max-width:none;padding:0}
 
-/* la reunion ya confirmada */
-.ficha{margin:clamp(24px,2.4vw,38px) 0 0;padding:clamp(22px,2.2vw,30px);border:1.5px solid var(--ink);border-radius:16px;background:#FAFAF7}
-.ficha .rot{font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-mute);margin:0}
-.ficha .cuando{margin:8px 0 0;font-size:clamp(23px,2.5vw,34px);line-height:1.14;font-weight:700;letter-spacing:-.025em;text-wrap:balance}
-.ficha p{margin:12px 0 0}
-.acciones{display:flex;gap:12px;flex-wrap:wrap;margin-top:clamp(18px,1.8vw,26px)}
-.btn.sec{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
-.btn.sec:hover{border-color:var(--ink);box-shadow:none;transform:translateY(-2px)}
-.btn.link{height:auto;padding:0;background:none;font-size:14.5px;font-weight:500;color:var(--ink-mute);text-decoration:underline;text-underline-offset:3px}
-.btn.link:hover{color:var(--ink);transform:none;box-shadow:none}
+:root{
+  --hair:rgba(10,10,10,.09);
+  --sunk:#FAFAF8;
+  --rojo:#A21212;
+  --ag-r:14px;              /* radio de las piezas chicas */
+}
 
-/* pasos de la reunion */
-.pasos{margin:clamp(26px,2.6vw,40px) 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}
-.pasos li{margin:0;padding:14px 0 0;border-bottom:1px solid var(--line);padding-bottom:14px;display:flex;gap:14px;align-items:baseline;font-size:clamp(14.5px,1.05vw,16px);line-height:1.6;color:var(--ink-soft)}
-.pasos li span{flex:none;width:22px;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+.ag{
+  max-width:1180px;margin:0 auto;
+  padding:clamp(36px,4vw,76px) var(--pad) clamp(56px,5vw,104px);
+  display:grid;gap:clamp(32px,4vw,72px);
+  grid-template-columns:minmax(0,1fr);
+  align-items:start;
+}
+@media (min-width:960px){
+  .ag{grid-template-columns:minmax(280px,.82fr) minmax(0,1.18fr)}
+}
 
-/* selector */
-.paso-t{margin:clamp(26px,2.6vw,40px) 0 12px;font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-mute)}
-.dias{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 12px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
-.dia{flex:none;scroll-snap-align:start;min-width:78px;padding:12px 10px 11px;text-align:center;line-height:1.2;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;cursor:pointer;font-family:inherit;color:inherit;transition:border-color .16s,background-color .16s,transform .16s cubic-bezier(.22,1,.36,1)}
-.dia:hover{border-color:var(--ink);transform:translateY(-2px)}
-.dia .dow,.dia .mes{display:block;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-mute)}
-.dia .num{display:block;font-size:22px;font-weight:700;letter-spacing:-.02em;margin:1px 0}
-.dia[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
-.dia[aria-pressed="true"] .dow,.dia[aria-pressed="true"] .mes{color:rgba(255,255,255,.68)}
+/* ------------------------------------------------------------------- rail */
 
-.horas{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
-.hora{padding:14px 6px;text-align:center;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;cursor:pointer;font-family:inherit;font-size:16px;font-weight:600;color:inherit;font-variant-numeric:tabular-nums;transition:border-color .16s,background-color .16s,transform .16s cubic-bezier(.22,1,.36,1)}
-.hora:hover{border-color:var(--ink);transform:translateY(-2px)}
-.hora[aria-pressed="true"]{background:var(--lima);border-color:var(--ink)}
+.ag-eyebrow{
+  margin:0;font-size:12.5px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+.ag-h1{
+  margin:14px 0 0;font-size:clamp(32px,3.5vw,50px);line-height:1.02;
+  font-weight:700;letter-spacing:-.035em;text-wrap:balance;
+}
+.ag-sub{
+  margin:16px 0 0;font-size:clamp(15px,1.1vw,17px);line-height:1.6;
+  color:var(--ink-soft);max-width:38ch;text-wrap:pretty;
+}
 
-/* confirmacion */
-.datos{margin-top:clamp(24px,2.4vw,36px);padding-top:clamp(22px,2.2vw,32px);border-top:1px solid var(--line)}
-.datos label{display:block;margin:0 0 16px}
-.datos label span{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
-.datos input,.datos textarea{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);font:inherit;font-size:16px;color:var(--ink)}
-.datos textarea{min-height:88px;resize:vertical;line-height:1.55}
-.datos input:focus,.datos textarea:focus{outline:none;border-color:var(--ink)}
-.datos .btn{width:100%;justify-content:center}
-.aviso{margin:12px 0 0;font-size:13.5px;color:var(--ink-mute)}
-.aviso.mal{color:#9b1c1c;font-weight:500}
+.ag-meta{margin:clamp(24px,2.4vw,34px) 0 0;padding:0;border-top:1px solid var(--line)}
+.ag-meta > div{
+  display:flex;gap:16px;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid var(--hair);
+}
+.ag-meta dt{flex:none;width:88px;font-size:12.5px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute)}
+.ag-meta dd{margin:0;font-size:15px;font-weight:500;color:var(--ink)}
+
+.ag-pasos{
+  margin:clamp(24px,2.4vw,34px) 0 0;padding:0;list-style:none;
+  counter-reset:p;
+}
+.ag-pasos li{
+  counter-increment:p;position:relative;padding:0 0 12px 30px;
+  font-size:14.5px;line-height:1.58;color:var(--ink-mute);text-wrap:pretty;
+}
+.ag-pasos li::before{
+  content:counter(p);position:absolute;left:0;top:1px;
+  width:19px;height:19px;border-radius:99px;border:1px solid var(--line);
+  font-size:10.5px;font-weight:700;color:var(--ink);
+  display:grid;place-items:center;
+}
+@media (min-width:960px){
+  .ag-rail{position:sticky;top:calc(var(--nav-h) + 34px)}
+}
+
+/* En una columna el rail entero antes del calendario obliga a scrollear todo
+   el contexto para llegar a lo que el lead vino a hacer. display:contents
+   sube sus hijos a la grilla y deja mandar el orden: titulo y datos arriba,
+   calendario, y los tres pasos de la reunion al final, que es lectura. */
+@media (max-width:959px){
+  .ag{gap:0}
+  .ag-rail{display:contents}
+  .ag-panel{order:2;margin-top:clamp(26px,5vw,34px)}
+  .ag-pasos{order:3;margin-top:clamp(26px,5vw,34px);
+    padding-top:clamp(22px,4vw,28px);border-top:1px solid var(--line)}
+  .ag-sub{max-width:none}
+  /* tres filas etiquetadas comen media pantalla: en angosto son chips, y el
+     valor se explica solo ("45 minutos", "Videollamada") sin la etiqueta */
+  .ag-meta{margin-top:20px;border-top:0;display:flex;flex-wrap:wrap;gap:8px}
+  .ag-meta > div{padding:7px 13px;border:1px solid var(--line);
+    border-radius:99px;border-bottom:1px solid var(--line)}
+  .ag-meta dt{display:none}
+  .ag-meta dd{font-size:13.5px}
+}
+
+/* ------------------------------------------------------------------ panel */
+
+.ag-panel{
+  position:relative;min-height:420px;
+  scroll-margin-top:calc(var(--nav-h) + 14px);   /* la barra es sticky */
+  border:1px solid var(--line);border-radius:22px;background:var(--paper);
+  padding:clamp(20px,2.2vw,30px);
+}
+
+/* mientras carga o si el link vencio no hay calendario que sostener: el alto
+   minimo dejaria un hueco enorme debajo de dos renglones */
+.ag-panel:has(#estado:not([hidden])){min-height:0}
+
+/* pasos */
+.ag-steps{
+  display:flex;gap:6px;flex-wrap:wrap;margin:0 0 clamp(20px,2vw,28px);
+  padding:0 0 clamp(16px,1.6vw,22px);list-style:none;
+  border-bottom:1px solid var(--hair);
+}
+.ag-steps li{
+  display:flex;align-items:center;gap:7px;
+  font-size:12.5px;font-weight:600;letter-spacing:.02em;color:var(--ink-mute);
+  padding:5px 12px 5px 5px;border-radius:99px;
+  transition:color .22s ease,background-color .22s ease;
+}
+.ag-steps li span{
+  width:20px;height:20px;border-radius:99px;display:grid;place-items:center;
+  background:var(--sunk);border:1px solid var(--line);
+  font-size:10.5px;font-variant-numeric:tabular-nums;
+  transition:background-color .22s ease,color .22s ease,border-color .22s ease;
+}
+.ag-steps li.on{color:var(--ink);background:var(--sunk)}
+.ag-steps li.on span{background:var(--ink);border-color:var(--ink);color:#fff}
+.ag-steps li.done span{background:var(--lima);border-color:var(--lima);color:var(--ink)}
+
+/* los tres pasos comparten lugar: solo uno visible por vez */
+.ag-step{display:grid;gap:clamp(20px,2.4vw,34px)}
+#paso-cuando{grid-template-columns:minmax(0,1fr)}
+@media (min-width:720px){
+  #paso-cuando{grid-template-columns:minmax(0,1fr) 188px}
+}
+
+/* --------------------------------------------------------------- estado */
+
+.ag-estado{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:22px 2px;font-size:15px;line-height:1.6;color:var(--ink-soft);
+}
+.ag-estado b{color:var(--ink)}
+.ag-estado a{text-decoration:underline;text-underline-offset:3px}
+.ag-estado.mal{color:var(--rojo)}
+.ag-estado.mal b,.ag-estado.mal a{color:var(--rojo)}
+.ag-estado.mal .ag-spin{display:none}
+.ag-spin{
+  flex:none;width:16px;height:16px;margin-top:3px;border-radius:99px;
+  border:2px solid var(--line);border-top-color:var(--ink);
+  animation:ag-gira .7s linear infinite;
+}
+@keyframes ag-gira{to{transform:rotate(360deg)}}
+
+/* ------------------------------------------------------------- calendario */
+
+.ag-cal-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.ag-mes{
+  margin:0;font-size:clamp(17px,1.5vw,21px);font-weight:600;
+  letter-spacing:-.02em;text-transform:capitalize;   /* 'septiembre 2026' -> 'Septiembre 2026' */
+}
+.ag-nav{display:flex;gap:6px}
+.ag-nav button{
+  width:38px;height:38px;display:grid;place-items:center;
+  border:1px solid var(--line);border-radius:11px;background:var(--paper);
+  color:var(--ink);cursor:pointer;
+  transition:border-color .18s ease,background-color .18s ease,opacity .18s ease;
+}
+.ag-nav button:hover:not(:disabled){border-color:var(--ink);background:var(--sunk)}
+.ag-nav button:disabled{opacity:.28;cursor:default}
+.ag-nav svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+
+.ag-dow,.ag-grid{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;
+}
+.ag-dow{margin-bottom:8px}
+.ag-dow span{
+  text-align:center;font-size:11px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+
+.ag-dia{
+  position:relative;aspect-ratio:1;min-height:44px;
+  display:grid;place-items:center;
+  border:1.5px solid var(--line);border-radius:var(--ag-r);
+  background:var(--paper);color:var(--ink);
+  font:inherit;font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums;
+  cursor:pointer;
+  transition:border-color .16s ease,background-color .16s ease,color .16s ease;
+}
+.ag-dia:hover{border-color:var(--ink);background:var(--sunk)}
+.ag-dia[aria-disabled="true"]{
+  border-color:transparent;background:transparent;color:var(--ink-mute);
+  opacity:.42;cursor:default;font-weight:500;
+}
+.ag-dia[aria-disabled="true"]:hover{background:transparent}
+.ag-dia[aria-selected="true"]{
+  background:var(--ink);border-color:var(--ink);color:#fff;
+}
+.ag-dia.hoy::after{
+  content:"";position:absolute;bottom:7px;left:50%;margin-left:-2px;
+  width:4px;height:4px;border-radius:99px;background:var(--ink);opacity:.5;
+}
+.ag-dia[aria-selected="true"].hoy::after{background:var(--lima);opacity:1}
+.ag-hueco{aspect-ratio:1;min-height:44px}
+
+/* legal.css subraya todo a[href^=http]: el boton del .ics no es un link de texto */
+main a.ag-btn,main a.ag-btn:hover{text-decoration:none}
+
+.ag-nota{
+  margin:0 0 14px;padding:12px 15px;border-radius:var(--ag-r);
+  background:var(--lima);font-size:13.5px;line-height:1.5;color:var(--ink);
+  font-weight:500;
+}
+
+.ag-vacio{
+  margin:16px 0 0;padding:14px 16px;border-radius:var(--ag-r);
+  background:var(--sunk);font-size:14px;line-height:1.55;color:var(--ink-soft);
+}
+.ag-vacio button{
+  border:0;background:none;padding:0;font:inherit;font-weight:600;color:var(--ink);
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer;
+}
+
+/* ------------------------------------------------------------------ horas */
+
+.ag-horas{min-width:0}
+.ag-horas-tit{
+  margin:0 0 12px;font-size:12.5px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+.ag-horas-lista{display:grid;gap:8px}
+@media (max-width:719px){
+  .ag-horas-lista{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
+}
+.ag-hora{
+  width:100%;min-height:48px;padding:12px 14px;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid var(--line);border-radius:var(--ag-r);
+  background:var(--paper);color:var(--ink);
+  font:inherit;font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums;
+  cursor:pointer;
+  transition:border-color .16s ease,background-color .16s ease,transform .16s cubic-bezier(.22,1,.36,1);
+}
+.ag-hora:hover{border-color:var(--ink);background:var(--sunk)}
+.ag-hora:active{transform:scale(.985)}
+.ag-hora[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.ag-horas-vacio{font-size:14px;line-height:1.55;color:var(--ink-mute)}
+
+/* ---------------------------------------------------------------- formulario */
+
+.ag-form{gap:0}
+.ag-elegido{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 18px;margin-bottom:clamp(20px,2vw,28px);
+  border-radius:var(--ag-r);background:var(--sunk);
+  border:1px solid var(--hair);
+}
+.ag-elegido-d{margin:0;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.ag-elegido-h{margin:2px 0 0;font-size:13.5px;color:var(--ink-mute);font-variant-numeric:tabular-nums}
+.ag-cambiar{
+  flex:none;border:1px solid var(--line);border-radius:99px;background:var(--paper);
+  padding:8px 16px;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);
+  cursor:pointer;transition:border-color .18s ease;
+}
+.ag-cambiar:hover{border-color:var(--ink)}
+/* en angosto el boton le roba el ancho a la fecha y la parte en dos lineas */
+@media (max-width:440px){
+  .ag-elegido{flex-direction:column;align-items:flex-start;gap:12px}
+}
+
+.ag-campo{display:block;margin:0 0 16px}
+.ag-campo > span{display:block;font-size:13.5px;font-weight:600;margin-bottom:7px}
+.ag-campo > span i{font-style:normal;font-weight:500;color:var(--ink-mute)}
+.ag-campo input,.ag-campo textarea{
+  width:100%;padding:13px 15px;
+  border:1.5px solid var(--line);border-radius:var(--ag-r);
+  background:var(--paper);font:inherit;font-size:16px;color:var(--ink);
+  transition:border-color .16s ease;
+}
+.ag-campo textarea{min-height:88px;resize:vertical;line-height:1.55}
+.ag-campo input:hover,.ag-campo textarea:hover{border-color:rgba(10,10,10,.28)}
+.ag-campo input:focus,.ag-campo textarea:focus{outline:none;border-color:var(--ink)}
+.ag-campo input[aria-invalid="true"]{border-color:var(--rojo)}
+.ag-err{display:block;margin-top:6px;font-style:normal;font-size:13px;color:var(--rojo)}
+
+.ag-pie{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--ink-mute);text-align:center}
+.ag-pie.mal{color:var(--rojo);font-weight:500}
+
+/* ---------------------------------------------------------------- botones */
+
+.ag-btn{
+  min-height:52px;display:inline-flex;align-items:center;justify-content:center;
+  gap:10px;padding:0 26px;border-radius:99px;
+  border:1.5px solid var(--line);background:var(--paper);color:var(--ink);
+  font:inherit;font-size:15.5px;font-weight:600;cursor:pointer;text-align:center;
+  transition:border-color .18s ease,transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s ease,opacity .18s ease;
+}
+.ag-btn:hover{border-color:var(--ink);transform:translateY(-2px)}
+.ag-btn-pri{background:var(--lima);border-color:var(--lima);color:var(--ink)}
+.ag-btn-pri:hover{border-color:var(--lima);box-shadow:0 10px 24px rgba(10,10,10,.16)}
+.ag-btn:disabled{opacity:.55;cursor:default;transform:none;box-shadow:none}
+#confirmar{width:100%;margin-top:6px}
+
+.ag-link{
+  border:0;background:none;padding:8px 0;margin-top:14px;
+  font:inherit;font-size:14px;font-weight:500;color:var(--ink-mute);
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer;
+}
+.ag-link:hover{color:var(--ink)}
+
+/* ------------------------------------------------------------ confirmado */
+
+.ag-listo{gap:0;text-align:left;padding:clamp(6px,1vw,14px) 0}
+.ag-tick{
+  width:52px;height:52px;border-radius:99px;background:var(--lima);
+  display:grid;place-items:center;margin:0 0 22px;
+}
+.ag-tick svg{width:26px;height:26px;fill:none;stroke:var(--ink);stroke-width:2.4;
+  stroke-linecap:round;stroke-linejoin:round}
+.ag-cuando{
+  margin:10px 0 0;font-size:clamp(26px,3vw,40px);line-height:1.08;
+  font-weight:700;letter-spacing:-.032em;text-wrap:balance;
+}
+.ag-meta-listo{margin-top:clamp(22px,2.2vw,30px)}
+.ag-acciones{display:flex;gap:12px;flex-wrap:wrap;margin-top:clamp(24px,2.4vw,32px)}
+@media (max-width:520px){
+  .ag-acciones{flex-direction:column;align-items:stretch}
+  .ag-acciones .ag-btn{width:100%}
+}
+
+/* ---------------------------------------------------------------- varios */
+
 [hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+.ag-dia:focus-visible,.ag-hora:focus-visible{outline-offset:2px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}

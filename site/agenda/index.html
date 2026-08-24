@@ -41,45 +41,119 @@
 </header>
 
 <main id="contenido">
-  <h1>Agendemos los 45 minutos</h1>
-  <p class="lead" id="lead">Elegí el día y la hora que te queden cómodos. Es una videollamada, sin costo y sin compromiso.</p>
+<div class="ag">
 
-  <!-- Todo lo de abajo lo enciende agenda.js segun lo que conteste el server:
-       sin JS o sin link valido queda a la vista solo este mensaje. -->
-  <div class="estado" id="estado">Buscando los horarios libres…</div>
+  <!-- Columna de contexto: quien, cuanto dura, en que huso. No cambia nunca,
+       asi que en desktop queda fija mientras el calendario se mueve al lado. -->
+  <aside class="ag-rail">
+    <p class="ag-eyebrow" id="empresa">NEA Sistemas</p>
+    <h1 class="ag-h1">Videollamada de 45 minutos</h1>
+    <p class="ag-sub">Sin costo y sin compromiso. Salís con un alcance, un precio y una fecha, o con un no claro.</p>
+    <dl class="ag-meta">
+      <div><dt>Duración</dt><dd id="dur">45 minutos</dd></div>
+      <div><dt>Formato</dt><dd>Videollamada</dd></div>
+      <div><dt>Horarios</dt><dd>Argentina (GMT−3)</dd></div>
+    </dl>
+    <ol class="ag-pasos">
+      <li>Nos contás cómo entra hoy un cliente y dónde se te cae.</li>
+      <li>Traducimos eso a números con tus datos, no con promedios.</li>
+      <li>Definimos el alcance, el precio y la fecha de arranque.</li>
+    </ol>
+  </aside>
 
-  <section class="ficha" id="confirmada" hidden aria-live="polite">
-    <p class="rot">Reunión confirmada</p>
-    <p class="cuando" id="cuando"></p>
-    <p>45 minutos por videollamada. Te mandamos el link por WhatsApp el día anterior.</p>
-    <div class="acciones">
-      <a class="btn" id="ics" href="#">Agregar a mi calendario</a>
-      <button class="btn sec" type="button" id="reprogramar">Elegir otro horario</button>
-      <button class="btn link" type="button" id="cancelar">Cancelar la reunión</button>
-    </div>
-  </section>
+  <!-- Panel: los tres pasos ocupan el mismo lugar, uno por vez. -->
+  <section class="ag-panel" aria-label="Agendar la reunión">
 
-  <section id="elegir" hidden>
-    <ol class="pasos">
-      <li><span>1</span>Nos contás cómo entra hoy un cliente y dónde se te cae.</li>
-      <li><span>2</span>Traducimos eso a números con tus datos, no con promedios.</li>
-      <li><span>3</span>Salís con un alcance, un precio y una fecha. O con un no claro.</li>
+    <ol class="ag-steps" id="steps" hidden>
+      <li data-paso="cuando"><span>1</span>Horario</li>
+      <li data-paso="datos"><span>2</span>Tus datos</li>
+      <li data-paso="listo"><span>3</span>Listo</li>
     </ol>
 
-    <h2 class="paso-t">Elegí el día</h2>
-    <div class="dias" id="dias" role="group" aria-label="Días disponibles"></div>
+    <!-- carga, link vencido, sin horarios -->
+    <div class="ag-estado" id="estado" aria-live="polite">
+      <span class="ag-spin" aria-hidden="true"></span>
+      <span id="estado-txt">Buscando los horarios libres…</span>
+    </div>
 
-    <h2 class="paso-t" id="rotHoras">Elegí la hora <span style="text-transform:none;letter-spacing:0;font-weight:500">(hora de Argentina)</span></h2>
-    <div class="horas" id="horas" role="group" aria-label="Horarios disponibles"></div>
+    <!-- paso 1 ------------------------------------------------------------ -->
+    <div class="ag-step" id="paso-cuando" hidden>
+      <div class="ag-cal">
+        <p class="ag-nota" id="nota" hidden role="status"></p>
+        <div class="ag-cal-top">
+          <h2 class="ag-mes" id="mes-tit">&nbsp;</h2>
+          <div class="ag-nav">
+            <button type="button" id="mes-ant" aria-label="Mes anterior">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+            </button>
+            <button type="button" id="mes-sig" aria-label="Mes siguiente">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="ag-dow" aria-hidden="true">
+          <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span><span>Do</span>
+        </div>
+        <div class="ag-grid" id="grid" role="grid" aria-labelledby="mes-tit"></div>
+        <p class="ag-vacio" id="mes-vacio" hidden></p>
+      </div>
 
-    <form class="datos" id="datos" hidden>
-      <label><span>Tu nombre</span><input id="nombre" autocomplete="name" required></label>
-      <label><span>WhatsApp donde te mandamos el link</span><input id="whatsapp" type="tel" inputmode="tel" autocomplete="tel" required></label>
-      <label><span>Algo puntual que quieras que veamos (opcional)</span><textarea id="tema" rows="3"></textarea></label>
-      <button class="btn" id="confirmar">Confirmar</button>
-      <p class="aviso" id="aviso">Nada queda agendado hasta que aprietes el botón.</p>
+      <div class="ag-horas" id="col-horas">
+        <h3 class="ag-horas-tit" id="horas-tit">&nbsp;</h3>
+        <div class="ag-horas-lista" id="horas" role="group" aria-labelledby="horas-tit"></div>
+      </div>
+    </div>
+
+    <!-- paso 2 ------------------------------------------------------------ -->
+    <form class="ag-step ag-form" id="paso-datos" hidden novalidate>
+      <div class="ag-elegido">
+        <div>
+          <p class="ag-elegido-d" id="elegido-dia">&nbsp;</p>
+          <p class="ag-elegido-h" id="elegido-hora">&nbsp;</p>
+        </div>
+        <button type="button" class="ag-cambiar" id="cambiar">Cambiar</button>
+      </div>
+
+      <label class="ag-campo">
+        <span>Tu nombre</span>
+        <input id="nombre" autocomplete="name" required aria-describedby="err-nombre">
+        <em class="ag-err" id="err-nombre" hidden>Necesitamos saber con quién hablamos.</em>
+      </label>
+      <label class="ag-campo">
+        <span>WhatsApp donde te mandamos el link</span>
+        <input id="whatsapp" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="err-whatsapp">
+        <em class="ag-err" id="err-whatsapp" hidden>Sin un número no te llega el link de la llamada.</em>
+      </label>
+      <label class="ag-campo">
+        <span>Algo puntual que quieras que veamos <i>(opcional)</i></span>
+        <textarea id="tema" rows="3" maxlength="600"></textarea>
+      </label>
+
+      <button class="ag-btn ag-btn-pri" id="confirmar">Confirmar la reunión</button>
+      <p class="ag-pie" id="aviso">No se agenda nada hasta que aprietes el botón.</p>
     </form>
+
+    <!-- paso 3 ------------------------------------------------------------ -->
+    <div class="ag-step ag-listo" id="paso-listo" hidden>
+      <div class="ag-tick" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+      </div>
+      <p class="ag-eyebrow">Reunión confirmada</p>
+      <p class="ag-cuando" id="cuando">&nbsp;</p>
+      <dl class="ag-meta ag-meta-listo">
+        <div><dt>Duración</dt><dd>45 minutos</dd></div>
+        <div><dt>Formato</dt><dd>Videollamada</dd></div>
+        <div><dt>El link</dt><dd>Te llega por WhatsApp el día anterior</dd></div>
+      </dl>
+      <div class="ag-acciones">
+        <a class="ag-btn ag-btn-pri" id="ics" href="#">Agregar a mi calendario</a>
+        <button type="button" class="ag-btn" id="reprogramar">Elegir otro horario</button>
+      </div>
+      <button type="button" class="ag-link" id="cancelar">Cancelar la reunión</button>
+    </div>
+
   </section>
+</div>
 </main>
 
 <footer id="contacto">
@@ -124,6 +198,8 @@
 </footer>
 
 <script src="../nav.js" defer></script>
+<!-- GSAP self-hosteado, como las tipografias: sin CDN de terceros. -->
+<script src="../vendor/gsap-3.15.0.min.js" defer></script>
 <script src="../agenda.js" defer></script>
 </body>
 </html>

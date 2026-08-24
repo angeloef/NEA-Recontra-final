@@ -131,7 +131,16 @@
   }
 
   // ------------------------------------------------------------ calendario
-  function isosLibres() { return Object.keys(datos.dias).sort(); }
+  // dias con al menos un turno reservable. Los que solo tienen tomados
+  // existen en datos.dias y se ven completos, pero no se pueden elegir.
+  function isosLibres() {
+    return Object.keys(datos.dias).sort().filter(function (iso) {
+      return datos.dias[iso].libres.length;
+    });
+  }
+
+  function horasDe(iso) { return (datos.dias[iso] || {}).libres || []; }
+  function tomadasDe(iso) { return (datos.dias[iso] || {}).tomados || []; }
 
   function limites() {
     var libres = isosLibres();
@@ -166,7 +175,7 @@
     var hayAlguno = false;
     for (i = 1; i <= dias; i++) {
       var iso = aIso(new Date(mesVista.getFullYear(), mesVista.getMonth(), i));
-      var libre = !!datos.dias[iso];
+      var libre = horasDe(iso).length > 0;
       hayAlguno = hayAlguno || libre;
       var b = document.createElement('button');
       b.type = 'button';
@@ -176,8 +185,9 @@
       b.setAttribute('role', 'gridcell');
       b.setAttribute('aria-selected', iso === dia ? 'true' : 'false');
       b.setAttribute('aria-label', largo(iso) +
-        (libre ? ', ' + datos.dias[iso].length + ' horarios disponibles'
-               : ', sin horarios'));
+        (libre ? ', ' + horasDe(iso).length + ' horarios disponibles'
+               : (tomadasDe(iso).length ? ', completo' : ', sin horarios')));
+      if (!libre && tomadasDe(iso).length) b.classList.add('lleno');
       if (!libre) b.setAttribute('aria-disabled', 'true');
       grid.appendChild(b);
     }
@@ -252,11 +262,21 @@
     $('horas-tit').textContent = DIA[lunes0(f)].slice(0, 3) + ' ' + f.getDate() +
                                  ' ' + MES_C[f.getMonth()];
     cont.innerHTML = '';
-    (datos.dias[dia] || []).forEach(function (h) {
+    var libres_ = horasDe(dia), tomadas = tomadasDe(dia);
+    libres_.concat(tomadas).sort().forEach(function (h) {
+      // los tomados van en gris y no son botones: nadie tiene que descubrir
+      // a los clicks cual se puede. Son reservas de verdad, no relleno.
+      if (tomadas.indexOf(h) >= 0) {
+        var d = document.createElement('div');
+        d.className = 'ag-hora ag-hora-off';
+        d.innerHTML = '<span>' + h + '</span><em>Agendado</em>';
+        d.setAttribute('aria-label', h + ' del ' + largo(dia) + ', ya agendado');
+        return cont.appendChild(d);
+      }
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'ag-hora';
-      b.textContent = h;
+      b.innerHTML = '<span>' + h + '</span>';
       b.setAttribute('aria-selected', 'false');
       b.setAttribute('aria-label', h + ' del ' + largo(dia));
       b.onclick = function () {
@@ -266,7 +286,7 @@
       };
       cont.appendChild(b);
     });
-    entra(cont.querySelectorAll('.ag-hora'),
+    entra(cont.children,
           { y: 8, duration: 0.32, stagger: 0.03 });
   }
 
@@ -327,7 +347,7 @@
     }
 
     var primero = isosLibres()[0];
-    if (!dia || !datos.dias[dia]) dia = primero;
+    if (!dia || !horasDe(dia).length) dia = primero;
     vaAlMes(aFecha(dia));
     eligeDia(dia);
     paso('cuando');

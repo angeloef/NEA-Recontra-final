@@ -233,6 +233,12 @@ main a.ag-btn,main a.ag-btn:hover{text-decoration:none}
   text-transform:uppercase;color:var(--ink-mute);
 }
 .ag-horas-lista{display:grid;gap:8px}
+/* un dia de 8 a 20 son doce turnos: sin esto la columna estira el panel al
+   doble del calendario. Scrollea en su propio carril, no la pagina. */
+@media (min-width:720px){
+  .ag-horas-lista{max-height:404px;overflow-y:auto;padding-right:6px;
+    scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+}
 @media (max-width:719px){
   .ag-horas-lista{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
 }
@@ -248,7 +254,28 @@ main a.ag-btn,main a.ag-btn:hover{text-decoration:none}
 .ag-hora:hover{border-color:var(--ink);background:var(--sunk)}
 .ag-hora:active{transform:scale(.985)}
 .ag-hora[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+/* turno ya reservado: gris, sin borde y sin cursor. No es un boton, asi que
+   no hay que descubrir a los clicks cual se puede elegir. */
+.ag-hora-off{
+  background:var(--sunk);border-color:transparent;color:var(--ink-mute);
+  cursor:default;gap:10px;font-weight:500;
+}
+.ag-hora-off:hover{border-color:transparent;background:var(--sunk);transform:none}
+.ag-hora-off > span{text-decoration:line-through;text-decoration-thickness:1px;
+  text-underline-offset:2px;opacity:.75}
+.ag-hora-off em{
+  font-style:normal;font-size:11px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+@media (max-width:719px){
+  .ag-hora-off{flex-direction:column;gap:2px}
+  .ag-hora-off em{font-size:10px}
+}
 .ag-horas-vacio{font-size:14px;line-height:1.55;color:var(--ink-mute)}
+
+/* dia sin huecos pero con reuniones: no se puede elegir, pero no esta vacio */
+.ag-dia.lleno{opacity:.6;text-decoration:line-through;
+  text-decoration-thickness:1px}
 
 /* ---------------------------------------------------------------- formulario */
 

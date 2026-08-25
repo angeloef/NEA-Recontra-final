@@ -7,6 +7,7 @@
 (() => {
   const GA4 = 'PONER-GA4';         // G-XXXXXXXXXX  (Google Analytics 4)
   const CLARITY = 'PONER-CLARITY'; // xxxxxxxxxx    (Microsoft Clarity)
+  const CF = 'd419f106238f455b8b2ba9d75fa48aa1'; // token de Cloudflare Web Analytics
 
   // Se valida la forma del ID, no que deje de ser el placeholder: asi un ID
   // vacio o a medio pegar tampoco dispara una request rota.
@@ -27,6 +28,16 @@
       t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, 'clarity', 'script', CLARITY);
+  }
+
+  /* Cloudflare Web Analytics. El DNS esta en gris (DNS only), asi que Cloudflare
+     no puede inyectar el beacon en el borde: hay que cargarlo desde aca. */
+  if (/^[a-f0-9]{32}$/.test(CF)) {
+    const s = document.createElement('script');
+    s.type = 'module';
+    s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    s.setAttribute('data-cf-beacon', JSON.stringify({ token: CF }));
+    document.head.appendChild(s);
   }
 
   /* Conversiones: todo click a WhatsApp cuenta como lead. Delegado en document,

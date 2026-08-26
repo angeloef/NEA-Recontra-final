@@ -179,8 +179,14 @@
     nav.pointerEvents = p > A * .5 ? 'auto' : 'none';
     bg.width = vw + 'px';
     bg.padding = '0 ' + (narrow ? 20 : 32) + 'px';
-    // "covered" must mean the video actually spans the whole nav band, not just that its top edge is high
-    const covered = st.t < 4 && st.l < 4 && st.r < 4;
+    // "covered" es que la banda de la barra tenga chrome oscuro detras, no solo que el
+    // video haya llegado arriba. Mientras la barra negra sube, su borde inferior y el
+    // borde superior del video son el mismo pixel: entre los dos tapan la banda entera.
+    // Sin el segundo termino la barra se pintaba blanca sobre el negro y recien saltaba
+    // a transparente cuando el video tocaba el tope: el rectangulo blanco semitransparente
+    // que aparecia y se cortaba fuera de tiempo con el borde del video.
+    const frameBottom = frameH * (1 - ea);
+    const covered = (st.t < 4 && st.l < 4 && st.r < 4) || frameBottom > 0;
     bg.background = covered ? 'transparent' : (bgColor || '#FFFFFF');
     const fg = covered || (bgLum !== undefined && bgLum < .21) ? 255 : 10;
     el.navbg.style.color = 'rgb(' + fg + ',' + fg + ',' + fg + ')';

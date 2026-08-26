@@ -1452,7 +1452,11 @@
   grid = initGrid();
   estrellas = initEstrellas();
   ascii = initAscii();
-  update();
+  /* ponytail: el video nace invisible (opacity:0 en el HTML) y recien se muestra
+     cuando update() ya le escribio su posicion real. Sin esto el navegador pintaba
+     el top:570px del markup y despues lo movia: eso es el CLS de #nea-video.
+     El finally lo destapa igual si update() explota. */
+  try { update(); } finally { if (el.video) el.video.style.opacity = '1'; }
   playVideo();
   /* El markup del estimador vive en estimador.html y lo comparten la home y
      /precios/. Si hay punto de montaje lo traemos y recien ahi lo inicializamos;

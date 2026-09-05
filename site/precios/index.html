@@ -156,6 +156,14 @@ p,li{text-wrap:pretty}
 .hero h1{margin:0;max-width:19ch;font-size:clamp(36px,5.6vw,78px);line-height:1.02;font-weight:700;letter-spacing:-.035em;color:#fff}
 .hero h1 em{font-family:'Instrument Serif',Georgia,serif;font-style:normal;font-weight:400;letter-spacing:-.02em;color:var(--lima)}
 .hero .lead{color:rgba(255,255,255,.72);max-width:56ch}
+/* El estimador (card oscura) arranca apenas debajo del hero, tambien oscuro:
+   este aire blanco los separa para que no se lean como un solo bloque. */
+#estimacion.nea-estsec--card{margin-top:clamp(28px,3.4vw,56px)}
+/* Alto reservado para el estimador, que se inyecta por fetch: sin esto la lista
+   de precios salta cuando llega. Medido: ~1125px en mobile, ~690px de 901 para
+   arriba. ponytail: dos numeros, no un observer. */
+#nea-estmount{min-height:1125px}
+@media (min-width:901px){#nea-estmount{min-height:690px}}
 .hero .acts{display:flex;flex-wrap:wrap;gap:14px;margin-top:clamp(28px,3vw,42px)}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:1px;margin-top:clamp(48px,5vw,84px);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14);border-radius:14px;overflow:hidden}
 .facts div{background:#0A0A0A;padding:22px 24px}
@@ -298,11 +306,11 @@ p,li{text-wrap:pretty}
 
       <h1>Precios de páginas web, <em>publicados</em>. Sin pedir una reunión primero.</h1>
 
-      <p class="lead">Toda la lista está acá abajo: cuánto sale cada tipo de sitio, cuánto suma cada extra, qué se paga una vez y qué se paga por mes. Son valores orientativos y el número final se cierra en la reunión, pero el orden de magnitud lo ves ahora.</p>
+      <p class="lead">Toda la lista está acá abajo: cuánto sale cada tipo de sitio, cuánto suma cada extra, qué se paga una vez y qué se paga por mes. Empezá por el estimador acá abajo —un minuto y tenés tu número— y si querés el detalle, la lista completa está más abajo. Son valores orientativos y el número final se cierra en la reunión, pero el orden de magnitud lo ves ahora.</p>
 
       <div class="acts">
-        <a href="#sitios" class="btn">Ver la lista completa</a>
-        <a href="#estimacion" class="btn btn--ghost">Armá tu combinación</a>
+        <a href="#estimacion" class="btn">Armá tu presupuesto acá abajo</a>
+        <a href="#sitios" class="btn btn--ghost">Ver la lista completa</a>
       </div>
 
       <div class="facts">
@@ -313,6 +321,13 @@ p,li{text-wrap:pretty}
       </div>
     </div>
   </section>
+
+  <!-- El estimador es compartido con la home: markup en /estimador.html,
+       estilos en /estimador.css, logica en app.js. Se inyecta al cargar.
+       ponytail: va apenas debajo del hero porque es la accion principal de la
+       pagina; el min-height reserva el alto para que la inyeccion no mueva
+       la lista de precios (CLS). -->
+  <div id="nea-estmount" data-src="../estimador.html" data-class="nea-estsec--card"></div>
 
   <!-- ======================================================== POR QUÉ PUBLICAMOS -->
   <section class="sec wrap" aria-labelledby="h-porque">
@@ -638,18 +653,14 @@ p,li{text-wrap:pretty}
   </section>
 
   <!-- ======================================================== CIERRE -->
-  <!-- El estimador es compartido con la home: markup en /estimador.html,
-       estilos en /estimador.css, logica en app.js. Se inyecta al cargar. -->
-  <div id="nea-estmount" data-src="../estimador.html" data-class="nea-estsec--card"></div>
-
   <section class="sec wrap" id="presupuesto" aria-labelledby="h-cierre">
     <div class="close-cta">
       <div>
         <h2 class="h2" id="h-cierre" style="font-size:clamp(24px,2.9vw,38px)">Armá tu presupuesto con la combinación que necesitás.</h2>
-        <p class="p" style="max-width:60ch">Arriba tenés la lista completa; el estimador hace la otra mitad. Elegís el producto, tildás los extras, elegís el plan de soporte y te muestra el número armado, listo para mandarnos por WhatsApp. Tarda menos de un minuto.</p>
+        <p class="p" style="max-width:60ch">La lista completa la acabás de ver; el estimador hace la otra mitad. Elegís el producto, tildás los extras, elegís el plan de soporte y te muestra el número armado, listo para mandarnos por WhatsApp. Tarda menos de un minuto.</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <a href="#estimacion" class="btn">Volver al estimador</a>
+        <a href="#estimacion" class="btn">Ir al estimador</a>
         <a href="https://wa.me/5493755446606?text=Hola%2C%20vi%20la%20p%C3%A1gina%20de%20precios%20y%20quiero%20un%20presupuesto" class="btn btn--ghost" rel="noopener">Escribir por WhatsApp</a>
       </div>
     </div>

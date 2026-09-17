@@ -7,8 +7,50 @@ services:
     domains:
       - neasistemas.com.ar
       - www.neasistemas.com.ar
-    # ponytail: sin rewrite catch-all. Es un sitio multipagina, no una SPA.
-    # Render sirve site/404.html con status 404 cuando no encuentra el archivo.
+    # El dashboard de Render tiene una regla manual `/* -> /index.html` (rewrite).
+    # Efecto: cualquier URL inexistente devolvia la home con 200 y canonical a `/`,
+    # una fabrica de soft-404 y duplicados que Google reporta como "sin indexar".
+    # El blueprint no puede borrar reglas del dashboard, pero si redefinir las que
+    # declara con el mismo `source`. Redeclaramos `/*` apuntando a 404.html, que
+    # lleva <meta name="robots" content="noindex,follow">.
+    # Las rutas se evaluan en orden: los redirects explicitos van primero.
+    routes:
+      - type: redirect
+        source: /diseno-web
+        destination: /diseno-web/
+      - type: redirect
+        source: /tienda-online
+        destination: /tienda-online/
+      - type: redirect
+        source: /sistemas-a-medida
+        destination: /sistemas-a-medida/
+      - type: redirect
+        source: /marketing-digital
+        destination: /marketing-digital/
+      - type: redirect
+        source: /google-ads
+        destination: /google-ads/
+      - type: redirect
+        source: /seo
+        destination: /seo/
+      - type: redirect
+        source: /precios
+        destination: /precios/
+      - type: redirect
+        source: /nosotros
+        destination: /nosotros/
+      - type: redirect
+        source: /privacidad
+        destination: /privacidad/
+      - type: redirect
+        source: /terminos
+        destination: /terminos/
+      - type: redirect
+        source: /agenda
+        destination: /agenda/
+      - type: rewrite
+        source: /*
+        destination: /404.html
     headers:
       - path: /*
         name: X-Content-Type-Options

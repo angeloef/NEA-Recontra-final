@@ -7,13 +7,12 @@ services:
     domains:
       - neasistemas.com.ar
       - www.neasistemas.com.ar
-    # El dashboard de Render tiene una regla manual `/* -> /index.html` (rewrite).
-    # Efecto: cualquier URL inexistente devolvia la home con 200 y canonical a `/`,
-    # una fabrica de soft-404 y duplicados que Google reporta como "sin indexar".
-    # El blueprint no puede borrar reglas del dashboard, pero si redefinir las que
-    # declara con el mismo `source`. Redeclaramos `/*` apuntando a 404.html, que
-    # lleva <meta name="robots" content="noindex,follow">.
-    # Las rutas se evaluan en orden: los redirects explicitos van primero.
+    # ponytail: sin rewrite catch-all. Es un sitio multipagina, no una SPA.
+    # Sin regla `/*`, Render sirve site/404.html con status 404 real.
+    # Hubo una regla manual `/* -> /index.html` en el dashboard: devolvia la home
+    # con 200 y canonical a `/` para cualquier URL inexistente, una fabrica de
+    # soft-404 y duplicados. Borrada por API; no la vuelvas a agregar.
+    # Los redirects de abajo canonizan las URLs sin barra final.
     routes:
       - type: redirect
         source: /diseno-web
@@ -48,9 +47,6 @@ services:
       - type: redirect
         source: /agenda
         destination: /agenda/
-      - type: rewrite
-        source: /*
-        destination: /404.html
     headers:
       - path: /*
         name: X-Content-Type-Options

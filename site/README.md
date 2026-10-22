@@ -28,13 +28,23 @@ grep -rl 'wa.me/5493755446606' . | xargs sed -i 's/wa\.me\/5493755446606/wa.me\/
 ```
 
 Formato internacional sin `+` ni espacios. Verificar después con
-`grep -rc 'wa.me' index.html */index.html` (esperado: 6 en la home, 1 en cada subsección).
+`grep -rc 'wa.me' index.html */index.html` (esperado: 5 en la home, 1 en cada subsección).
 
 ## Notas
 - Los precios del estimador viven en la constante `PRICING` de `app.js`. Los nombres y
   descripciones de cada opción están en el HTML, para que Google los lea.
-- Los anchors `#llamada`, `#servicios` y `#precios` todavía no tienen destino:
-  quedan a la espera de definir el canal de contacto.
+- Los anchors `#llamada` y `#servicios` todavía no tienen destino:
+  quedan a la espera de definir el canal de contacto. `#precios` ya existe en la home
+  (el bloque que enlaza a /precios/).
+- **PENDIENTE — enlaces rotos a propósito.** Las cards de "Qué hacemos" en la home apuntan a
+  `/sitios-web/` y `/anuncios/`, que todavía no existen y dan 404. Son las páginas nuevas del
+  plan de reescritura (Sitios web reemplaza a Diseño web; Anuncios reemplaza a Google Ads).
+  Al publicarlas, las cards quedan enlazadas sin tocar la home. Mientras tanto, no publicar
+  la home a producción sin esas dos páginas o sin un redirect temporal.
+- La imagen de la card de Anuncios es provisoria (`feature-google-seo.webp`): falta una de
+  Instagram/Facebook.
+- La home ya no carga el estimador (vive solo en /precios/) ni la galería (se sacó el
+  12/10/2026 hasta tener trabajos reales; el código está en el historial de git).
 
 ### Fuentes
 Están auto-hospedadas en `uploads/fonts/` y los `@font-face` viven **inline en el `<head>`

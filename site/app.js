@@ -179,14 +179,8 @@
     nav.pointerEvents = p > A * .5 ? 'auto' : 'none';
     bg.width = vw + 'px';
     bg.padding = '0 ' + (narrow ? 20 : 32) + 'px';
-    // "covered" es que la banda de la barra tenga chrome oscuro detras, no solo que el
-    // video haya llegado arriba. Mientras la barra negra sube, su borde inferior y el
-    // borde superior del video son el mismo pixel: entre los dos tapan la banda entera.
-    // Sin el segundo termino la barra se pintaba blanca sobre el negro y recien saltaba
-    // a transparente cuando el video tocaba el tope: el rectangulo blanco semitransparente
-    // que aparecia y se cortaba fuera de tiempo con el borde del video.
-    const frameBottom = frameH * (1 - ea);
-    const covered = (st.t < 4 && st.l < 4 && st.r < 4) || frameBottom > 0;
+    // "covered" must mean the video actually spans the whole nav band, not just that its top edge is high
+    const covered = st.t < 4 && st.l < 4 && st.r < 4;
     bg.background = covered ? 'transparent' : (bgColor || '#FFFFFF');
     const fg = covered || (bgLum !== undefined && bgLum < .21) ? 255 : 10;
     el.navbg.style.color = 'rgb(' + fg + ',' + fg + ',' + fg + ')';
@@ -999,7 +993,7 @@
       if (hint && hint.textContent) {
         hint.textContent = on
           ? 'Deslizá o tocá para ocultar'
-          : 'Soporte y descuentos · tocá para revisar';
+          : 'Soporte · tocá para revisar';
       }
     }
     const cerrarDetalle = () => setDetalle(false);
@@ -1009,6 +1003,9 @@
     const detailNode = document.getElementById('nea-detail');
     const mesNode = document.getElementById('nea-mes');
     const mesLabel = document.getElementById('nea-meslabel');
+    const mesNote = document.getElementById('nea-mesnote');
+    // Soporte desde el año 2 (Precios v2, 14/10/2026): lo declara cada boton en data-soporte.
+    const soporteDe = btn => btn && btn.getAttribute('data-soporte');
     const ahorroNode = document.getElementById('nea-ahorro');
     const mesBlock = document.getElementById('nea-mesblock');
     const planOpts = Array.from(document.querySelectorAll('[data-plan]'));
@@ -1044,7 +1041,8 @@
     }
 
     const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
-    const weeks = base => (base < 900 ? '2 a 3' : base < 2000 ? '3 a 5' : '5 a 8');
+    // Plazo por producto (Inicio v3 / Precios v2, 14/10/2026): lo declara cada boton en data-weeks.
+    const weeks = btn => (btn && btn.getAttribute('data-weeks')) || '2 a 8';
     const quiet = matchMedia('(prefers-reduced-motion: reduce)');
 
     let open = null;   // id del producto abierto, o null en el estado 0
@@ -1183,7 +1181,7 @@
       } else {
         totalLabel.textContent = 'PAGO ÚNICO';
         setText(totalNode, 'Desde ' + fmt(s.total));
-        noteNode.textContent = 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' + weeks(s.base) + ' semanas.';
+        noteNode.textContent = 'Incluye diseño, desarrollo y puesta online. Plazo estimado ' + weeks(pickOf(s.id)) + ' semanas.';
         detailNode.textContent = '';
         detailNode.style.display = '';
         detailNode.appendChild(sumLine(s.name, fmt(s.base)));
@@ -1194,8 +1192,12 @@
           // puede ser "$0", que se lee como error; se lee como regalo.
           mesLabel.textContent = 'Primer año';
           mesNode.textContent = 'Incluido';
-          ahorroNode.style.display = '';
-          ahorroNode.textContent = 'Te ahorrás ' + fmt(s.ahorro) + ' el primer año';
+          ahorroNode.style.display = 'none';
+          if (mesNote) {
+            const sop = soporteDe(pickOf(s.id));
+            mesNote.textContent = 'El primer año va incluido en el precio del proyecto: hosting, dominio, copias de seguridad, actualizaciones y hasta dos cambios menores por mes. ' +
+              (sop ? 'Desde el segundo año, ' + sop + ' por mes, o diez meses si pagás el año adelantado.' : 'Desde el segundo año, el soporte se cotiza junto con el sistema.');
+          }
         } else {
           mesLabel.textContent = (s.aniosPagos === 1 ? 'Año 2' : 'Años 2 a ' + s.anios) + ', pago adelantado';
           setText(mesNode, fmt(s.soporte));
@@ -1210,7 +1212,7 @@
         if (barHint) {
           barHint.textContent = sumbox && sumbox.classList.contains('is-detail')
             ? 'Deslizá o tocá para ocultar'
-            : 'Soporte y descuentos · tocá para revisar';
+            : 'Soporte · tocá para revisar';
         }
         nudge(true);
       }
@@ -1458,11 +1460,7 @@
   grid = initGrid();
   estrellas = initEstrellas();
   ascii = initAscii();
-  /* ponytail: el video nace invisible (opacity:0 en el HTML) y recien se muestra
-     cuando update() ya le escribio su posicion real. Sin esto el navegador pintaba
-     el top:570px del markup y despues lo movia: eso es el CLS de #nea-video.
-     El finally lo destapa igual si update() explota. */
-  try { update(); } finally { if (el.video) el.video.style.opacity = '1'; }
+  update();
   playVideo();
   /* El markup del estimador vive en estimador.html y lo comparten la home y
      /precios/. Si hay punto de montaje lo traemos y recien ahi lo inicializamos;

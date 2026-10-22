@@ -14,24 +14,49 @@ services:
     # soft-404 y duplicados. Borrada por API; no la vuelvas a agregar.
     # Los redirects de abajo canonizan las URLs sin barra final.
     routes:
+      # 22/10/2026: el menu paso de 11 a 8 paginas. Las direcciones viejas
+      # redirigen a las nuevas (301). /sitios-web/ absorbe diseno-web, tienda-online
+      # y seo; /anuncios/ absorbe google-ads y marketing-digital.
       - type: redirect
         source: /diseno-web
-        destination: /diseno-web/
+        destination: /sitios-web/
+      - type: redirect
+        source: /diseno-web/
+        destination: /sitios-web/
       - type: redirect
         source: /tienda-online
-        destination: /tienda-online/
+        destination: /sitios-web/
+      - type: redirect
+        source: /tienda-online/
+        destination: /sitios-web/
+      - type: redirect
+        source: /seo
+        destination: /sitios-web/
+      - type: redirect
+        source: /seo/
+        destination: /sitios-web/
+      - type: redirect
+        source: /google-ads
+        destination: /anuncios/
+      - type: redirect
+        source: /google-ads/
+        destination: /anuncios/
+      - type: redirect
+        source: /marketing-digital
+        destination: /anuncios/
+      - type: redirect
+        source: /marketing-digital/
+        destination: /anuncios/
+      # Canonizan las URLs sin barra final.
+      - type: redirect
+        source: /sitios-web
+        destination: /sitios-web/
+      - type: redirect
+        source: /anuncios
+        destination: /anuncios/
       - type: redirect
         source: /sistemas-a-medida
         destination: /sistemas-a-medida/
-      - type: redirect
-        source: /marketing-digital
-        destination: /marketing-digital/
-      - type: redirect
-        source: /google-ads
-        destination: /google-ads/
-      - type: redirect
-        source: /seo
-        destination: /seo/
       - type: redirect
         source: /precios
         destination: /precios/

@@ -4,7 +4,7 @@ Sitio estático. No necesita build, no tiene dependencias y no carga nada de CDN
 
 ## Estructura
 - `index.html` — todo el contenido, en HTML plano (crawleable sin ejecutar JS)
-- `app.js` — animaciones de scroll, tipeo del hero y estimador de precios. Vanilla, sin librerías.
+- `app.js` — animaciones de scroll y tipeo del hero. Vanilla, sin librerías.
 - `uploads/` — video, imágenes y logos
 
 ## Local
@@ -31,11 +31,12 @@ Formato internacional sin `+` ni espacios. Verificar después con
 `grep -rc 'wa.me' index.html */index.html` (esperado: 5 en la home, 1 en cada subsección).
 
 ## Notas
-- Los precios del estimador viven en la constante `PRICING` de `app.js`. Los nombres y
-  descripciones de cada opción están en el HTML, para que Google los lea.
+- 17/11/2026: el sitio no publica precios; el precio se cotiza según el proyecto. La página
+  /precios/ es un stub que redirige a /sitios-web/, y el estimador (estimador.html,
+  estimador.css y su lógica de `app.js`) quedó en `neasistemasweb/archivo/`.
 - Los anchors `#llamada` y `#servicios` todavía no tienen destino:
-  quedan a la espera de definir el canal de contacto. `#precios` ya existe en la home
-  (el bloque que enlaza a /precios/).
+  quedan a la espera de definir el canal de contacto. El bloque que antes era `#precios`
+  en la home ahora es `#cotizacion`.
 - **PENDIENTE — enlaces rotos a propósito.** Las cards de "Qué hacemos" en la home apuntan a
   `/sitios-web/` y `/anuncios/`, que todavía no existen y dan 404. Son las páginas nuevas del
   plan de reescritura (Sitios web reemplaza a Diseño web; Anuncios reemplaza a Google Ads).
@@ -43,7 +44,7 @@ Formato internacional sin `+` ni espacios. Verificar después con
   la home a producción sin esas dos páginas o sin un redirect temporal.
 - La imagen de la card de Anuncios es provisoria (`feature-google-seo.webp`): falta una de
   Instagram/Facebook.
-- La home ya no carga el estimador (vive solo en /precios/) ni la galería (se sacó el
+- La home ya no carga la galería (se sacó el
   12/10/2026 hasta tener trabajos reales; el código está en el historial de git).
 
 ### Fuentes

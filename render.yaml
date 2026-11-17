@@ -57,9 +57,14 @@ services:
       - type: redirect
         source: /sistemas-a-medida
         destination: /sistemas-a-medida/
+      # 17/11/2026: la pagina de precios salio del sitio; el precio se cotiza
+      # segun el proyecto. Las dos direcciones van a /sitios-web/.
       - type: redirect
         source: /precios
-        destination: /precios/
+        destination: /sitios-web/
+      - type: redirect
+        source: /precios/
+        destination: /sitios-web/
       - type: redirect
         source: /nosotros
         destination: /nosotros/
@@ -88,9 +93,9 @@ services:
       - path: /*
         name: Permissions-Policy
         value: camera=(), microphone=(), geolocation=(), interest-cohort=()
-      # /estimador.html es un fragmento que app.js inyecta en la home y en /precios/.
-      # Servido solo, es HTML sin <head>: no puede llevar meta robots. Lo saca del
-      # indice el header, que es el unico lugar donde el fragmento no manda.
+      # /estimador.html era un fragmento que app.js inyectaba en /precios/. Salio
+      # del sitio el 17/11/2026 (quedo en archivo/). El header queda por si alguna
+      # copia vieja sigue publicada: un fragmento sin <head> no lleva meta robots.
       - path: /estimador.html
         name: X-Robots-Tag
         value: noindex

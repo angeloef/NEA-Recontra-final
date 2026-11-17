@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Hostería El Pilar · Propuesta de sitio nuevo</title>
+<style>
+  :root { --fondo: #f6f5f1; --papel: #fff; --tinta: #1d1c1a; --gris: #5f5d58; --linea: #dedcd5; --acento: #8f2a22; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--fondo); color: var(--tinta); font: 400 17px/1.6 system-ui, "Segoe UI", sans-serif; }
+  .ancho { max-width: 1120px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); }
+  header { padding: clamp(40px, 7vw, 88px) 0 clamp(28px, 4vw, 48px); }
+  .marca { font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); margin-bottom: 18px; }
+  h1 { font-size: clamp(30px, 4.4vw, 52px); font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; max-width: 20ch; }
+  .bajada { margin-top: 18px; max-width: 60ch; color: var(--gris); font-size: 18px; }
+  .versiones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); }
+  .version { display: flex; flex-direction: column; background: var(--papel); border: 1px solid var(--linea); color: inherit; text-decoration: none; transition: border-color .2s, transform .2s; }
+  .version:hover { border-color: var(--tinta); transform: translateY(-2px); }
+  .version img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+  .version div { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 6px; }
+  .version h2 { font-size: 20px; font-weight: 500; }
+  .version p { font-size: 15px; color: var(--gris); }
+  .version span { margin-top: 8px; font-weight: 500; color: var(--acento); }
+  .nota { margin-top: 16px; font-size: 14px; color: var(--gris); }
+  main.propuesta { margin-top: clamp(56px, 8vw, 104px); padding-bottom: clamp(56px, 8vw, 96px); }
+  .propuesta > h2 { font-size: clamp(26px, 3vw, 36px); font-weight: 500; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .propuesta > p { color: var(--gris); max-width: 62ch; }
+  .bloques { margin-top: 32px; border-top: 1px solid var(--linea); }
+  .bloque { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(16px, 4vw, 56px); padding: 28px 0; border-bottom: 1px solid var(--linea); }
+  .bloque h3 { font-size: 19px; font-weight: 500; }
+  .bloque ul { padding-left: 1.1em; display: grid; gap: 8px; }
+  .bloque p + p, .bloque p + ul, .bloque ul + p { margin-top: 10px; }
+  .contacto { margin-top: 40px; background: var(--papel); border: 1px solid var(--linea); padding: clamp(22px, 3vw, 36px); }
+  .contacto h3 { font-size: 22px; font-weight: 500; margin-bottom: 8px; }
+  .contacto a.boton { display: inline-block; margin-top: 16px; margin-right: 12px; padding: 12px 20px; background: var(--tinta); color: #fff; text-decoration: none; font-weight: 500; }
+  .contacto a.sec { background: transparent; color: var(--tinta); border: 1px solid var(--tinta); }
+  footer { border-top: 1px solid var(--linea); padding: 24px 0 40px; font-size: 14px; color: var(--gris); }
+  footer a { color: inherit; }
+  @media (max-width: 860px) {
+    .versiones { grid-template-columns: minmax(0, 1fr); }
+    .bloque { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="ancho">
+  <header>
+    <p class="marca">NEA Sistemas · para Hostería El Pilar</p>
+    <h1>Una propuesta de sitio nuevo para El Pilar</h1>
+    <p class="bajada">Armamos tres versiones con sus fotos y sus textos, en español y en inglés. Es una muestra para que vean la idea: no es el sitio oficial ni está publicado en su dominio.</p>
+  </header>
+
+  <section class="versiones" aria-label="Las tres versiones">
+    <a class="version" href="a1/">
+      <img src="capturas/hero-a1.webp" alt="" loading="eager">
+      <div>
+        <h2>Versión 1 · Clásica</h2>
+        <p>Tipografía con serifa, blanco cálido y detalles en dorado. Movimiento lento.</p>
+        <span>Ver la versión 1 →</span>
+      </div>
+    </a>
+    <a class="version" href="a2/">
+      <img src="capturas/hero-a2.webp" alt="" loading="eager">
+      <div>
+        <h2>Versión 2 · Montaña moderna</h2>
+        <p>Una sola tipografía sin serifa, blanco, grafito y los grises de la piedra.</p>
+        <span>Ver la versión 2 →</span>
+      </div>
+    </a>
+    <a class="version" href="a3/">
+      <img src="capturas/hero-a3.webp" alt="" loading="eager">
+      <div>
+        <h2>Versión 3 · Casona</h2>
+        <p>Los colores de la casa: el blanco y hueso del logo y el rojo del techo en los botones.</p>
+        <span>Ver la versión 3 →</span>
+      </div>
+    </a>
+  </section>
+  <p class="nota">Las tres tienen las mismas secciones y textos; cambia la estética. Se ven bien en computadora y en el celular.</p>
+
+  <main class="propuesta">
+    <h2>Qué les proponemos</h2>
+    <p>Un sitio nuevo, en español y en inglés, a la altura del lugar, que lleve al huésped a reservar directo con ustedes en vez de terminar en una plataforma con comisión.</p>
+
+    <div class="bloques">
+      <section class="bloque">
+        <h3>Diseño a medida</h3>
+        <div><p>El sitio se hace para El Pilar, con sus fotos y su forma de contar el lugar. No se parte de una plantilla. Ustedes eligen la línea (una de estas tres o una mezcla) y la terminamos juntos.</p></div>
+      </section>
+      <section class="bloque">
+        <h3>Reserva directa</h3>
+        <div>
+          <p>La reserva es lo principal del sitio: está en la portada, con fechas y huéspedes.</p>
+          <p>El botón lleva al motor de reservas que ya usan (TodoAlojamiento), así que no cambia nada en su operación. No tocamos sus reservas, sus tarifas ni sus cobros, y la sincronización con Booking sigue como la tienen hoy.</p>
+        </div>
+      </section>
+      <section class="bloque">
+        <h3>Español e inglés</h3>
+        <div><p>Las dos versiones completas y con el mismo peso, cada una con su propia dirección para que Google muestre la correcta según el idioma de quien busca. No es un traductor automático.</p></div>
+      </section>
+      <section class="bloque">
+        <h3>Google</h3>
+        <div>
+          <ul>
+            <li>Hasta 10 páginas armadas según lo que la gente busca de verdad sobre El Chaltén y la zona.</li>
+            <li>Un blog con unas 6 entradas para empezar (depende del material que haya). Ustedes pueden sumar entradas cuando quieran.</li>
+            <li>Los datos de la hostería iguales en el sitio, en Google y en las plataformas, y los datos que Google lee para mostrar un hotel.</li>
+            <li>Un informe de por qué búsquedas aparecen.</li>
+          </ul>
+          <p>No prometemos posiciones ni plazos en Google, porque no dependen de nosotros. Prometemos el trabajo bien hecho.</p>
+        </div>
+      </section>
+      <section class="bloque">
+        <h3>Qué pasa en el sitio</h3>
+        <div><p>Un panel simple donde ven cuántas personas tocan "Reservar", cuántas consultan por WhatsApp o por mail, de qué país vienen y desde dónde llegaron (Google, Instagram, directo).</p></div>
+      </section>
+      <section class="bloque">
+        <h3>Después de publicar</h3>
+        <div><p>Nos ocupamos de que el sitio funcione: alojamiento, dominio, certificado de seguridad y arreglos. Los cambios de contenido (tarifas, fotos, promociones) los hacemos nosotros cuando nos los pidan.</p></div>
+      </section>
+      <section class="bloque">
+        <h3>Qué necesitamos de ustedes</h3>
+        <div>
+          <p>Poco. Armamos todo con lo que ya es público (su Instagram, el sitio actual y las plataformas). Ustedes hacen tres cosas:</p>
+          <ul>
+            <li>Confirmarnos los datos que tengamos en duda, por llamada o por mensajes, como les quede más cómodo.</li>
+            <li>Pasarnos los accesos (dominio y motor de reservas).</li>
+            <li>Aprobar el sitio antes de publicarlo.</li>
+          </ul>
+          <p>Si tienen fotos o videos que sí o sí quieren mostrar, los sumamos.</p>
+        </div>
+      </section>
+      <section class="bloque">
+        <h3>Cómo trabajamos</h3>
+        <div>
+          <ul>
+            <li><strong>Semana 1:</strong> repasamos los datos (por llamada o por mensajes) y nos pasan los accesos.</li>
+            <li><strong>Semana 2:</strong> primera versión completa en un link para que la revisen.</li>
+            <li><strong>Semana 4:</strong> ajustes y publicación en su dominio.</li>
+          </ul>
+          <p>Son 4 semanas desde que tenemos los accesos, con dos rondas de revisión. Hablan siempre con la misma persona: Julián.</p>
+        </div>
+      </section>
+      <section class="bloque">
+        <h3>El sitio es de ustedes</h3>
+        <div><p>El sitio y el dominio quedan a nombre de El Pilar. Si algún día dejan de trabajar con nosotros, les entregamos los archivos y los accesos y lo pueden alojar donde quieran.</p></div>
+      </section>
+      <section class="bloque">
+        <h3>Cómo se paga</h3>
+        <div><p>No se paga nada por adelantado. El trabajo se paga cuando el sitio ya está publicado y funcionando en su dominio. El precio se lo contamos cuando nos escriban, por mensajes o en una llamada, como prefieran.</p></div>
+      </section>
+    </div>
+
+    <div class="contacto">
+      <h3>¿Les interesa?</h3>
+      <p>Escríbannos y les contamos cómo seguiríamos. Lo podemos hablar por mensajes o en una llamada corta, como les quede más cómodo.</p>
+      <a class="boton" href="https://wa.me/5493755446606?text=Hola%20Juli%C3%A1n%2C%20vimos%20la%20propuesta%20para%20El%20Pilar">Escribir por WhatsApp</a>
+      <a class="boton sec" href="https://neasistemas.com.ar">Conocer NEA Sistemas</a>
+    </div>
+  </main>
+</div>
+<footer>
+  <div class="ancho">NEA Sistemas · Estudio de diseño y desarrollo web · Oberá, Misiones · <a href="https://neasistemas.com.ar">neasistemas.com.ar</a></div>
+</footer>
+</body>
+</html>

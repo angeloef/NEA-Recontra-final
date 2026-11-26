@@ -1,541 +1,164 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es-AR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nosotros — NEA Sistemas | Oberá, Misiones</title>
-<meta name="description" content="Cómo trabajamos en NEA Sistemas: ves el sitio o el sistema funcionando antes de pagar, el diagnóstico es gratis y todo queda a tu nombre. Estudio de diseño y desarrollo web de Oberá, Misiones.">
+<title>Cómo trabajamos · NEA Sistemas</title>
+<meta name="description" content="Cómo trabaja NEA Sistemas, estudio de diseño y tecnología de Oberá, Misiones: cinco principios.">
+<meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.neasistemas.com.ar/nosotros/">
-<meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#0A0A0A">
-
-<link rel="icon" type="image/png" sizes="32x32" href="../uploads/favicon-32.png">
-<link rel="icon" type="image/png" sizes="512x512" href="../uploads/favicon-512.png">
-<link rel="apple-touch-icon" href="../uploads/apple-touch-icon.png">
-
+<script>
+  /* Antes de pintar: hay JS, y si se puede mover. */
+  (function (d) {
+    d.classList.add('js');
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('mov');
+  })(document.documentElement);
+</script>
+<link rel="preload" href="/assets/fuentes/Switzer-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fuentes/Chivo-wght.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="/css/sitio.css?v=202611260341">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NEA Sistemas">
 <meta property="og:locale" content="es_AR">
 <meta property="og:url" content="https://www.neasistemas.com.ar/nosotros/">
-<meta property="og:title" content="Nosotros — NEA Sistemas">
-<meta property="og:description" content="Ves el trabajo funcionando antes de pagar. Si no te sirve, no hay compromiso de compra.">
-<meta property="og:image" content="https://www.neasistemas.com.ar/uploads/og-nea-sistemas.png">
+<meta property="og:title" content="Cómo trabajamos · NEA Sistemas">
+<meta property="og:description" content="Cómo trabaja NEA Sistemas, estudio de diseño y tecnología de Oberá, Misiones: cinco principios.">
+<meta property="og:image" content="https://www.neasistemas.com.ar/img/og-nea-sistemas.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NEA Sistemas">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Nosotros — NEA Sistemas">
-<meta name="twitter:description" content="Ves el trabajo funcionando antes de pagar. Si no te sirve, no hay compromiso de compra.">
-<meta name="twitter:image" content="https://www.neasistemas.com.ar/uploads/og-nea-sistemas.png">
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "ProfessionalService",
-      "@id": "https://www.neasistemas.com.ar/#business",
-      "name": "NEA Sistemas",
-      "url": "https://www.neasistemas.com.ar/",
-      "logo": "https://www.neasistemas.com.ar/uploads/Nea_logo_negro.png",
-      "image": "https://www.neasistemas.com.ar/uploads/og-nea-sistemas.png",
-      "inLanguage": "es-AR",
-      "priceRange": "$$",
-      "description": "Estudio de diseño y desarrollo web de Oberá, Misiones. Sitios web, anuncios en Instagram y Facebook y sistemas a medida para negocios de toda la Argentina. El trabajo se ve funcionando antes de pagar.",
-      "telephone": "+543755446606",
-      "address": { "@type": "PostalAddress", "addressLocality": "Oberá", "addressRegion": "Misiones", "addressCountry": "AR" },
-      "areaServed": { "@type": "Country", "name": "Argentina" },
-      "knowsLanguage": "es-AR",
-      "availableLanguage": "es-AR"
-    },
-    {
-      "@type": "AboutPage",
-      "@id": "https://www.neasistemas.com.ar/nosotros/#about",
-      "url": "https://www.neasistemas.com.ar/nosotros/",
-      "name": "Nosotros — NEA Sistemas",
-      "description": "Cómo trabajamos: el sitio o el sistema se ve funcionando antes de pagar, el diagnóstico es gratis y todo queda a nombre del cliente.",
-      "inLanguage": "es-AR",
-      "about": { "@id": "https://www.neasistemas.com.ar/#business" },
-      "mainEntity": { "@id": "https://www.neasistemas.com.ar/#business" }
-    },
-    {
-      "@type": "FAQPage",
-      "@id": "https://www.neasistemas.com.ar/nosotros/#faq",
-      "mainEntity": [
-        {"@type": "Question", "name": "¿De verdad puedo ver el sitio terminado antes de pagar?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Lo navegás en una dirección de prueba, con todo funcionando. Se publica a tu nombre cuando lo aprobás y se factura en ese momento. Si no te sirve, no se publica y no se cobra."}},
-        {"@type": "Question", "name": "¿Por qué el diagnóstico es gratis?", "acceptedAnswer": {"@type": "Answer", "text": "Porque es nuestra forma de conseguir trabajo. Preferimos invertir unas horas en mostrarte algo concreto sobre tu negocio antes que pedirte que confíes en una promesa. Llega con precios, y si decidís que no, el informe te queda igual."}},
-        {"@type": "Question", "name": "¿Trabajan con cualquier rubro?", "acceptedAnswer": {"@type": "Answer", "text": "Trabajamos con negocios donde la imagen y la confianza influyen en la decisión del cliente. Si tu cliente elige solo por precio, no somos la opción correcta y te lo decimos en la primera charla."}},
-        {"@type": "Question", "name": "Estoy en otra provincia. ¿Cómo es trabajar a distancia?", "acceptedAnswer": {"@type": "Answer", "text": "El arranque es una videollamada de una hora y el día a día pasa por WhatsApp. Los avances los ves en un enlace, en tu propio celular. Si tu clientela es de tu ciudad, el sitio se arma para aparecer en las búsquedas de tu zona."}},
-        {"@type": "Question", "name": "¿Qué pasa si a mitad del proyecto quiero frenar?", "acceptedAnswer": {"@type": "Answer", "text": "Cada etapa se cotiza por separado y termina en algo que te llevás. Si frenás después del diseño, te quedan las pantallas y los textos. Si frenás después del sitio, te queda el sitio funcionando y a tu nombre, sin obligación de contratar anuncios ni sistemas."}},
-        {"@type": "Question", "name": "¿Por qué insisten con que todo quede a mi nombre?", "acceptedAnswer": {"@type": "Answer", "text": "Porque en el rubro es común lo contrario: el dominio a nombre del proveedor, el hosting en su cuenta y el código en su servidor. El día que querés cambiar de proveedor, descubrís que tu dirección de internet no es tuya. Nosotros registramos el dominio a nombre de tu empresa, te damos los accesos y te entregamos el código."}}
-      ]
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.neasistemas.com.ar/" },
-        { "@type": "ListItem", "position": 2, "name": "Nosotros", "item": "https://www.neasistemas.com.ar/nosotros/" }
-      ]
-    }
-  ]
-}
-</script>
-
-<link rel="preload" href="../uploads/fonts/plusjakartasans-700-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../uploads/fonts/plusjakartasans-400-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-
-<style>
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:300;font-display:swap;src:url(../uploads/fonts/plusjakartasans-300-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(../uploads/fonts/plusjakartasans-400-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(../uploads/fonts/plusjakartasans-400-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:500;font-display:swap;src:url(../uploads/fonts/plusjakartasans-500-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url(../uploads/fonts/plusjakartasans-600-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url(../uploads/fonts/plusjakartasans-700-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url(../uploads/fonts/plusjakartasans-700-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(../uploads/fonts/instrumentserif-400-normal-subset.woff2) format('woff2')}
-
-:root{
-  --ink:#0A0A0A;
-  --ink-soft:#3d3d3d;
-  --ink-mute:#6e6e6e;
-  --line:rgba(10,10,10,.14);
-  --paper:#FFFFFF;
-  --paper-2:#F5F4F0;
-  --lima:#C7FF4A;
-  --pad:clamp(20px,2.5vw,48px);
-  --gap-sec:clamp(64px,6.4vw,124px);
-  --max:none;
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:"Plus Jakarta Sans","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-img{max-width:100%}
-h1,h2,h3{text-wrap:balance}
-p,li{text-wrap:pretty}
-:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
-.nea-skip{position:absolute;left:-9999px;top:0;z-index:200;padding:12px 20px;
-  background:var(--ink);color:#fff;font-size:15px;font-weight:600;border-radius:0 0 8px 0}
-.nea-skip:focus{left:0;color:#fff}
-
-/* ---------------------------------------------------------------- primitivas */
-.wrap{padding-left:var(--pad);padding-right:var(--pad);max-width:var(--max);margin:0 auto}
-.sec{padding-top:var(--gap-sec);padding-bottom:var(--gap-sec)}
-/* ---- Tres secciones apiladas: cada una queda fija y la siguiente se le superpone al scrollear ---- */
-.stack{position:relative}
-.stack > .sec{position:sticky;top:var(--nav-h,88px);background:var(--paper);border-radius:22px 22px 0 0;box-shadow:0 -14px 40px rgba(10,10,10,.08);border-top:1px solid var(--line)}
-.stack > .sec:nth-child(2){background:var(--paper-2)}
-.stack > .sec:nth-child(3){background:#0A0A0A;color:#fff}
-.stack > .sec:nth-child(3) .rule{border-top-color:rgba(255,255,255,.24)}
-.stack > .sec:nth-child(3) .lead,.stack > .sec:nth-child(3) .p{color:rgba(255,255,255,.78)}
-.stack > .sec:nth-child(3) .inc li{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.16)}
-.stack > .sec:nth-child(3) .inc li:hover{border-color:rgba(255,255,255,.45)}
-.stack > .sec:nth-child(3) .inc b{color:#fff}
-.stack > .sec:nth-child(3) .inc span{color:rgba(255,255,255,.62)}
-.stack > .sec .rule{border-top:0;padding-top:0}
-@media (min-width:900px){.stack > .sec{min-height:calc(100vh - var(--nav-h,88px))}}
-@media (prefers-reduced-motion:reduce){.stack > .sec{position:static;border-radius:0;box-shadow:none}}
-
-.rule{border-top:1px solid var(--line);padding-top:13px;margin-bottom:clamp(26px,2.6vw,50px);font-size:11px;font-weight:600;letter-spacing:.2em}
-.dark .rule{border-top-color:rgba(255,255,255,.24)}
-.h2{margin:0;font-size:clamp(27px,3.5vw,46px);line-height:1.1;font-weight:600;letter-spacing:-.028em}
-.h3{margin:0;font-size:clamp(18px,1.45vw,21px);line-height:1.25;font-weight:600;letter-spacing:-.02em}
-.lead{margin:clamp(16px,1.5vw,24px) 0 0;max-width:64ch;font-size:clamp(15.5px,1.22vw,18.5px);line-height:1.62;color:var(--ink-soft)}
-.p{margin:14px 0 0;font-size:clamp(14.5px,1.05vw,16px);line-height:1.62;color:var(--ink-soft)}
-.small{font-size:13.5px;line-height:1.55;color:var(--ink-mute)}
-.btn{height:52px;display:inline-flex;align-items:center;gap:10px;padding:0 28px;border-radius:999px;background:var(--lima);color:#0A0A0A;font-size:16px;font-weight:600;white-space:nowrap;transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(10,10,10,.22)}
-.dark .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.5)}
-.btn--ghost{background:none;border:1px solid var(--line);font-weight:500}
-.btn--ghost:hover{border-color:var(--ink);box-shadow:none}
-/* El hero es oscuro pero no lleva .dark (tiene su propio fondo): sin incluirlo
-   aca el boton secundario quedaba negro sobre negro, invisible. */
-.dark .btn--ghost,.hero .btn--ghost{border-color:rgba(255,255,255,.4);color:#fff}
-.dark .btn--ghost:hover,.hero .btn--ghost:hover{border-color:#fff}
-.dark{background:#0A0A0A;color:var(--paper-2)}
-.dark .h2,.dark .h3{color:#fff}
-.dark .lead,.dark .p{color:rgba(255,255,255,.68)}
-.dark .small{color:rgba(255,255,255,.5)}
-.eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--ink-mute)}
-.dark .eyebrow{color:rgba(255,255,255,.5)}
-
-/* ---------------------------------------------------------------- nav */
-
-/* ---------------------------------------------------------------- hero */
-.hero{position:relative;background:#0A0A0A;color:#fff;overflow:hidden}
-.hero::after{content:"";position:absolute;inset:auto -10% -60% 40%;height:70%;background:radial-gradient(50% 50% at 50% 50%,rgba(199,255,74,.07),transparent 72%);pointer-events:none}
-.hero .in{position:relative;z-index:1;padding:clamp(52px,5.6vw,104px) var(--pad) clamp(56px,5vw,92px);max-width:var(--max);margin:0 auto}
-.crumb{font-size:12.5px;color:rgba(255,255,255,.5);margin-bottom:clamp(26px,3vw,48px)}
-.crumb a:hover{color:var(--lima)}
-.hero h1{margin:0;max-width:19ch;font-size:clamp(36px,5.6vw,78px);line-height:1.02;font-weight:700;letter-spacing:-.035em;color:#fff}
-.hero h1 em{font-family:'Instrument Serif',Georgia,serif;font-style:normal;font-weight:400;letter-spacing:-.02em;color:var(--lima)}
-.hero .lead{color:rgba(255,255,255,.72);max-width:56ch}
-.hero .acts{display:flex;flex-wrap:wrap;gap:14px;margin-top:clamp(28px,3vw,42px)}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:1px;margin-top:clamp(48px,5vw,84px);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14);border-radius:14px;overflow:hidden}
-.facts div{background:#0A0A0A;padding:22px 24px}
-.facts b{display:block;font-size:clamp(21px,2vw,28px);font-weight:700;letter-spacing:-.03em;color:var(--lima)}
-.facts span{display:block;margin-top:7px;font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.6)}
-
-/* ---------------------------------------------------------------- editorial split */
-.split{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(28px,4vw,84px);align-items:start}
-@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
-.stick{position:sticky;top:96px}
-@media (max-width:900px){.stick{position:static}}
-
-/* lista numerada editorial */
-.steps{list-style:none;margin:0;padding:0;counter-reset:s}
-.steps li{counter-increment:s;padding:clamp(22px,2.2vw,30px) 0;border-top:1px solid var(--line);display:grid;grid-template-columns:56px minmax(0,1fr);gap:clamp(14px,1.6vw,26px)}
-.steps li:last-child{border-bottom:1px solid var(--line)}
-.steps li::before{content:"0" counter(s);font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--ink-mute);padding-top:5px}
-.dark .steps li{border-color:rgba(255,255,255,.16)}
-.dark .steps li::before{color:rgba(255,255,255,.45)}
-
-/* checklist */
-/* Bordes por celda y no gap sobre un fondo de linea: con auto-fit el ultimo
-   renglon queda incompleto y las celdas fantasma se veian como bloques grises. */
-/* 370px y no 310: son 9 items, y a 3 columnas cierran en tres renglones llenos.
-   A 4 columnas el ultimo renglon queda con una sola card colgando. */
-.inc{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(370px,100%),1fr));gap:clamp(14px,1.3vw,20px)}
-.inc li{padding:22px 24px;border:1px solid var(--line);border-radius:14px;background:var(--paper);transition:border-color .2s,transform .2s cubic-bezier(.22,1,.36,1)}
-.inc li:hover{border-color:rgba(10,10,10,.34);transform:translateY(-2px)}
-.inc b{display:block;font-size:15.5px;font-weight:600;letter-spacing:-.01em}
-.inc span{display:block;margin-top:7px;font-size:13.8px;line-height:1.55;color:var(--ink-mute)}
-
-/* tabla comparativa */
-.cmp{width:100%;border-collapse:collapse;font-size:14.8px;margin-top:clamp(24px,2.4vw,40px)}
-.cmp th,.cmp td{text-align:left;padding:16px 18px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
-.cmp thead th{font-size:11px;font-weight:600;letter-spacing:.16em;color:var(--ink-mute);border-bottom-color:var(--ink);padding-bottom:12px}
-.cmp tbody th{font-weight:600;width:26%;color:var(--ink)}
-.cmp td:last-child{background:rgba(199,255,74,.09)}
-.cmp-scroll{overflow-x:auto}
-@media (max-width:760px){.cmp{min-width:640px}}
-
-/* tarjetas producto */
-.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr));gap:clamp(14px,1.4vw,22px)}
-.tier{display:flex;flex-direction:column;padding:clamp(24px,2.2vw,32px);border:1px solid rgba(255,255,255,.16);border-radius:18px;background:rgba(255,255,255,.04);transition:border-color .2s,transform .2s cubic-bezier(.22,1,.36,1)}
-.tier:hover{border-color:rgba(199,255,74,.55);transform:translateY(-3px)}
-.tier .price{margin-top:16px;font-size:clamp(24px,2.2vw,31px);font-weight:700;letter-spacing:-.03em;color:var(--lima)}
-.tier ul{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:9px}
-.tier li{position:relative;padding-left:22px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.7)}
-.tier li::before{content:"";position:absolute;left:1px;top:7px;width:8px;height:8px;border-radius:99px;border:1.5px solid var(--lima)}
-
-/* muestras */
-.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:clamp(12px,1.2vw,20px)}
-.shots figure{margin:0}
-/* Relacion nativa de los mockups (900x1599 ~ 9/16) y no un recorte: encuadrados
-   en 4/3 o 3/4 la maqueta pierde justamente el texto que la hace legible. */
-.shots{align-items:start}
-/* height:auto es obligatorio: con el atributo height="1599" del HTML el alto
-   queda fijo en 1599px, el aspect-ratio no aplica y cover recorta a lo ancho. */
-.shots img{width:100%;height:auto;aspect-ratio:9/16;object-fit:cover;border-radius:12px;display:block;background:#f0efec;border:1px solid var(--line)}
-.shots figcaption{margin-top:12px;font-size:13.5px;line-height:1.5;color:var(--ink-mute)}
-.shots b{color:var(--ink);font-weight:600}
-
-/* faq */
-.faq{border-top:1px solid var(--line)}
-.faq details{border-bottom:1px solid var(--line)}
-.faq summary{list-style:none;cursor:pointer;padding:clamp(20px,1.9vw,26px) 44px clamp(20px,1.9vw,26px) 0;position:relative;font-size:clamp(16px,1.25vw,19px);font-weight:600;letter-spacing:-.015em;transition:color .18s}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary:hover{color:#C7FF4A}
-.faq summary::after{content:"";position:absolute;right:8px;top:50%;width:11px;height:11px;margin-top:-7px;border-right:1.8px solid currentColor;border-bottom:1.8px solid currentColor;transform:rotate(45deg);transition:transform .22s cubic-bezier(.22,1,.36,1)}
-.faq details[open] summary::after{transform:rotate(225deg);margin-top:-2px}
-.faq .a{padding:0 clamp(20px,6vw,110px) clamp(22px,2vw,30px) 0;font-size:15px;line-height:1.65;color:var(--ink-soft)}
-.faq .a p{margin:0 0 12px}
-.faq .a p:last-child{margin:0}
-
-/* cierre */
-.close-cta{border-radius:20px;background:var(--paper-2);padding:clamp(32px,3.6vw,64px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(22px,2.4vw,44px);align-items:center}
-@media (max-width:820px){.close-cta{grid-template-columns:minmax(0,1fr)}}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
-}
-
-/* imagen apaisada: misma regla que .shots, con la relacion nativa del archivo
-   (1400x779) y height:auto para que el atributo height del HTML no la recorte. */
-.figwide{margin:0}
-.figwide img{width:100%;height:auto;aspect-ratio:1400/779;object-fit:cover;border-radius:14px;display:block;background:#f0efec;border:1px solid var(--line)}
-.figwide figcaption{margin-top:12px;font-size:13.5px;line-height:1.5;color:var(--ink-mute)}
-</style>
-<link rel="stylesheet" href="../chrome.css">
-<link rel="stylesheet" href="../menu.css">
+<meta name="twitter:title" content="Cómo trabajamos · NEA Sistemas">
+<meta name="twitter:description" content="Cómo trabaja NEA Sistemas, estudio de diseño y tecnología de Oberá, Misiones: cinco principios.">
+<meta name="twitter:image" content="https://www.neasistemas.com.ar/img/og-nea-sistemas.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ProfessionalService","@id":"https://www.neasistemas.com.ar/#business","name":"NEA Sistemas","url":"https://www.neasistemas.com.ar/","logo":"https://www.neasistemas.com.ar/img/logo/simbolo-color-512.png","image":"https://www.neasistemas.com.ar/img/og-nea-sistemas.png","description":"Marca, diseño, sistemas y anuncios de nivel internacional, conectados entre sí, para empresas que quieren verse y funcionar como las mejores.","telephone":"+543755446606","email":"hola@neasistemas.com.ar","address":{"@type":"PostalAddress","addressLocality":"Oberá","addressRegion":"Misiones","addressCountry":"AR"},"areaServed":{"@type":"Country","name":"Argentina"},"knowsLanguage":"es-AR"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.neasistemas.com.ar/"},{"@type":"ListItem","position":2,"name":"Cómo trabajamos","item":"https://www.neasistemas.com.ar/nosotros/"}]}]}</script>
 </head>
-<body>
-<a class="nea-skip" href="#contenido">Saltar al contenido</a>
-
-<header id="nav">
-  <div class="in">
-    <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="185" height="40" style="height:clamp(30px,2.1vw,40px);width:auto;display:block"></a>
-    <nav aria-label="Principal">
-      <details>
-        <summary>Servicios</summary>
-        <div class="panel">
-          <a href="../sitios-web/">Sitios web</a>
-          <a href="../anuncios/">Anuncios</a>
-          <a href="../sistemas-a-medida/">Sistemas a medida</a>
-        </div>
-      </details>
-      <a href="../nosotros/" aria-current="page">Nosotros</a>
+<body class="">
+<a class="salto" href="#contenido">Ir al contenido</a>
+<header class="cab" id="cab">
+  <div class="cab__fila caja">
+    <a class="cab__marca" href="/" aria-label="NEA Sistemas, inicio">
+      <img src="/assets/logo/lockup-horizontal-claro.svg" alt="NEA Sistemas" width="153" height="26">
+    </a>
+    <nav class="cab__nav" aria-label="Principal">
+      <a href="/trabajos/">Trabajos</a>
+      <a href="/marca/">Marca</a>
+      <a href="/sitios-web/">Sitios web</a>
+      <a href="/sistemas-a-medida/">Sistemas</a>
+      <a href="/anuncios/">Anuncios</a>
+      <a href="/nosotros/" aria-current="page">Cómo trabajamos</a>
     </nav>
-    <a href="https://wa.me/5493755446606?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" class="btn cta">Pedí tu diagnóstico gratis</a>
+    <a class="boton boton--chico cab__cta" href="/cotizar/">Cuéntanos tu proyecto</a>
+    <button class="cab__menu" type="button" id="abrir-menu" aria-expanded="false" aria-controls="menu">Menú</button>
+  </div>
+  <div class="menu" id="menu" hidden>
+    <nav class="menu__nav caja" aria-label="Menú">
+      <a href="/trabajos/">Trabajos</a>
+      <a href="/marca/">Marca</a>
+      <a href="/sitios-web/">Sitios web</a>
+      <a href="/sistemas-a-medida/">Sistemas</a>
+      <a href="/anuncios/">Anuncios</a>
+      <a href="/nosotros/" aria-current="page">Cómo trabajamos</a>
+      <a class="boton" href="/cotizar/">Cuéntanos tu proyecto</a>
+    </nav>
   </div>
 </header>
 
 <main id="contenido">
-
-  <!-- Nosotros v2 (14/10/2026). Eje: ves el trabajo funcionando antes de pagar.
-       Titulos descriptivos, sin remates. Sin referencias a antiguedad ni experiencia. -->
-
-  <!-- ======================================================== PORTADA -->
-  <section class="hero">
-    <div class="in">
-      <p class="crumb"><a href="../">Inicio</a> <span aria-hidden="true">→</span> Nosotros</p>
-
-      <h1>Ves el trabajo funcionando <em>antes</em> de pagar.</h1>
-
-      <p class="lead">NEA Sistemas es un estudio de diseño y desarrollo web de Oberá, Misiones. Hacemos sitios web, anuncios en Instagram y Facebook y sistemas a medida para negocios de todo el país. En los tres casos, lo que contratás lo ves antes de pagarlo. Si no te sirve, no hay compromiso de compra.</p>
-
-      <div class="acts">
-        <a href="https://wa.me/5493755446606?text=Hola%2C%20le%C3%AD%20la%20p%C3%A1gina%20de%20nosotros%20y%20quiero%20el%20diagn%C3%B3stico%20gratis" class="btn" rel="noopener">Pedí tu diagnóstico gratis</a>
-        <a href="#que-ves" class="btn btn--ghost">Qué ves antes de pagar</a>
-      </div>
-
-      <div class="facts">
-        <div><b>Primero lo ves</b><span>El sitio o el sistema, funcionando, antes de pagar.</span></div>
-        <div><b>Sin compromiso</b><span>Si lo que ves no te sirve, ahí termina.</span></div>
-        <div><b>Todo a tu nombre</b><span>Dominio, cuentas y código quedan de tu empresa.</span></div>
-        <div><b>Oberá, Misiones</b><span>Trabajamos con negocios de todo el país.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================== QUÉ VES ANTES DE PAGAR -->
-  <section class="sec dark" id="que-ves" aria-labelledby="h-que-ves">
-    <div class="wrap">
-      <div class="rule" style="color:#fff"></div>
-      <div class="split">
-        <div class="stick">
-          <h2 class="h2" id="h-que-ves">Qué ves antes de pagar</h2>
-          <p class="lead">Contratar un sitio o un sistema a alguien que no conocés es un riesgo, y lo sabemos. Por eso no te pedimos que confíes en una promesa: te mostramos el trabajo hecho.</p>
-          <p class="p">En ningún caso hay obligación de compra hasta que aprobás lo que viste.</p>
-        </div>
-        <div>
-          <ul class="steps">
-            <li><div>
-              <h3 class="h3">Sitios web</h3>
-              <p class="p">Antes de programar, ves el diseño de las páginas principales en tu celular, con tus textos. Antes de pagar, navegás el sitio terminado en una dirección de prueba, con todo funcionando: el botón de WhatsApp, los formularios, la medición. Se publica a tu nombre cuando lo aprobás.</p>
-            </div></li>
-            <li><div>
-              <h3 class="h3">Sistemas a medida</h3>
-              <p class="p">Después del relevamiento, usás el primer módulo con tus datos reales durante dos semanas. Si resuelve lo que tenía que resolver, se paga y se sigue con el siguiente. Si no, no se cobra.</p>
-            </div></li>
-            <li><div>
-              <h3 class="h3">Anuncios</h3>
-              <p class="p">Un anuncio no se puede probar sin invertir, porque la publicidad se paga a Meta. Por eso acá lo que ves antes es el plan: qué anuncios, para quién, con qué presupuesto y qué vamos a medir. Lo acordamos por escrito antes de que pongas un peso, y la publicidad se paga desde una cuenta a tu nombre, donde ves cada gasto.</p>
-            </div></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="stack">
-  <!-- ======================================================== EL DIAGNÓSTICO -->
-  <section class="sec wrap" id="diagnostico" aria-labelledby="h-diag">
-    <div class="rule"></div>
-    <div class="split">
-      <div class="stick">
-        <h2 class="h2" id="h-diag">El diagnóstico</h2>
-      </div>
-      <div>
-        <p class="lead">Todo empieza con un diagnóstico, y es gratis. Miramos tu negocio y a tu competencia, y en menos de 24 horas te mandamos por escrito qué conviene hacer, en qué orden y cuánto cuesta cada cosa.</p>
-        <p class="p">Es un documento con precios, así que podés usarlo para comparar con otra cotización. Si decidís que no, no debés nada y el informe te queda igual.</p>
-        <a href="https://wa.me/5493755446606?text=Hola%2C%20le%C3%AD%20la%20p%C3%A1gina%20de%20nosotros%20y%20quiero%20el%20diagn%C3%B3stico%20gratis" class="btn" rel="noopener" style="margin-top:clamp(20px,2vw,30px)">Pedí tu diagnóstico gratis</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================== PARA QUIÉN -->
-  <section class="sec wrap" id="para-quien" aria-labelledby="h-para-quien">
-    <div class="rule"></div>
-    <div class="split">
-      <div class="stick">
-        <h2 class="h2" id="h-para-quien">Para quién trabajamos</h2>
-      </div>
-      <div>
-        <p class="lead">No nos definimos por rubro. Trabajamos con negocios donde la imagen y la confianza influyen en la decisión del cliente: un restaurante, un instituto, un estudio de arquitectura, un consultorio o una marca de producto se parecen en eso. Alguien los compara con otros y elige por el que le da más confianza.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================== LO QUE QUEDA POR ESCRITO -->
-  <section class="sec wrap" id="reglas" aria-labelledby="h-reglas">
-    <div class="rule"></div>
-    <h2 class="h2" id="h-reglas">Lo que queda por escrito</h2>
-    <p class="lead">Son las condiciones con las que trabajamos. Están en el presupuesto de cada proyecto.</p>
-
-    <ul class="inc" style="margin-top:clamp(30px,3vw,52px)">
-      <li><b>El diseño antes del desarrollo</b><span>Ves tu sitio navegable, en tu celular, con tus textos, antes de que se programe.</span></li>
-      <li><b>El trabajo terminado antes de pagar</b><span>El sitio o el módulo, funcionando, antes de la factura.</span></li>
-      <li><b>Todo a tu nombre</b><span>El dominio se registra a nombre de tu empresa, el hosting queda en una cuenta tuya y el código se entrega. Si mañana trabajás con otro, te llevás todo.</span></li>
-      <li><b>Objetivos acordados antes de empezar</b><span>Qué número tiene que moverse y en cuánto tiempo, para que al final se hable de resultados y no de impresiones.</span></li>
-      <li><b>Podés frenar al final de cualquier etapa</b><span>Cada etapa se cotiza por separado y termina en algo que te llevás. Sin permanencia.</span></li>
-      <li><b>Te decimos cuando no hace falta</b><span>Si con un ajuste chico alcanza, o si lo que pedís no te va a mover el número, lo decimos.</span></li>
-    </ul>
-  </section>
-
+<section class="pag" aria-labelledby="t-pag">
+<div class="caja pag__grilla">
+  <div>
+    <p class="pag__miga"><a href="/">Inicio</a> / Cómo trabajamos</p>
+    <h1 class="pag__titular entra" id="t-pag">Cómo trabajamos.</h1>
+    <p class="pag__bajada entra">NEA Sistemas es un estudio de diseño y tecnología de Oberá, Misiones, Argentina.</p>
   </div>
 
-  <!-- ======================================================== CÓMO ES TRABAJAR CON NOSOTROS -->
-  <section class="sec wrap" id="como-es" aria-labelledby="h-como-es">
-    <div class="rule"></div>
-    <div class="split">
-      <div class="stick">
-        <h2 class="h2" id="h-como-es">Cómo es trabajar con nosotros</h2>
-      </div>
-      <div>
-        <ul class="steps">
-          <li><div><h3 class="h3">Empieza con una conversación</h3><p class="p">Cuando nos escribís, te preguntamos qué necesitás y hablamos de tu negocio, por WhatsApp o en una llamada, según el caso. De esa conversación sale el diagnóstico, con precios.</p></div></li>
-          <li><div><h3 class="h3">Te vamos a pedir cosas</h3><p class="p">Fotos, referencias de sitios que te gusten, información sobre lo que vendés y respuestas a algunas preguntas. El plazo del proyecto depende sobre todo de eso: cuando el material llega rápido, el trabajo avanza rápido.</p></div></li>
-          <li><div><h3 class="h3">Lo ves por partes</h3><p class="p">En un sitio web, lo primero que recibís son los textos, para que los corrijas. Con los textos aprobados se arma el sitio, con tus fotos y tus referencias, y lo navegás completo antes de que se publique.</p></div></li>
-          <li><div><h3 class="h3">Se publica cuando lo aprobás</h3><p class="p">No hace falta una reunión. Si el sitio tiene panel para editar el contenido, te enseñamos a usarlo.</p></div></li>
-          <li><div><h3 class="h3">Los sistemas se prueban antes de pagarlos</h3><p class="p">Lo usás durante dos semanas con tus datos reales. Después se corrige lo que haga falta y decidís.</p></div></li>
-          <li><div><h3 class="h3">Después de la entrega</h3><p class="p">Si algo se rompe o necesitás un cambio chico, nos escribís por WhatsApp y entra en el primer año de soporte. Los cambios grandes se cotizan aparte.</p></div></li>
-        </ul>
-      </div>
+</div>
+</section>
+<section class="como sec--pegada" aria-label="Principios">
+<div class="caja">
+      <ol class="principios rev">
+        <li class="principio">
+          <span class="num" aria-hidden="true">01</span>
+          <div class="principio__cuerpo"><h3 class="principio__titulo">Verse y funcionar como las mejores.</h3>
+          <p>Diseño y sistema salen del mismo estudio, medidos contra los mejores del mundo.</p></div>
+        </li>
+        <li class="principio">
+          <span class="num" aria-hidden="true">02</span>
+          <div class="principio__cuerpo"><h3 class="principio__titulo">Un trabajo que se recorre.</h3>
+          <p>El sitio llega terminado al teléfono del dueño, con sus textos, sus fotos y cada botón andando. El sistema, con sus datos adentro.</p></div>
+        </li>
+        <li class="principio">
+          <span class="num" aria-hidden="true">03</span>
+          <div class="principio__cuerpo"><h3 class="principio__titulo">Un estudio con criterio propio.</h3>
+          <p>Miramos cómo vende y cómo trabaja la empresa antes de opinar. La respuesta puede ser un sistema entero o un solo botón.</p></div>
+        </li>
+        <li class="principio">
+          <span class="num" aria-hidden="true">04</span>
+          <div class="principio__cuerpo"><h3 class="principio__titulo">Hablamos con números.</h3>
+          <p>Acordamos por escrito qué se mide. Nunca prometemos ventas ni puestos en Google.</p></div>
+        </li>
+        <li class="principio">
+          <span class="num" aria-hidden="true">05</span>
+          <div class="principio__cuerpo"><h3 class="principio__titulo">Cada pieza es tuya.</h3>
+          <p>El dominio, el hosting, el código y las cuentas de anuncios quedan a nombre de tu empresa.</p></div>
+        </li>
+      </ol>
+</div>
+</section>
+<section class="frase cierre" aria-labelledby="t-cierre">
+  <div class="caja frase__fila">
+    <div class="cierre__texto">
+      <h2 class="frase__texto rev" id="t-cierre">Para los que hacen la diferencia.</h2>
+      <a class="boton boton--lima" href="/cotizar/">Cuéntanos tu proyecto</a>
     </div>
-  </section>
+    <svg class="frase__simbolo" id="simbolo" viewBox="0 0 620 620" aria-hidden="true">
+      <path class="pz pz--no" d="M300,300L0,300L0,0C165.575,0 300,134.425 300,300Z"/>
+      <path class="pz pz--ne" d="M320,0L620,0L620,300L320,300Z"/>
+      <path class="pz pz--so" d="M0,320L300,320L300,620C134.425,620 0,485.575 0,320Z"/>
+      <path class="pz pz--se" d="M320,320L620,320L620,620C454.425,620 320,485.575 320,320Z"/>
+    </svg>
+  </div>
+</section>
 
-  <!-- ======================================================== QUÉ NECESITAMOS DE VOS -->
-  <section class="sec wrap" id="que-necesitamos" aria-labelledby="h-necesitamos">
-    <div class="rule"></div>
-    <div class="split">
-      <div class="stick">
-        <h2 class="h2" id="h-necesitamos">Qué necesitamos de vos</h2>
-        <p class="lead">Cada proyecto necesita cosas distintas de tu lado. Esto es lo habitual.</p>
-      </div>
-      <div>
-        <ul class="steps">
-          <li><div><h3 class="h3">Para un sitio web</h3><p class="p">Una charla de una hora sobre tu negocio. Con eso escribimos los textos y te los mandamos para corregir, junto con un documento de fotos: qué sacar, cuántas, para qué sección y cómo. Las podés sacar con un buen celular; si el sitio depende mucho de la imagen, te vamos a recomendar un fotógrafo de tu zona y le pasamos la misma guía. Si no tenés logo ni identidad, se hace como parte del proyecto. El dominio y el hosting los registramos nosotros a tu nombre, y si ya los tenés, se usan. También te vamos a pedir acceso a tu ficha de Google y, si corresponde, a tu Instagram.</p></div></li>
-          <li><div><h3 class="h3">Para anuncios</h3><p class="p">Acceso como administrador a tu página de Facebook y a tu Instagram, y una cuenta publicitaria a tu nombre con tu tarjeta, que armamos juntos si no la tenés. Las fotos y los videos de los anuncios salen del material del sitio o del que nos pases.</p></div></li>
-          <li><div><h3 class="h3">Para un sistema</h3><p class="p">Depende del sistema. Para uno de turnos o de consultas alcanza con una charla y ver cómo lo manejás hoy. Para uno de gestión, las planillas que usás y un rato viendo cómo se carga la información. Si ya tenés datos, clientes, productos o precios, los importamos. Durante las dos semanas de prueba conviene que lo uses a la par de lo que ya tenés, para comparar.</p></div></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================== DÓNDE ESTAMOS -->
-  <section class="sec wrap" id="donde" aria-labelledby="h-donde">
-    <div class="rule"></div>
-    <div class="split">
-      <div class="stick">
-        <h2 class="h2" id="h-donde">Dónde estamos</h2>
-        <p class="lead">Estamos en Oberá, Misiones, y trabajamos con negocios de todo el país.</p>
-        <p class="p"><b style="color:var(--ink);font-weight:600">El arranque es una videollamada de una hora.</b> Ahí contás cómo funciona tu negocio, qué te preguntan siempre tus clientes y qué tipo de trabajo querés que te llegue más. Es la única reunión larga del proyecto.</p>
-        <p class="p"><b style="color:var(--ink);font-weight:600">El día a día pasa por WhatsApp.</b> Dudas, fotos, textos, correcciones y aprobaciones.</p>
-        <p class="p"><b style="color:var(--ink);font-weight:600">Los avances los ves vos.</b> Cada vez que hay algo para mirar te llega un enlace que abrís en tu propio celular, como lo va a ver tu cliente.</p>
-      </div>
-      <div>
-        <figure class="figwide">
-          <img src="../uploads/nosotros-diagnostico.webp" alt="Vista cenital de una mesa de trabajo con libros abiertos, papeles anotados y varias manos escribiendo" width="1400" height="779" loading="lazy" decoding="async">
-          <figcaption>La primera etapa es leer cómo funciona el negocio y escribir qué conviene hacer primero. Recién después se elige la tecnología. <span class="small">Imagen ilustrativa.</span></figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================== PREGUNTAS -->
-  <section class="sec wrap" id="preguntas" aria-labelledby="h-faq">
-    <div class="rule"></div>
-    <h2 class="h2" id="h-faq">Preguntas frecuentes</h2>
-    <div class="faq" style="margin-top:clamp(28px,2.8vw,48px)">
-
-      <details open>
-        <summary>¿De verdad puedo ver el sitio terminado antes de pagar?</summary>
-        <div class="a"><p>Sí. Lo navegás en una dirección de prueba, con todo funcionando. Se publica a tu nombre cuando lo aprobás y se factura en ese momento. Si no te sirve, no se publica y no se cobra.</p></div>
-      </details>
-
-      <details>
-        <summary>¿Por qué el diagnóstico es gratis?</summary>
-        <div class="a"><p>Porque es nuestra forma de conseguir trabajo. Preferimos invertir unas horas en mostrarte algo concreto sobre tu negocio antes que pedirte que confíes en una promesa. Llega con precios, y si decidís que no, el informe te queda igual.</p></div>
-      </details>
-
-      <details>
-        <summary>¿Trabajan con cualquier rubro?</summary>
-        <div class="a"><p>Trabajamos con negocios donde la imagen y la confianza influyen en la decisión del cliente. Si tu cliente elige solo por precio, no somos la opción correcta y te lo decimos en la primera charla.</p></div>
-      </details>
-
-      <details>
-        <summary>Estoy en otra provincia. ¿Cómo es trabajar a distancia?</summary>
-        <div class="a"><p>El arranque es una videollamada de una hora y el día a día pasa por WhatsApp. Los avances los ves en un enlace, en tu propio celular. Si tu clientela es de tu ciudad, el sitio se arma para aparecer en las búsquedas de tu zona.</p></div>
-      </details>
-
-      <details>
-        <summary>¿Qué pasa si a mitad del proyecto quiero frenar?</summary>
-        <div class="a"><p>Cada etapa se cotiza por separado y termina en algo que te llevás. Si frenás después del diseño, te quedan las pantallas y los textos. Si frenás después del sitio, te queda el sitio funcionando y a tu nombre, sin obligación de contratar anuncios ni sistemas.</p></div>
-      </details>
-
-      <details>
-        <summary>¿Por qué insisten con que todo quede a mi nombre?</summary>
-        <div class="a"><p>Porque en el rubro es común lo contrario: el dominio a nombre del proveedor, el hosting en su cuenta y el código en su servidor. El día que querés cambiar de proveedor, descubrís que tu dirección de internet no es tuya. Nosotros registramos el dominio a nombre de tu empresa, te damos los accesos y te entregamos el código.</p></div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- ======================================================== CIERRE -->
-  <section class="sec wrap" id="cierre" aria-labelledby="h-cierre">
-    <div class="close-cta">
-      <div>
-        <h2 class="h2" id="h-cierre" style="font-size:clamp(24px,2.9vw,38px)">Contanos a qué se dedica tu negocio.</h2>
-        <p class="p" style="max-width:60ch">En menos de 24 horas te llega el diagnóstico, con precios. Si te cierra, empezamos. Si no, no debés nada.</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <a href="https://wa.me/5493755446606?text=Hola%2C%20le%C3%AD%20la%20p%C3%A1gina%20de%20nosotros%20y%20quiero%20el%20diagn%C3%B3stico%20gratis" class="btn" rel="noopener">Pedir el diagnóstico gratis</a>
-      </div>
-    </div>
-  </section>
 
 </main>
-
-<footer id="contacto">
-  <div class="foot-in">
-    <div class="foot-top">
-      <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(64px,9.2vw,176px);width:auto;display:block"></a>
-      <div class="foot-cols">
-        <div>
-          <h2>Servicios</h2>
-          <nav aria-label="Servicios">
-        <a href="../sitios-web/">Sitios web</a>
-        <a href="../anuncios/">Anuncios</a>
-        <a href="../sistemas-a-medida/">Sistemas a medida</a>
-          </nav>
-        </div>
-        <div>
-          <h2>Empresa</h2>
-          <nav aria-label="Empresa">
-            <a href="../">Inicio</a>
-            <a href="../nosotros/" aria-current="page">Nosotros</a>
-          </nav>
-        </div>
-        <div>
-          <h2>Legal</h2>
-          <nav aria-label="Legal">
-            <a href="../privacidad/">Privacidad</a>
-            <a href="../terminos/">Términos</a>
-          </nav>
-        </div>
-      </div>
-      <a href="https://wa.me/5493755446606?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20gratis%20para%20mi%20negocio" class="foot-cta">Pedí tu diagnóstico gratis</a>
+<footer class="pie">
+  <div class="caja pie__grilla">
+    <div class="pie__marca">
+      <a href="/" aria-label="NEA Sistemas, inicio"><img src="/assets/logo/lockup-horizontal-oscuro.svg" alt="NEA Sistemas" width="153" height="26" loading="lazy"></a>
+      <p>Oberá, Misiones, Argentina.</p>
+      <p class="pie__contacto"><a href="mailto:hola@neasistemas.com.ar">hola@neasistemas.com.ar</a><br><a href="https://wa.me/5493755446606?text=Hola%2C%20vi%20el%20sitio%20de%20NEA%20Sistemas%20y%20quiero%20hacer%20una%20consulta.">WhatsApp +54 3755 446606</a></p>
     </div>
-    <div class="foot-bot">
-      <span>© 2026 NEA Sistemas</span>
-      <span>Oberá, Misiones — trabajamos con todo el país</span>
+    <div class="pie__cols">
+      <nav class="pie__nav" aria-label="Áreas">
+        <a href="/marca/">Marca</a>
+        <a href="/sitios-web/">Sitios web</a>
+        <a href="/sistemas-a-medida/">Sistemas</a>
+        <a href="/anuncios/">Anuncios</a>
+      </nav>
+      <nav class="pie__nav" aria-label="Estudio">
+        <a href="/trabajos/">Trabajos</a>
+        <a href="/nosotros/">Cómo trabajamos</a>
+        <a href="/cotizar/">Cotizar</a>
+      </nav>
+      <nav class="pie__nav" aria-label="Legales">
+        <a href="/privacidad/">Privacidad</a>
+        <a href="/terminos/">Términos</a>
+      </nav>
+    </div>
+    <div class="pie__firma">
+      <img src="/assets/logo/piezas-fila-blanco.svg" alt="" width="80" height="16" loading="lazy">
+      <p>© 2026 NEA Sistemas</p>
     </div>
   </div>
 </footer>
 
-<script src="../nav.js" defer></script>
+<script src="/js/sitio.js?v=202611260341" defer></script>
 </body>
 </html>

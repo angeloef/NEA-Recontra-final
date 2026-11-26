@@ -1,20 +1,21 @@
 # NEA Sistemas
 
-> Estudio de diseño y desarrollo web con base en Oberá, Misiones, Argentina: sitios web, anuncios en Instagram y Facebook y sistemas a medida. Trabaja de forma remota con negocios de todo el país. El diagnóstico inicial es gratuito, el trabajo se muestra antes de cobrar y todo (dominio, hosting, cuentas y código) queda a nombre del cliente.
+> Estudio de marca, diseño web, sistemas y anuncios de Oberá, Misiones, Argentina. Trabaja con empresas de Argentina y Latinoamérica.
 
-Sitio en español (es-AR). Contenido estático, sin paywall ni login.
+Marca, diseño, sistemas y anuncios salen del mismo estudio, para empresas que quieren verse y funcionar como las mejores de su rubro. El dominio, el código y las cuentas quedan a nombre de cada empresa.
 
-## Servicios
+## Áreas
+- [Marca](https://www.neasistemas.com.ar/marca/): identidad completa, de la estrategia y la voz al logo, el sistema visual y el manual.
+- [Sitios web](https://www.neasistemas.com.ar/sitios-web/): landing pages, sitios institucionales, reservas y tiendas, diseñados y programados sin plantillas.
+- [Sistemas a medida](https://www.neasistemas.com.ar/sistemas-a-medida/): software a medida para stock, ventas, facturación, turnos y clientes.
+- [Anuncios](https://www.neasistemas.com.ar/anuncios/): imágenes, videos y campañas en Instagram y Facebook, con la cuenta publicitaria a nombre de la empresa.
 
-- [Sitios web](https://www.neasistemas.com.ar/sitios-web/): landing pages, sitios institucionales, reservas y tiendas online a medida, con WhatsApp y medición incluidos. El precio se cotiza según el proyecto.
-- [Anuncios](https://www.neasistemas.com.ar/anuncios/): campañas en Instagram y Facebook medidas en consultas; pauta a nombre del cliente, gestión mensual fija.
-- [Sistemas a medida](https://www.neasistemas.com.ar/sistemas-a-medida/): software de gestión interno (turnos, pedidos, clientes, stock), cotizado después de un relevamiento.
+## Estudio
+- [Trabajos](https://www.neasistemas.com.ar/trabajos/): marcas de concepto (Brígida, Oller y Tarn), cada una con su sitio publicado.
+- [Cómo trabajamos](https://www.neasistemas.com.ar/nosotros/): cinco principios.
+- [Cotizar](https://www.neasistemas.com.ar/cotizar/): se cotiza por proyecto; no hay precios publicados.
 
-## Referencia
-
-- [Inicio](https://www.neasistemas.com.ar/): resumen de servicios, proceso de trabajo y contacto.
-- [Nosotros](https://www.neasistemas.com.ar/nosotros/): quiénes somos, cómo trabajamos y con qué tipo de negocios.
-
-## Opcional
-
-- [Sitemap](https://www.neasistemas.com.ar/sitemap.xml)
+## Contacto
+- WhatsApp: +54 3755 446606
+- Mail: hola@neasistemas.com.ar
+- Sitemap: https://www.neasistemas.com.ar/sitemap.xml

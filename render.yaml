@@ -1,3 +1,5 @@
+# Sitio nuevo de NEA Sistemas (demos/nea-sistemas/sitio). Basado en neasistemasweb/render.yaml.
+# El HTML ya viene armado en ./site (python build.py): Render no corre build.
 services:
   - type: web
     name: nea-sistemas-landing
@@ -7,16 +9,11 @@ services:
     domains:
       - neasistemas.com.ar
       - www.neasistemas.com.ar
-    # ponytail: sin rewrite catch-all. Es un sitio multipagina, no una SPA.
-    # Sin regla `/*`, Render sirve site/404.html con status 404 real.
-    # Hubo una regla manual `/* -> /index.html` en el dashboard: devolvia la home
-    # con 200 y canonical a `/` para cualquier URL inexistente, una fabrica de
-    # soft-404 y duplicados. Borrada por API; no la vuelvas a agregar.
-    # Los redirects de abajo canonizan las URLs sin barra final.
+    # Sin rewrite catch-all: es multipagina. Sin regla `/*`, Render sirve
+    # site/404.html con status 404 real. No agregar `/* -> /index.html`.
     routes:
-      # 22/10/2026: el menu paso de 11 a 8 paginas. Las direcciones viejas
-      # redirigen a las nuevas (301). /sitios-web/ absorbe diseno-web, tienda-online
-      # y seo; /anuncios/ absorbe google-ads y marketing-digital.
+      # 301 de seo.md. En site/ no hay ningun archivo en estas rutas, asi la
+      # regla gana (en el sitio viejo el stub con 200 le ganaba).
       - type: redirect
         source: /diseno-web
         destination: /sitios-web/
@@ -36,6 +33,15 @@ services:
         source: /seo/
         destination: /sitios-web/
       - type: redirect
+        source: /precios
+        destination: /cotizar/
+      - type: redirect
+        source: /precios/
+        destination: /cotizar/
+      - type: redirect
+        source: /estimador.html
+        destination: /cotizar/
+      - type: redirect
         source: /google-ads
         destination: /anuncios/
       - type: redirect
@@ -47,27 +53,34 @@ services:
       - type: redirect
         source: /marketing-digital/
         destination: /anuncios/
-      # Canonizan las URLs sin barra final.
+      - type: redirect
+        source: /casos
+        destination: /trabajos/
+      - type: redirect
+        source: /casos/
+        destination: /trabajos/
+      # Canonizan las URL sin barra final.
+      - type: redirect
+        source: /marca
+        destination: /marca/
       - type: redirect
         source: /sitios-web
         destination: /sitios-web/
       - type: redirect
+        source: /sistemas-a-medida
+        destination: /sistemas-a-medida/
+      - type: redirect
         source: /anuncios
         destination: /anuncios/
       - type: redirect
-        source: /sistemas-a-medida
-        destination: /sistemas-a-medida/
-      # 17/11/2026: la pagina de precios salio del sitio; el precio se cotiza
-      # segun el proyecto. Las dos direcciones van a /sitios-web/.
-      - type: redirect
-        source: /precios
-        destination: /sitios-web/
-      - type: redirect
-        source: /precios/
-        destination: /sitios-web/
+        source: /trabajos
+        destination: /trabajos/
       - type: redirect
         source: /nosotros
         destination: /nosotros/
+      - type: redirect
+        source: /cotizar
+        destination: /cotizar/
       - type: redirect
         source: /privacidad
         destination: /privacidad/
@@ -93,9 +106,14 @@ services:
       - path: /*
         name: Permissions-Policy
         value: camera=(), microphone=(), geolocation=(), interest-cohort=()
-      # /estimador.html era un fragmento que app.js inyectaba en /precios/. Salio
-      # del sitio el 17/11/2026 (quedo en archivo/). El header queda por si alguna
-      # copia vieja sigue publicada: un fragmento sin <head> no lleva meta robots.
-      - path: /estimador.html
+      # La agenda es personal (link con ?t=): fuera de los buscadores.
+      - path: /agenda/*
         name: X-Robots-Tag
-        value: noindex
+        value: noindex, nofollow
+      # Fuentes e imagenes con nombre fijo: cache de una semana.
+      - path: /fonts/*
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /img/*
+        name: Cache-Control
+        value: public, max-age=604800

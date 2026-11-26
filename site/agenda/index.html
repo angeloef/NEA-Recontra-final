@@ -1,42 +1,61 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es-AR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agendá tu reunión — NEA Sistemas</title>
+<title>Agendá tu reunión · NEA Sistemas</title>
 <meta name="description" content="Elegí el día y la hora de la videollamada de 45 minutos con NEA Sistemas.">
-<!-- Pagina personal: se entra con un link unico. No va al sitemap ni al indice. -->
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0A0A0A">
-<link rel="icon" type="image/png" sizes="32x32" href="../uploads/favicon-32.png">
-<link rel="apple-touch-icon" href="../uploads/apple-touch-icon.png">
-<link rel="stylesheet" href="../chrome.css">
-<link rel="stylesheet" href="../legal.css">
-<link rel="stylesheet" href="../menu.css">
-<link rel="stylesheet" href="../agenda.css">
+<script>
+  /* Antes de pintar: hay JS, y si se puede mover. */
+  (function (d) {
+    d.classList.add('js');
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('mov');
+  })(document.documentElement);
+</script>
+<link rel="preload" href="/assets/fuentes/Switzer-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fuentes/Chivo-wght.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="/css/sitio.css?v=202611260341">
+<link rel="stylesheet" href="/agenda.css?v=202611260341">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 </head>
-<body>
-<a class="nea-skip" href="#contenido">Saltar al contenido</a>
-
-<header id="nav">
-  <div class="in">
-    <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="185" height="40" style="height:clamp(30px,2.1vw,40px);width:auto;display:block"></a>
-    <nav aria-label="Principal">
-      <details>
-        <summary>Servicios</summary>
-        <div class="panel">
-          <a href="../sitios-web/">Sitios web</a>
-          <a href="../anuncios/">Anuncios</a>
-          <a href="../sistemas-a-medida/">Sistemas a medida</a>
-        </div>
-      </details>
-      <a href="../nosotros/">Nosotros</a>
+<body class="pagina-agenda">
+<a class="salto" href="#contenido">Ir al contenido</a>
+<header class="cab" id="cab">
+  <div class="cab__fila caja">
+    <a class="cab__marca" href="/" aria-label="NEA Sistemas, inicio">
+      <img src="/assets/logo/lockup-horizontal-claro.svg" alt="NEA Sistemas" width="153" height="26">
+    </a>
+    <nav class="cab__nav" aria-label="Principal">
+      <a href="/trabajos/">Trabajos</a>
+      <a href="/marca/">Marca</a>
+      <a href="/sitios-web/">Sitios web</a>
+      <a href="/sistemas-a-medida/">Sistemas</a>
+      <a href="/anuncios/">Anuncios</a>
+      <a href="/nosotros/">Cómo trabajamos</a>
     </nav>
-    <a href="https://wa.me/5493755446606" class="btn cta">Escribinos por WhatsApp</a>
+    <a class="boton boton--chico cab__cta" href="/cotizar/">Cuéntanos tu proyecto</a>
+    <button class="cab__menu" type="button" id="abrir-menu" aria-expanded="false" aria-controls="menu">Menú</button>
+  </div>
+  <div class="menu" id="menu" hidden>
+    <nav class="menu__nav caja" aria-label="Menú">
+      <a href="/trabajos/">Trabajos</a>
+      <a href="/marca/">Marca</a>
+      <a href="/sitios-web/">Sitios web</a>
+      <a href="/sistemas-a-medida/">Sistemas</a>
+      <a href="/anuncios/">Anuncios</a>
+      <a href="/nosotros/">Cómo trabajamos</a>
+      <a class="boton" href="/cotizar/">Cuéntanos tu proyecto</a>
+    </nav>
   </div>
 </header>
 
 <main id="contenido">
+<!-- Copiado tal cual del <main> de neasistemasweb/site/agenda/index.html (la plantilla pone el <main>). -->
 <div class="ag">
 
   <!-- Columna de contexto: quien, cuanto dura, en que huso. No cambia nunca,
@@ -150,48 +169,42 @@
 
   </section>
 </div>
-</main>
 
-<footer id="contacto">
-  <div class="foot-in">
-    <div class="foot-top">
-      <a href="../" aria-label="NEA Sistemas — inicio"><img src="../uploads/Nea_logo_blanco.png" alt="NEA Sistemas" width="200" height="44" style="height:clamp(34px,2.6vw,44px);width:auto;display:block"></a>
-      <div class="foot-cols">
-        <div>
-          <h2>Servicios</h2>
-          <nav aria-label="Servicios">
-            <a href="../sitios-web/">Sitios web</a>
-            <a href="../anuncios/">Anuncios</a>
-            <a href="../sistemas-a-medida/">Sistemas a medida</a>
-          </nav>
-        </div>
-        <div>
-          <h2>Empresa</h2>
-          <nav aria-label="Empresa">
-            <a href="../">Inicio</a>
-            <a href="../nosotros/">Nosotros</a>
-          </nav>
-        </div>
-        <div>
-          <h2>Legal</h2>
-          <nav aria-label="Legal">
-            <a href="../privacidad/">Privacidad</a>
-            <a href="../terminos/">Términos</a>
-          </nav>
-        </div>
-      </div>
-      <a href="https://wa.me/5493755446606" class="foot-cta">Escribinos por WhatsApp</a>
+
+</main>
+<footer class="pie">
+  <div class="caja pie__grilla">
+    <div class="pie__marca">
+      <a href="/" aria-label="NEA Sistemas, inicio"><img src="/assets/logo/lockup-horizontal-oscuro.svg" alt="NEA Sistemas" width="153" height="26" loading="lazy"></a>
+      <p>Oberá, Misiones, Argentina.</p>
+      <p class="pie__contacto"><a href="mailto:hola@neasistemas.com.ar">hola@neasistemas.com.ar</a><br><a href="https://wa.me/5493755446606?text=Hola%2C%20vi%20el%20sitio%20de%20NEA%20Sistemas%20y%20quiero%20hacer%20una%20consulta.">WhatsApp +54 3755 446606</a></p>
     </div>
-    <div class="foot-bot">
-      <span>© 2026 NEA Sistemas</span>
-      <span>Oberá, Misiones — trabajamos con todo el país</span>
+    <div class="pie__cols">
+      <nav class="pie__nav" aria-label="Áreas">
+        <a href="/marca/">Marca</a>
+        <a href="/sitios-web/">Sitios web</a>
+        <a href="/sistemas-a-medida/">Sistemas</a>
+        <a href="/anuncios/">Anuncios</a>
+      </nav>
+      <nav class="pie__nav" aria-label="Estudio">
+        <a href="/trabajos/">Trabajos</a>
+        <a href="/nosotros/">Cómo trabajamos</a>
+        <a href="/cotizar/">Cotizar</a>
+      </nav>
+      <nav class="pie__nav" aria-label="Legales">
+        <a href="/privacidad/">Privacidad</a>
+        <a href="/terminos/">Términos</a>
+      </nav>
+    </div>
+    <div class="pie__firma">
+      <img src="/assets/logo/piezas-fila-blanco.svg" alt="" width="80" height="16" loading="lazy">
+      <p>© 2026 NEA Sistemas</p>
     </div>
   </div>
 </footer>
 
-<script src="../nav.js" defer></script>
-<!-- GSAP self-hosteado, como las tipografias: sin CDN de terceros. -->
-<script src="../vendor/gsap-3.15.0.min.js" defer></script>
-<script src="../agenda.js" defer></script>
+<script src="/js/sitio.js?v=202611260341" defer></script>
+<script src="/vendor/gsap-3.15.0.min.js?v=202611260341" defer></script>
+<script src="/agenda.js?v=202611260341" defer></script>
 </body>
 </html>

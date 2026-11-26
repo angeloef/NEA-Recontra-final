@@ -1,95 +1,100 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es-AR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Página no encontrada (404) — NEA Sistemas</title>
-<meta name="description" content="La página que buscás no existe o cambió de dirección. Volvé al inicio o mirá los servicios de NEA Sistemas.">
+<title>Página no encontrada · NEA Sistemas</title>
+<meta name="description" content="La dirección no existe o cambió de lugar con el sitio nuevo de NEA Sistemas.">
 <meta name="robots" content="noindex,follow">
 <meta name="theme-color" content="#0A0A0A">
-
-<link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/uploads/favicon-512.png">
-<link rel="apple-touch-icon" href="/uploads/apple-touch-icon.png">
-
-<style>
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url(/uploads/fonts/plusjakartasans-400-normal-latin.woff2) format('woff2')}
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url(/uploads/fonts/plusjakartasans-600-normal-latin.woff2) format('woff2')}
-@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url(/uploads/fonts/plusjakartasans-700-normal-latin.woff2) format('woff2')}
-@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(/uploads/fonts/instrumentserif-400-normal-subset.woff2) format('woff2')}
-
-:root{
-  --ink:#0A0A0A;
-  --ink-soft:#3d3d3d;
-  --ink-mute:#6e6e6e;
-  --line:rgba(255,255,255,.16);
-  --paper:#FFFFFF;
-  --lima:#C7FF4A;
-  --pad:clamp(20px,2.9vw,56px);
-}
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--ink);color:var(--paper);
-  font-family:"Plus Jakarta Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  min-height:100vh;display:flex;flex-direction:column;
-}
-main{
-  flex:1;display:flex;flex-direction:column;justify-content:center;
-  padding:clamp(64px,10vw,140px) var(--pad);max-width:900px;
-}
-.code{
-  font-size:clamp(64px,14vw,180px);line-height:.85;font-weight:700;
-  letter-spacing:-.05em;color:var(--lima);margin:0 0 clamp(24px,4vw,40px);
-}
-h1{
-  font-size:clamp(30px,5vw,56px);line-height:1.05;letter-spacing:-.03em;
-  font-weight:600;text-wrap:balance;margin:0 0 20px;
-}
-h1 em{font-family:'Instrument Serif',Georgia,serif;font-style:normal;font-weight:400;color:var(--lima)}
-p{font-size:clamp(16px,1.5vw,19px);line-height:1.55;color:rgba(255,255,255,.72);margin:0 0 40px;max-width:56ch}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:clamp(48px,7vw,80px)}
-.btn{
-  display:inline-flex;align-items:center;padding:14px 26px;border-radius:999px;
-  font-size:15px;font-weight:600;text-decoration:none;
-  transition:transform .18s ease,background .18s ease,border-color .18s ease;
-}
-.btn--solid{background:var(--lima);color:var(--ink)}
-.btn--solid:hover{transform:translateY(-2px)}
-.btn--ghost{border:1px solid var(--line);color:var(--paper)}
-.btn--ghost:hover{border-color:#fff;transform:translateY(-2px)}
-.btn:focus-visible{outline:2px solid var(--lima);outline-offset:3px}
-nav h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:600;margin:0 0 18px}
-nav ul{list-style:none;padding:0;margin:0;display:grid;gap:2px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-nav a{
-  display:block;padding:14px 0;border-top:1px solid var(--line);
-  color:rgba(255,255,255,.8);text-decoration:none;font-size:16px;
-  transition:color .18s ease,transform .18s ease;
-}
-nav a:hover{color:var(--lima);transform:translateX(8px)}
-nav a:focus-visible{outline:2px solid var(--lima);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
+<script>
+  /* Antes de pintar: hay JS, y si se puede mover. */
+  (function (d) {
+    d.classList.add('js');
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('mov');
+  })(document.documentElement);
+</script>
+<link rel="preload" href="/assets/fuentes/Switzer-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fuentes/Chivo-wght.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="/css/sitio.css?v=202611260341">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 </head>
-<body>
-<main>
-  <p class="code" aria-hidden="true">404</p>
-  <h1>Esta página <em>no existe</em>.</h1>
-  <p>Puede que el enlace esté mal escrito o que hayamos movido el contenido. Desde acá llegás a todo lo demás.</p>
-
-  <div class="actions">
-    <a class="btn btn--solid" href="/">Volver al inicio</a>
+<body class="">
+<a class="salto" href="#contenido">Ir al contenido</a>
+<header class="cab" id="cab">
+  <div class="cab__fila caja">
+    <a class="cab__marca" href="/" aria-label="NEA Sistemas, inicio">
+      <img src="/assets/logo/lockup-horizontal-claro.svg" alt="NEA Sistemas" width="153" height="26">
+    </a>
+    <nav class="cab__nav" aria-label="Principal">
+      <a href="/trabajos/">Trabajos</a>
+      <a href="/marca/">Marca</a>
+      <a href="/sitios-web/">Sitios web</a>
+      <a href="/sistemas-a-medida/">Sistemas</a>
+      <a href="/anuncios/">Anuncios</a>
+      <a href="/nosotros/">Cómo trabajamos</a>
+    </nav>
+    <a class="boton boton--chico cab__cta" href="/cotizar/">Cuéntanos tu proyecto</a>
+    <button class="cab__menu" type="button" id="abrir-menu" aria-expanded="false" aria-controls="menu">Menú</button>
   </div>
+  <div class="menu" id="menu" hidden>
+    <nav class="menu__nav caja" aria-label="Menú">
+      <a href="/trabajos/">Trabajos</a>
+      <a href="/marca/">Marca</a>
+      <a href="/sitios-web/">Sitios web</a>
+      <a href="/sistemas-a-medida/">Sistemas</a>
+      <a href="/anuncios/">Anuncios</a>
+      <a href="/nosotros/">Cómo trabajamos</a>
+      <a class="boton" href="/cotizar/">Cuéntanos tu proyecto</a>
+    </nav>
+  </div>
+</header>
 
-  <nav aria-label="Páginas del sitio">
-    <h2>Ir a</h2>
-    <ul>
-      <li><a href="/sitios-web/">Sitios web</a></li>
-      <li><a href="/anuncios/">Anuncios</a></li>
-      <li><a href="/sistemas-a-medida/">Sistemas a medida</a></li>
-      <li><a href="/nosotros/">Nosotros</a></li>
-    </ul>
-  </nav>
+<main id="contenido">
+<section class="pag error" aria-labelledby="t-pag">
+<div class="caja">
+  <p class="pag__miga">Error 404</p>
+  <h1 class="pag__titular entra" id="t-pag">Esta página no existe.</h1>
+  <p class="pag__bajada entra">La dirección puede estar mal escrita, o la página cambió de lugar con el sitio nuevo.</p>
+  <div class="pag__botones entra"><a class="boton" href="/">Ir al inicio</a><a class="boton boton--linea" href="/trabajos/">Ver trabajos</a></div>
+</div>
+</section>
+
 </main>
+<footer class="pie">
+  <div class="caja pie__grilla">
+    <div class="pie__marca">
+      <a href="/" aria-label="NEA Sistemas, inicio"><img src="/assets/logo/lockup-horizontal-oscuro.svg" alt="NEA Sistemas" width="153" height="26" loading="lazy"></a>
+      <p>Oberá, Misiones, Argentina.</p>
+      <p class="pie__contacto"><a href="mailto:hola@neasistemas.com.ar">hola@neasistemas.com.ar</a><br><a href="https://wa.me/5493755446606?text=Hola%2C%20vi%20el%20sitio%20de%20NEA%20Sistemas%20y%20quiero%20hacer%20una%20consulta.">WhatsApp +54 3755 446606</a></p>
+    </div>
+    <div class="pie__cols">
+      <nav class="pie__nav" aria-label="Áreas">
+        <a href="/marca/">Marca</a>
+        <a href="/sitios-web/">Sitios web</a>
+        <a href="/sistemas-a-medida/">Sistemas</a>
+        <a href="/anuncios/">Anuncios</a>
+      </nav>
+      <nav class="pie__nav" aria-label="Estudio">
+        <a href="/trabajos/">Trabajos</a>
+        <a href="/nosotros/">Cómo trabajamos</a>
+        <a href="/cotizar/">Cotizar</a>
+      </nav>
+      <nav class="pie__nav" aria-label="Legales">
+        <a href="/privacidad/">Privacidad</a>
+        <a href="/terminos/">Términos</a>
+      </nav>
+    </div>
+    <div class="pie__firma">
+      <img src="/assets/logo/piezas-fila-blanco.svg" alt="" width="80" height="16" loading="lazy">
+      <p>© 2026 NEA Sistemas</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/sitio.js?v=202611260341" defer></script>
 </body>
 </html>
